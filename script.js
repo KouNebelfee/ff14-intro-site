@@ -54,7 +54,7 @@ window.addEventListener('scroll', function() {
 
 // 音楽プレイヤーや要素をスマホで安定させる
 function adjustElementsForMobile() {
-    if (window.innerWidth <= 767) { // スマホサイズ（767px以下）
+    if (window.innerWidth <= 767) {
         var musicPlayer = document.querySelector('.music-player');
         if (musicPlayer) {
             musicPlayer.style.position = 'static';
@@ -65,9 +65,9 @@ function adjustElementsForMobile() {
 
 // ページ読み込み時とリサイズ時に調整
 document.addEventListener("DOMContentLoaded", () => {
-    setInterval(updateTime, 5000); // 5秒ごとに時間更新
-    updateTime(); // 即時更新
-    adjustElementsForMobile(); // スマホ対応の調整
+    setInterval(updateTime, 5000);
+    updateTime();
+    adjustElementsForMobile();
 });
 
 window.addEventListener('resize', adjustElementsForMobile);

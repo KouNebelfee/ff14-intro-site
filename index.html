@@ -20,14 +20,13 @@
             color: white;
             margin: 0 15px;
             text-decoration: none;
-            transition: all 0.3s ease; /* 滑らかな変化のためのトランジション */
+            transition: all 0.3s ease;
         }
-        /* ホバーエフェクトの追加 */
         nav a:hover {
-            color: #ffd700; /* カーソルオンで色を変更（例: ゴールド） */
-            background-color: rgba(255, 255, 255, 0.1); /* 薄い背景色 */
-            padding: 5px 10px; /* 少し余白を追加 */
-            border-radius: 5px; /* 角を丸く */
+            color: #ffd700;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
         footer {
             position: fixed;
@@ -40,26 +39,16 @@
             padding: 10px 0;
             z-index: 1000;
         }
-        .music-player {
-            position: fixed;
-            top: 50px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            color: white;
-        }
         body {
             margin-top: 120px;
-            margin-bottom: 40px;
+            margin-bottom: 80px;
             margin-left: 10px;
         }
     </style>
 </head>
 <body class="bg-index">
     <div class="music-player">
-        <audio id="bgm" loop>
+        <audio id="bgm">
             <source src="" type="audio/mpeg">
             お使いのブラウザは音楽に対応していません。
         </audio>
@@ -88,11 +77,9 @@
         <p>リアルタイム: <span id="real-time"></span></p>
         <p>エオルゼアタイム: <span id="eorzea-time"></span></p>
     </div>
-
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -103,18 +90,21 @@
             ];
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
-            let currentIndex = 0;
+            let currentIndex = Math.floor(Math.random() * tracks.length);
 
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
-                bgm.load(); // 新しいトラックを読み込む
-                bgm.play().catch(error => console.log("再生エラー:", error)); // 自動再生を試みる
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
             }
 
-            // ページ読み込み時にランダムなトラックを選択して再生
-            currentIndex = Math.floor(Math.random() * tracks.length);
             updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
 
             window.prevTrack = function() {
                 currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
@@ -124,6 +114,22 @@
             window.nextTrack = function() {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
             };
         });
     </script>

@@ -20,14 +20,13 @@
             color: white;
             margin: 0 15px;
             text-decoration: none;
-            transition: all 0.3s ease; /* 滑らかな変化のためのトランジション */
+            transition: all 0.3s ease;
         }
-        /* ホバーエフェクトの追加 */
         nav a:hover {
-            color: #ffd700; /* カーソルオンで色を変更（例: ゴールド） */
-            background-color: rgba(255, 255, 255, 0.1); /* 薄い背景色 */
-            padding: 5px 10px; /* 少し余白を追加 */
-            border-radius: 5px; /* 角を丸く */
+            color: #ffd700;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
         footer {
             position: fixed;
@@ -40,26 +39,16 @@
             padding: 10px 0;
             z-index: 1000;
         }
-        .music-player {
-            position: fixed;
-            top: 50px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            color: white;
-        }
         body {
             margin-top: 120px;
-            margin-bottom: 40px;
+            margin-bottom: 80px;
             margin-left: 10px;
         }
     </style>
 </head>
 <body class="bg-shb">
     <div class="music-player">
-        <audio id="bgm" loop>
+        <audio id="bgm">
             <source src="" type="audio/mpeg">
             お使いのブラウザは音楽に対応していません。
         </audio>
@@ -193,7 +182,6 @@
         <a href="story-stormblood.html">前章: 紅蓮の解放者</a>
         <a href="story-endwalker.html">次章: 暁月の終焉</a>
     </div>
-
     <footer>
         <div class="footer-nav">
             <a href="story-stormblood.html">前章: 紅蓮の解放者</a>
@@ -201,40 +189,63 @@
         </div>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-    
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
-                {"src": "assets/Shadowbringers.mp3", "name": "Shadowbringers"},
-                {"src": "assets/To the Edge.mp3", "name": "To the Edge"},
-                {"src": "assets/Weight of the World／Prelude Version.mp3", "name": "Weight of the World／Prelude Version"},
-                {"src": "assets/ランドスライド ～希望の園エデン覚醒編～.mp3", "name": "ランドスライド"},
-                {"src": "assets/ロングフォール ～異界遺構 シルクス･ツイニング～.mp3", "name": "ロングフォール"},
-                {"src": "assets/冥き水底 ～テンペスト深部～.mp3", "name": "冥き水底"},
-                {"src": "assets/忘却の此方.mp3", "name": "忘却の此方"},
-                {"src": "assets/目覚めの御使い ～ティターニア討滅戦～.mp3", "name": "目覚めの御使い"},
-                {"src": "assets/砕けぬ思い ～ハーデス討滅戦～.mp3", "name": "砕けぬ思い"},
-                {"src": "assets/貪欲.mp3", "name": "貪欲"}
+                { src: "assets/Shadowbringers.mp3", name: "Shadowbringers" },
+                { src: "assets/To the Edge.mp3", name: "To the Edge" },
+                { src: "assets/Weight of the World／Prelude Version.mp3", name: "Weight of the World／Prelude Version" },
+                { src: "assets/ランドスライド ～希望の園エデン覚醒編～.mp3", name: "ランドスライド" },
+                { src: "assets/ロングフォール ～異界遺構 シルクス･ツイニング～.mp3", name: "ロングフォール" },
+                { src: "assets/冥き水底 ～テンペスト深部～.mp3", name: "冥き水底" },
+                { src: "assets/忘却の此方.mp3", name: "忘却の此方" },
+                { src: "assets/目覚めの御使い ～ティターニア討滅戦～.mp3", name: "目覚めの御使い" },
+                { src: "assets/砕けぬ思い ～ハーデス討滅戦～.mp3", name: "砕けぬ思い" },
+                { src: "assets/貪欲.mp3", name: "貪欲" }
             ];
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
-            let currentIndex = 0;
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
                 bgm.load();
                 bgm.play().catch(error => console.log("再生エラー:", error));
             }
-            currentIndex = Math.floor(Math.random() * tracks.length);
+
             updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
             window.prevTrack = function() {
                 currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
                 updateTrack();
             };
+
             window.nextTrack = function() {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
             };
         });
     </script>

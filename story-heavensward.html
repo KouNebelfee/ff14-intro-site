@@ -20,14 +20,13 @@
             color: white;
             margin: 0 15px;
             text-decoration: none;
-            transition: all 0.3s ease; /* 滑らかな変化のためのトランジション */
+            transition: all 0.3s ease;
         }
-        /* ホバーエフェクトの追加 */
         nav a:hover {
-            color: #ffd700; /* カーソルオンで色を変更（例: ゴールド） */
-            background-color: rgba(255, 255, 255, 0.1); /* 薄い背景色 */
-            padding: 5px 10px; /* 少し余白を追加 */
-            border-radius: 5px; /* 角を丸く */
+            color: #ffd700;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
         footer {
             position: fixed;
@@ -40,19 +39,10 @@
             padding: 10px 0;
             z-index: 1000;
         }
-        .music-player {
-            position: fixed;
-            top: 50px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            color: white;
-        }
+        /* インラインCSSでのmusic-player定義を削除し、styles.cssに統合 */
         body {
-            margin-top: 120px;
-            margin-bottom: 40px;
+            margin-top: 120px; /* navの高さ分 */
+            margin-bottom: 80px; /* footerとmusic-player分 */
             margin-left: 10px;
         }
     </style>
@@ -193,7 +183,6 @@
         <a href="story-a-realm-reborn.html">前章: 新生エオルゼア</a>
         <a href="story-stormblood.html">次章: 紅蓮の解放者</a>
     </div>
-
     <footer>
         <div class="footer-nav">
             <a href="story-a-realm-reborn.html">前章: 新生エオルゼア</a>
@@ -201,40 +190,63 @@
         </div>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
-                {"src": "assets/Dragonsong.mp3", "name": "Dragonsong"},
-                {"src": "assets/Heavensward.mp3", "name": "Heavensward"},
-                {"src": "assets/アンブレーカブル ～博物戦艦 フラクタル･コンティニアム～.mp3", "name": "アンブレーカブル"},
-                {"src": "assets/ライズ ～機工城アレキサンダー天動編～.mp3", "name": "ライズ"},
-                {"src": "assets/ローカス ～機工城アレキサンダー起動編～.mp3", "name": "ローカス"},
-                {"src": "assets/彩られし山麓 ～高地ドラヴァニア昼～.mp3", "name": "彩られし山麓"},
-                {"src": "assets/忘却の彼方 ～蛮神シヴァ討滅戦～.mp3", "name": "忘却の彼方"},
-                {"src": "assets/英傑 ～ナイツ･オブ･ラウンド討滅戦～.mp3", "name": "英傑"},
-                {"src": "assets/逆襲の咆哮.mp3", "name": "逆襲の咆哮"},
-                {"src": "assets/魔神 ～魔神セフィロト討滅戦～.mp3", "name": "魔神"}
+                { src: "assets/Dragonsong.mp3", name: "Dragonsong" },
+                { src: "assets/Heavensward.mp3", name: "Heavensward" },
+                { src: "assets/アンブレーカブル ～博物戦艦 フラクタル･コンティニアム～.mp3", name: "アンブレーカブル" },
+                { src: "assets/ライズ ～機工城アレキサンダー天動編～.mp3", name: "ライズ" },
+                { src: "assets/ローカス ～機工城アレキサンダー起動編～.mp3", name: "ローカス" },
+                { src: "assets/彩られし山麓 ～高地ドラヴァニア昼～.mp3", name: "彩られし山麓" },
+                { src: "assets/忘却の彼方 ～蛮神シヴァ討滅戦～.mp3", name: "忘却の彼方" },
+                { src: "assets/英傑 ～ナイツ･オブ･ラウンド討滅戦～.mp3", name: "英傑" },
+                { src: "assets/逆襲の咆哮.mp3", name: "逆襲の咆哮" },
+                { src: "assets/魔神 ～魔神セフィロト討滅戦～.mp3", name: "魔神" }
             ];
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
-            let currentIndex = 0;
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
                 bgm.load();
                 bgm.play().catch(error => console.log("再生エラー:", error));
             }
-            currentIndex = Math.floor(Math.random() * tracks.length);
+
             updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
             window.prevTrack = function() {
                 currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
                 updateTrack();
             };
+
             window.nextTrack = function() {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
             };
         });
     </script>

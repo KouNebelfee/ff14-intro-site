@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>黄金のレガシー - FF14</title>
+    <title>暁月の終焉 - FF14</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         nav {
@@ -20,14 +20,13 @@
             color: white;
             margin: 0 15px;
             text-decoration: none;
-            transition: all 0.3s ease; /* 滑らかな変化のためのトランジション */
+            transition: all 0.3s ease;
         }
-        /* ホバーエフェクトの追加 */
         nav a:hover {
-            color: #ffd700; /* カーソルオンで色を変更（例: ゴールド） */
-            background-color: rgba(255, 255, 255, 0.1); /* 薄い背景色 */
-            padding: 5px 10px; /* 少し余白を追加 */
-            border-radius: 5px; /* 角を丸く */
+            color: #ffd700;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
         footer {
             position: fixed;
@@ -40,26 +39,16 @@
             padding: 10px 0;
             z-index: 1000;
         }
-        .music-player {
-            position: fixed;
-            top: 50px;
-            left: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 5px;
-            z-index: 1000;
-            color: white;
-        }
         body {
             margin-top: 120px;
-            margin-bottom: 40px;
+            margin-bottom: 80px;
             margin-left: 10px;
         }
     </style>
 </head>
-<body class="bg-dt">
+<body class="bg-ew">
     <div class="music-player">
-        <audio id="bgm" loop>
+        <audio id="bgm">
             <source src="" type="audio/mpeg">
             お使いのブラウザは音楽に対応していません。
         </audio>
@@ -155,50 +144,72 @@
     </div>
     <div class="story-nav">
         <a href="story-endwalker.html">前章: 暁月の終焉</a>
-        <span class="disabled">次章</span>
+        <a href="#" class="disabled">次章</a>
     </div>
-
     <footer>
-        <div class="footer-nav">
+        <div class="story-nav">
             <a href="story-endwalker.html">前章: 暁月の終焉</a>
-            <a href="#" class="disabled">次章</a>
+            <span class="disabled">次章</span>
         </div>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-    
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
                 {"src": "assets/Dawntrail.mp3", "name": "Dawntrail"},
-                {"src": "assets/Open Sky.mp3", "name": "Open Sky"},
-                {"src": "assets/命の火 ～ストーリーズ・フロム・ザ・スカイ～.mp3", "name": "命の火"},
-                {"src": "assets/天幕の饗宴.mp3", "name": "天幕の饗宴"},
-                {"src": "assets/嵐の中の灯火 ～希望の園エデン：共鳴編～.mp3", "name": "嵐の中の灯火"},
-                {"src": "assets/新たなる大地 ～ヨークトラン大陸昼～.mp3", "name": "新たなる大地"},
-                {"src": "assets/星芒の戦士 ～ヴァリガルマンダ討滅戦～.mp3", "name": "星芒の戦士"},
-                {"src": "assets/黄金の王 ～ザラ討滅戦～.mp3", "name": "黄金の王"},
-                {"src": "assets/黄金の都市 ～シャーロー昼～.mp3", "name": "黄金の都市"},
-                {"src": "assets/黄金色の夜明け.mp3", "name": "黄金色の夜明け"}
+                {"src": "assets/Bee My Honey ～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Bee My Honey"},
+                {"src": "assets/Give It All～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Give It All"},
+                {"src": "assets/一つの路.mp3", "name": "一つの路"},
+                {"src": "assets/二人の路.mp3", "name": "二人の路"},
+                {"src": "assets/山峡の涼風 ～オルコ・パチャ：昼～.mp3", "name": "山峡の涼風"},
+                {"src": "assets/星なき摩天楼 ～ソリューション・ナイン～.mp3", "name": "星なき摩天楼"},
+                {"src": "assets/火花と閃光～外征前哨ヴァンガード～.mp3", "name": "火花と閃光"},
+                {"src": "assets/終わりなき軌跡.mp3", "name": "終わりなき軌跡"},
+                {"src": "assets/金煌なる民 〜トライヨラ：昼〜 .mp3", "name": "金煌なる民"}
             ];
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
-            let currentIndex = 0;
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
                 bgm.load();
                 bgm.play().catch(error => console.log("再生エラー:", error));
             }
-            currentIndex = Math.floor(Math.random() * tracks.length);
+
             updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
             window.prevTrack = function() {
                 currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
                 updateTrack();
             };
+
             window.nextTrack = function() {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
             };
         });
     </script>

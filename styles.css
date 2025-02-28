@@ -1,60 +1,114 @@
+/* HTML全体にも背景を適用 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 /* 全体の基本設定 */
 body {
     background-color: #1a1a2e;
     color: white;
     text-align: center;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     position: relative;
     min-height: 100vh;
-    padding-bottom: 70px; /* フッターの高さ＋余白 */
     box-sizing: border-box;
 }
 
 /* メディアクエリで画面幅に応じてパディングを調整 */
-@media (min-width: 768px) { /* タブレット以上 */
+@media (min-width: 768px) {
     body { padding: 20px; padding-bottom: 70px; }
 }
 
-@media (max-width: 767px) { /* スマホサイズ */
+@media (max-width: 767px) {
     body { padding: 10px; padding-bottom: 60px; }
 }
 
+/* 背景画像（かくつき軽減のためスクロール対応） */
+body[class^="bg-"] {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (max-width: 767px) {
+    body[class^="bg-"] { 
+        background-size: cover;
+        background-position: center center;
+    }
+    body[class^="bg-"]::after { 
+        background: rgba(0, 0, 0, 0.5);
+    }
+}
+
+body[class^="bg-"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* コンテンツのラッパー */
+.content-wrapper {
+    position: relative;
+    z-index: 3;
+    padding-top: 80px; /* navとmusic-player分の余白 */
+    padding-bottom: 80px; /* footer分の余白 */
+}
+
+/* 見出しスタイル */
 h1 { 
-    color: #ff6f61; /* 第零章のデフォルト色 */
+    color: #ff6f61;
     font-size: 36px;
 }
 
-/* スマホサイズではフォントサイズを小さく */
 @media (max-width: 767px) {
     h1 { font-size: 20px; }
 }
 
+/* music-playerの固定設定 */
 .music-player {
-    background-color: #16213e;
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 10px;
-    position: fixed;
-    top: 10px;
+    position: fixed !important;
+    top: 60px;
+    left: 10px;
     right: 10px;
     border-radius: 5px;
-    z-index: 10;
+    z-index: 1200;
     display: flex;
     align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* スマホサイズでは音楽プレイヤーを小さくし、固定位置を解除 */
 @media (max-width: 767px) {
     .music-player {
-        position: static;
-        width: 100%;
-        margin: 5px 0;
-        top: auto;
-        right: auto;
+        top: 50px;
+        left: 5px;
+        right: 5px;
+        padding: 5px;
+        font-size: 14px;
     }
     .music-player button, .music-player input[type="range"] {
         padding: 3px 5px;
         margin: 0 3px;
+        font-size: 12px;
+    }
+    .music-player input[type="range"] {
+        width: 80px;
     }
 }
 
@@ -74,6 +128,8 @@ h1 {
     margin: 0 5px;
 }
 
+.music-player p { margin: 0 5px; }
+
 .nav-btn {
     background-color: #ff6f61;
     color: white;
@@ -86,8 +142,6 @@ h1 {
 
 .nav-btn:hover { background-color: #e65a50; }
 
-.music-player p { margin: 0 5px; }
-
 nav {
     background-color: #16213e;
     padding: 10px;
@@ -96,7 +150,6 @@ nav {
     z-index: 5;
 }
 
-/* スマホサイズではナビゲーションを小さく */
 @media (max-width: 767px) {
     nav {
         padding: 5px;
@@ -126,7 +179,6 @@ nav a:hover { color: white; }
     transition: transform 0.3s;
 }
 
-/* タブレット以上では元のサイズに戻す */
 @media (min-width: 768px) {
     .circle-img {
         width: 350px;
@@ -134,7 +186,6 @@ nav a:hover { color: white; }
     }
 }
 
-/* スマホサイズでは小さく */
 @media (max-width: 767px) {
     .circle-img { max-width: 250px; }
 }
@@ -158,12 +209,10 @@ nav a:hover { color: white; }
     margin: 10px;
 }
 
-/* タブレット以上では元のサイズに戻す */
 @media (min-width: 768px) {
     .profile-img { width: 200px; }
 }
 
-/* スマホサイズでは小さく */
 @media (max-width: 767px) {
     .profile-img { max-width: 150px; }
 }
@@ -177,12 +226,10 @@ nav a:hover { color: white; }
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* タブレット以上では元のサイズに戻す */
 @media (min-width: 768px) {
     .characters img { width: 200px; }
 }
 
-/* スマホサイズでは小さく */
 @media (max-width: 767px) {
     .characters img { max-width: 150px; }
 }
@@ -197,12 +244,11 @@ nav a:hover { color: white; }
     font-size: 18px;
 }
 
-/* スマホサイズではフォントサイズを小さく */
 @media (max-width: 767px) {
     .time { font-size: 16px; }
 }
 
-/* mist アニメーション */
+/* mist アニメーション（削除して静的に） */
 body::before {
     content: "";
     position: absolute;
@@ -211,15 +257,8 @@ body::before {
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.1);
-    animation: mist 10s linear infinite;
     pointer-events: none;
     z-index: 1;
-    will-change: transform;
-}
-
-@keyframes mist {
-    0% { transform: translateX(-100%) translateY(0); }
-    100% { transform: translateX(100%) translateY(0); }
 }
 
 .story { position: relative; z-index: 2; }
@@ -241,7 +280,6 @@ body::before {
     z-index: 3;
 }
 
-/* スマホサイズでは幅を100%に */
 @media (max-width: 767px) {
     .story-content {
         max-width: 100%;
@@ -271,46 +309,15 @@ body > p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-/* スマホサイズでは幅を100%に */
 @media (max-width: 767px) {
     body > p { max-width: 100%; padding: 5px; margin: 5px; }
 }
-
-/* 背景画像にオーバーレイ */
-body[class^="bg-"] {
-    background-size: cover;
-    position: relative;
-}
-
-/* スマホサイズでは背景を小さく */
-@media (max-width: 767px) {
-    body[class^="bg-"] { 
-        background-size: contain; 
-        background-position: center; 
-    }
-    body[class^="bg-"]::after { background: rgba(0, 0, 0, 0.5); }
-}
-
-body[class^="bg-"]::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* z-index調整 */
-nav, .music-player, .story-content, h1 { position: relative; z-index: 3; }
 
 /* スライドショーのコンテナ */
 .slideshow {
     position: relative;
     max-width: 600px;
-    max-height: 400px;
+    height: 400px;
     margin: 20px auto;
     overflow: hidden;
     display: flex;
@@ -318,19 +325,21 @@ nav, .music-player, .story-content, h1 { position: relative; z-index: 3; }
     align-items: center;
 }
 
-/* スマホサイズではスライドショーを小さく */
 @media (max-width: 767px) {
-    .slideshow { max-width: 100%; max-height: 200px; }
-    .slide { max-height: 200px; }
+    .slideshow { max-width: 100%; height: 200px; }
 }
 
 /* スライドショーの画像 */
 .slide {
-    display: none;
     width: 100%;
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    will-change: opacity;
 }
 
 /* ギャラリー全体のスタイル */
@@ -353,7 +362,6 @@ nav, .music-player, .story-content, h1 { position: relative; z-index: 3; }
     background: none;
 }
 
-/* スマホサイズではギャラリーアイテムの幅を調整 */
 @media (max-width: 767px) {
     .gallery-item { width: 100%; height: auto; }
 }
@@ -381,7 +389,6 @@ nav, .music-player, .story-content, h1 { position: relative; z-index: 3; }
     flex-grow: 1;
 }
 
-/* スマホサイズではフォントサイズを小さく */
 @media (max-width: 767px) {
     .gallery-item p { font-size: 12px; }
 }
@@ -403,18 +410,17 @@ section {
     z-index: 2;
 }
 
-/* スマホサイズではセクションを小さく */
 @media (max-width: 767px) {
     section { max-width: 100%; padding: 5px; margin: 5px; }
 }
 
 /* テーマ色ごとの h1 スタイル */
-.theme-arr { color: #2ecc71; } /* 新生エオルゼア */
-.theme-hw { color: #3498db; } /* 蒼天のイシュガルド */
-.theme-sb { color: #e74c3c; } /* 紅蓮の解放者 */
-.theme-shb { color: #9b59b6; } /* 漆黒のヴィランズ */
-.theme-ew { color: #f1c40f; } /* 暁月の終焉 */
-.theme-dt { color: #e67e22; } /* 黄金のレガシー */
+.theme-arr { color: #2ecc71; }
+.theme-hw { color: #3498db; }
+.theme-sb { color: #e74c3c; }
+.theme-shb { color: #9b59b6; }
+.theme-ew { color: #f1c40f; }
+.theme-dt { color: #e67e22; }
 
 /* フッター */
 footer {
@@ -443,7 +449,7 @@ footer {
 
 /* デフォルトのリンクスタイル（第零章用） */
 .footer-nav a {
-    color: #ff6f61; /* 第零章のデフォルト色 */
+    color: #ff6f61;
     text-decoration: none;
     padding: 5px 15px;
     transition: all 0.3s ease;
@@ -469,12 +475,12 @@ footer {
 }
 
 /* 各ページのテーマカラー適用 */
-body.bg-arr .footer-nav a { color: #2ecc71; } /* 新生エオルゼア */
-body.bg-hw .footer-nav a { color: #3498db; } /* 蒼天のイシュガルド */
-body.bg-sb .footer-nav a { color: #e74c3c; } /* 紅蓮の解放者 */
-body.bg-shb .footer-nav a { color: #9b59b6; } /* 漆黒のヴィランズ */
-body.bg-ew .footer-nav a { color: #f1c40f; } /* 暁月の終焉 */
-body.bg-dt .footer-nav a { color: #e67e22; } /* 黄金のレガシー */
+body.bg-arr .footer-nav a { color: #2ecc71; }
+body.bg-hw .footer-nav a { color: #3498db; }
+body.bg-sb .footer-nav a { color: #e74c3c; }
+body.bg-shb .footer-nav a { color: #9b59b6; }
+body.bg-ew .footer-nav a { color: #f1c40f; }
+body.bg-dt .footer-nav a { color: #e67e22; }
 
 /* ホバー時の例外（テーマカラー適用ページでも白に統一） */
 body.bg-arr .footer-nav a:hover,
@@ -502,7 +508,6 @@ footer p {
     font-size: 12px;
 }
 
-/* スマホサイズでの調整 */
 @media (max-width: 767px) {
     .footer-nav {
         gap: 10px;
@@ -520,16 +525,16 @@ footer p {
 }
 
 /* 背景 */
-.bg-index { background: url("assets/bg-index.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-nebelfee { background: url("assets/bg-nebelfee.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-schattenfee { background: url("assets/bg-schattenfee.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-story { background: url("assets/bg-story.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-origin { background: url("assets/bg-origin.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-arr { background: url("assets/bg-arr.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-hw { background: url("assets/bg-hw.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-sb { background: url("assets/bg-sb.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-shb { background: url("assets/bg-shb.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-ew { background: url("assets/bg-ew.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-dt { background: url("assets/bg-dt.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-gallery { background: url("assets/bg-gallery.jpg") no-repeat center center scroll; background-size: cover; }
-.bg-raid { background: url("assets/bg-raid.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-index { background-image: url("assets/bg-index.jpg"); }
+.bg-nebelfee { background-image: url("assets/bg-nebelfee.jpg"); }
+.bg-schattenfee { background-image: url("assets/bg-schattenfee.jpg"); }
+.bg-story { background-image: url("assets/bg-story.jpg"); }
+.bg-origin { background-image: url("assets/bg-origin.jpg"); }
+.bg-arr { background-image: url("assets/bg-arr.jpg"); }
+.bg-hw { background-image: url("assets/bg-hw.jpg"); }
+.bg-sb { background-image: url("assets/bg-sb.jpg"); }
+.bg-shb { background-image: url("assets/bg-shb.jpg"); }
+.bg-ew { background-image: url("assets/bg-ew.jpg"); }
+.bg-dt { background-image: url("assets/bg-dt.jpg"); }
+.bg-gallery { background-image: url("assets/bg-gallery.jpg"); }
+.bg-raid { background-image: url("assets/bg-raid.jpg"); }
