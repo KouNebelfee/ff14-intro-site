@@ -44,6 +44,12 @@ body[class^="bg-"] {
     background-attachment: scroll !important; /* スクロールに合わせて背景が動く */
     min-height: 100vh !important; /* ビューポートの高さを最低限確保 */
     height: 100% !important; /* コンテンツの高さに追従 */
+    animation: bgZoom 10s infinite alternate ease-in-out; /* 追加: 背景ズームアニメーション */
+}
+
+@keyframes bgZoom { /* 追加: 背景ズームのキーフレーム */
+    0% { background-size: 100%; }
+    100% { background-size: 110%; }
 }
 
 /* 疑似要素で背景を補完 */
@@ -150,9 +156,18 @@ h1 {
     padding: 5px 10px;
     cursor: pointer;
     margin: 0 5px;
+    position: relative; /* 追加: 波紋用 */
+    overflow: hidden; /* 追加: 波紋が枠外に出ないように */
+    transition: background-color 0.3s ease; /* 追加: スムーズな色変化 */
 }
 
-.music-player button:hover { background-color: #e65a50; }
+.music-player button:hover { 
+    background-color: #e65a50; 
+}
+
+.music-player button:active { /* 追加: クリック時の波紋 */
+    animation: shockwave 0.5s ease-out;
+}
 
 .music-player input[type="range"] {
     width: 100px;
@@ -190,6 +205,7 @@ nav a {
     margin: 0 15px;
     text-decoration: none;
     transition: all 0.3s ease;
+    position: relative; /* 追加: グロー用 */
 }
 
 nav a:hover {
@@ -197,6 +213,8 @@ nav a:hover {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 5px 10px;
     border-radius: 5px;
+    transform: scale(1.1); /* 追加: 軽く拡大 */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* 追加: グロー効果 */
 }
 
 @media (max-width: 767px) {
@@ -216,7 +234,7 @@ nav a:hover {
     height: auto;
     border-radius: 50%;
     margin: 15px;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 変更: トランジション拡張 */
 }
 
 @media (min-width: 768px) {
@@ -230,7 +248,10 @@ nav a:hover {
     .circle-img { max-width: 250px; }
 }
 
-.circle-img:hover { transform: scale(1.2); }
+.circle-img:hover { 
+    transform: scale(1.2) rotate(5deg); /* 変更: 拡大＋回転 */
+    box-shadow: 0 0 15px rgba(255, 111, 97, 0.8); /* 追加: グロー */
+}
 
 /* トップページのキャラクター配置 */
 .characters {
@@ -337,6 +358,7 @@ body::before {
     position: relative;
     z-index: 3;
     padding-bottom: 100px; /* footerが隠さないように余白追加 */
+    animation: fadeInUp 1s ease-out forwards; /* 追加: フェードイン */
 }
 
 @media (max-width: 767px) {
@@ -356,6 +378,18 @@ body::before {
     background-color: rgba(22, 33, 62, 0.8); 
     padding: 10px; 
     border-radius: 5px; 
+}
+
+/* 追加: フェードインアニメーション */
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* あらすじ部分 */
