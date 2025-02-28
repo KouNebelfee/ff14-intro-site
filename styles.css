@@ -1,14 +1,31 @@
+/* 全体の基本設定 */
 body {
     background-color: #1a1a2e;
     color: white;
     text-align: center;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 0; /* 固定のパディングを削除 */
     position: relative;
 }
 
-h1 { color: #ff6f61; font-size: 36px; }
+/* メディアクエリで画面幅に応じてパディングを調整 */
+@media (min-width: 768px) { /* タブレット以上 */
+    body {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 767px) { /* スマホサイズ */
+    body {
+        padding: 10px;
+    }
+}
+
+h1 { 
+    color: #ff6f61; 
+    font-size: 36px;
+}
 
 .music-player {
     background-color: #16213e;
@@ -20,6 +37,21 @@ h1 { color: #ff6f61; font-size: 36px; }
     z-index: 10;
     display: flex;
     align-items: center;
+}
+
+/* スマホサイズでは音楽プレイヤーを小さくし、右側に寄せない */
+@media (max-width: 767px) {
+    .music-player {
+        position: static; /* 固定位置を解除 */
+        width: 100%; /* 画面幅全体に広げる */
+        margin: 10px 0; /* 上部と下部のマージン */
+        top: auto;
+        right: auto;
+    }
+    .music-player button, .music-player input[type="range"] {
+        padding: 3px 5px; /* ボタンとスライダーのサイズを小さく */
+        margin: 0 3px; /* 間隔を狭く */
+    }
 }
 
 .music-player button {
@@ -48,13 +80,9 @@ h1 { color: #ff6f61; font-size: 36px; }
     margin: 0 5px;
 }
 
-.nav-btn:hover {
-    background-color: #e65a50;
-}
+.nav-btn:hover { background-color: #e65a50; }
 
-.music-player p {
-    margin: 0 5px;
-}
+.music-player p { margin: 0 5px; }
 
 nav {
     background-color: #16213e;
@@ -62,6 +90,18 @@ nav {
     margin-bottom: 20px;
     position: relative;
     z-index: 5;
+}
+
+/* スマホサイズではナビゲーションを小さく */
+@media (max-width: 767px) {
+    nav {
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+    nav a {
+        margin: 0 10px; /* リンク間の間隔を狭く */
+        font-size: 14px; /* フォントサイズを小さく */
+    }
 }
 
 nav a {
@@ -74,20 +114,28 @@ nav a:hover { color: white; }
 
 /* トップページの丸い画像 */
 .circle-img {
-    width: 350px;
-    height: 350px;
+    width: 100%; /* 親要素に合わせて広がる */
+    max-width: 350px; /* 最大幅を設定 */
+    height: auto; /* 高さを自動調整 */
     border-radius: 50%;
     margin: 15px;
     transition: transform 0.3s;
 }
 
-.circle-img:hover {
-    transform: scale(1.2);
+/* タブレット以上では元のサイズに戻す */
+@media (min-width: 768px) {
+    .circle-img {
+        width: 350px;
+        height: 350px;
+    }
 }
+
+.circle-img:hover { transform: scale(1.2); }
 
 /* トップページのキャラクター配置 */
 .characters {
     display: flex;
+    flex-wrap: wrap; /* 要素が折り返すように */
     justify-content: center;
     align-items: center;
     margin: 20px 0;
@@ -95,16 +143,33 @@ nav a:hover { color: white; }
 
 /* プロフィール画像 */
 .profile-img {
-    width: 200px;
-    height: 200px;
+    width: 100%; /* 親要素に合わせて広がる */
+    max-width: 200px; /* 最大幅を設定 */
+    height: auto; /* 高さを自動調整 */
     margin: 10px;
+}
+
+/* タブレット以上では元のサイズに戻す */
+@media (min-width: 768px) {
+    .profile-img {
+        width: 200px;
+    }
 }
 
 /* キャラクター画像（ギャラリーとは別） */
 .characters img {
-    width: 200px;
+    width: 100%; /* 親要素に合わせて広がる */
+    max-width: 200px; /* 最大幅を設定 */
+    height: auto; /* 高さを自動調整 */
     margin: 10px;
     transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* タブレット以上では元のサイズに戻す */
+@media (min-width: 768px) {
+    .characters img {
+        width: 200px;
+    }
 }
 
 .characters img:hover {
@@ -112,7 +177,10 @@ nav a:hover { color: white; }
     box-shadow: 0 0 10px #ff6f61;
 }
 
-.time { margin-top: 20px; font-size: 18px; }
+.time { 
+    margin-top: 20px; 
+    font-size: 18px;
+}
 
 /* mist アニメーション */
 body::before {
@@ -136,10 +204,7 @@ body::before {
 
 .story { position: relative; z-index: 2; }
 
-.story h2 a {
-    color: #ff6f61;
-    text-decoration: none;
-}
+.story h2 a { color: #ff6f61; text-decoration: none; }
 
 .story h2 a:hover { color: white; }
 
@@ -168,25 +233,29 @@ body::before {
     max-width: 800px;
     margin: 20px auto;
     line-height: 1.6;
-    background-color: rgba(22, 33, 62, 0.9); /* 半透明の暗い背景 */
-    padding: 20px; /* 内側余白を追加 */
-    border-radius: 5px; /* 角を丸く */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 軽い影で浮き上がらせる */
+    background-color: rgba(22, 33, 62, 0.9);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     position: relative;
     z-index: 3;
 }
 
-.story-content p {
-    margin-bottom: 20px;
-    color: #ffffff;
+/* スマホサイズでは幅を100%に */
+@media (max-width: 767px) {
+    .story-content {
+        max-width: 100%;
+        padding: 10px;
+        margin: 10px;
+    }
+    .story-content h2, .story-content p {
+        font-size: 16px; /* フォントサイズを小さく */
+    }
 }
 
-.story-content h2 {
-    color: #ff6f61;
-    background-color: rgba(22, 33, 62, 0.8);
-    padding: 10px;
-    border-radius: 5px;
-}
+.story-content p { margin-bottom: 20px; color: #ffffff; }
+
+.story-content h2 { color: #ff6f61; background-color: rgba(22, 33, 62, 0.8); padding: 10px; border-radius: 5px; }
 
 /* あらすじ部分 */
 body > p {
@@ -198,10 +267,30 @@ body > p {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+/* スマホサイズでは幅を100%に */
+@media (max-width: 767px) {
+    body > p {
+        max-width: 100%;
+        padding: 10px;
+        margin: 10px;
+    }
+}
+
 /* 背景画像にオーバーレイ */
 body[class^="bg-"] {
     background-size: cover;
     position: relative;
+}
+
+/* スマホサイズでは背景を調整 */
+@media (max-width: 767px) {
+    body[class^="bg-"] {
+        background-size: contain; /* 画面全体に収まるように */
+        background-position: center;
+    }
+    body[class^="bg-"]::after {
+        background: rgba(0, 0, 0, 0.5); /* 少し濃いオーバーレイ */
+    }
 }
 
 body[class^="bg-"]::after {
@@ -217,10 +306,7 @@ body[class^="bg-"]::after {
 }
 
 /* z-index調整 */
-nav, .music-player, .story-content, h1, .story-nav {
-    position: relative;
-    z-index: 3;
-}
+nav, .music-player, .story-content, h1, .story-nav { position: relative; z-index: 3; }
 
 /* スライドショーのコンテナ */
 .slideshow {
@@ -232,6 +318,17 @@ nav, .music-player, .story-content, h1, .story-nav {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* スマホサイズではスライドショーを小さく */
+@media (max-width: 767px) {
+    .slideshow {
+        max-width: 100%;
+        max-height: 200px;
+    }
+    .slide {
+        max-height: 200px;
+    }
 }
 
 /* スライドショーの画像 */
@@ -247,7 +344,7 @@ nav, .music-player, .story-content, h1, .story-nav {
 /* ギャラリー全体のスタイル */
 .gallery {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* 要素が折り返すように */
     justify-content: center;
     gap: 20px;
     background: none;
@@ -262,6 +359,14 @@ nav, .music-player, .story-content, h1, .story-nav {
     height: 350px;
     text-align: center;
     background: none;
+}
+
+/* スマホサイズではギャラリーアイテムの幅を調整 */
+@media (max-width: 767px) {
+    .gallery-item {
+        width: 100%; /* 1列に表示 */
+        height: auto; /* 高さを自動調整 */
+    }
 }
 
 /* ギャラリー内の画像 */
@@ -302,6 +407,15 @@ section {
     border-radius: 5px;
     position: relative;
     z-index: 2;
+}
+
+/* スマホサイズではセクションを小さく */
+@media (max-width: 767px) {
+    section {
+        max-width: 100%;
+        padding: 10px;
+        margin: 10px;
+    }
 }
 
 /* テーマ色ごとの h1 スタイル */
