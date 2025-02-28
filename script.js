@@ -1,4 +1,3 @@
-// BGMの再生/一時停止を切り替え（スマホ対応）
 function toggleBGM() {
     var bgm = document.getElementById("bgm");
     if (bgm.paused) {
@@ -11,7 +10,6 @@ function toggleBGM() {
     }
 }
 
-// BGMを開始（手動用、スマホ対応）
 function startBGM() {
     var bgm = document.getElementById("bgm");
     bgm.play().catch(error => {
@@ -20,14 +18,12 @@ function startBGM() {
     });
 }
 
-// ボリューム調整
 function adjustVolume() {
     var bgm = document.getElementById("bgm");
     var volume = document.getElementById("volume").value;
     bgm.volume = volume;
 }
 
-// 時間更新
 function updateTime() {
     var now = new Date();
     var realTime = now.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
@@ -42,7 +38,6 @@ function updateTime() {
     eorzeaTimeElements.forEach(element => element.textContent = eorzeaTime);
 }
 
-// ウィンドウサイズが変更されたときやスクロール時にズームをリセット
 window.addEventListener('resize', function() {
     document.body.style.zoom = 'reset';
     document.body.style.transform = 'none';
@@ -52,7 +47,6 @@ window.addEventListener('scroll', function() {
     document.body.style.zoom = 'reset';
 });
 
-// 音楽プレイヤーや要素をスマホで安定させる
 function adjustElementsForMobile() {
     if (window.innerWidth <= 767) {
         var musicPlayer = document.querySelector('.music-player');
@@ -63,7 +57,6 @@ function adjustElementsForMobile() {
     }
 }
 
-// ページ読み込み時とリサイズ時に調整
 document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateTime, 5000);
     updateTime();
