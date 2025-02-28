@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>暁月の終焉 - FF14</title>
+    <title>ギャラリー</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* インラインCSS: ナビとフッターの固定スタイル */
         nav {
             position: fixed;
             top: 0;
@@ -40,10 +39,32 @@
             padding: 10px 0;
             z-index: 1000;
         }
+        .slideshow {
+            position: relative;
+            max-width: 600px;
+            width: 100%;
+            height: 400px; /* 高さを明示 */
+            margin: 20px auto;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .slide {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 2;
+        }
+        .slide.active {
+            opacity: 1;
+        }
     </style>
 </head>
-<body class="bg-ew">
-    <!-- 音楽プレイヤー -->
+<body class="bg-gallery">
     <div class="music-player">
         <audio id="bgm">
             <source src="" type="audio/mpeg">
@@ -57,7 +78,6 @@
         <p>再生中: <span id="current-track"></span></p>
     </div>
 
-    <!-- ナビゲーション -->
     <nav>
         <a href="index.html">ホーム</a>
         <a href="profile-nebelfee.html">Nebelfee</a>
@@ -67,11 +87,9 @@
         <a href="raid.html">レイド</a>
     </nav>
 
-    <!-- メインコンテンツ -->
     <div class="content-wrapper">
-        <!-- スライドショー -->
         <div class="slideshow">
-            <img src="assets/ss1.jpg" alt="SS1" class="slide">
+            <img src="assets/ss1.jpg" alt="SS1" class="slide active">
             <img src="assets/ss2.jpg" alt="SS2" class="slide">
             <img src="assets/ss3.jpg" alt="SS3" class="slide">
             <img src="assets/ss4.jpg" alt="SS4" class="slide">
@@ -136,17 +154,13 @@
         </div>
     </div>
 
-    <!-- フッター -->
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
 
-    <!-- 外部スクリプト -->
-    <script src="script.js"></script>
-    <!-- インラインスクリプト -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // BGM制御
+            // ミュージックプレイヤーの設定
             const tracks = [
                 { src: "assets/White Stone Black ～万魔殿パンデモニウム：煉獄編～.mp3", "name": "White Stone Black" },
                 { src: "assets/Flow.mp3", "name": "Flow" },
@@ -196,21 +210,21 @@
                 bgm.volume = document.getElementById("volume").value;
             };
 
-            // スライドショー制御（自動切り替え）
+            // スライドショーの設定
             const slides = document.querySelectorAll('.slide');
             let slideIndex = 0;
 
             function showNextSlide() {
-                slides.forEach((slide, i) => {
-                    slide.style.opacity = i === slideIndex ? 1 : 0;
-                });
+                slides[slideIndex].classList.remove('active');
                 slideIndex = (slideIndex + 1) % slides.length;
+                slides[slideIndex].classList.add('active');
             }
 
-            // 初期表示
-            slides[0].style.opacity = 1; // 最初のスライドを表示
-            // 3秒ごとに自動切り替え
-            setInterval(showNextSlide, 3000);
+            if (slides.length > 0) {
+                setInterval(showNextSlide, 3000);
+            } else {
+                console.error("スライドが見つかりません");
+            }
         });
     </script>
 </body>
