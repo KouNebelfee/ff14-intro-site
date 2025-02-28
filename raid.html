@@ -2,8 +2,60 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>レイド履歴 - FF14</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            z-index: 1000;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: all 0.3s ease; /* 滑らかな変化のためのトランジション */
+        }
+        /* ホバーエフェクトの追加 */
+        nav a:hover {
+            color: #ffd700; /* カーソルオンで色を変更（例: ゴールド） */
+            background-color: rgba(255, 255, 255, 0.1); /* 薄い背景色 */
+            padding: 5px 10px; /* 少し余白を追加 */
+            border-radius: 5px; /* 角を丸く */
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        .music-player {
+            position: fixed;
+            top: 50px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            color: white;
+        }
+        body {
+            margin-top: 120px;
+            margin-bottom: 40px;
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body class="bg-raid">
     <div class="music-player">
@@ -37,6 +89,11 @@
         <h2>Schattenfee</h2>
         <p>まだまだ見習い中★</p>
     </section>
+
+    <footer>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {

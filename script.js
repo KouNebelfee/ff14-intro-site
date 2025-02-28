@@ -1,19 +1,23 @@
-// script.js
-
-// BGMの再生/一時停止を切り替え
+// BGMの再生/一時停止を切り替え（スマホ対応）
 function toggleBGM() {
     var bgm = document.getElementById("bgm");
     if (bgm.paused) {
-        bgm.play().catch(error => console.log("再生エラー:", error));
+        bgm.play().catch(error => {
+            console.log("再生エラー:", error);
+            alert("BGMの再生にはタップが必要です。ボタンを再度押してください。");
+        });
     } else {
         bgm.pause();
     }
 }
 
-// BGMを開始（手動用）
+// BGMを開始（手動用、スマホ対応）
 function startBGM() {
     var bgm = document.getElementById("bgm");
-    bgm.play().catch(error => console.log("再生エラー:", error));
+    bgm.play().catch(error => {
+        console.log("再生エラー:", error);
+        alert("BGMの再生にはタップが必要です。");
+    });
 }
 
 // ボリューム調整
@@ -38,8 +42,32 @@ function updateTime() {
     eorzeaTimeElements.forEach(element => element.textContent = eorzeaTime);
 }
 
-// ページ読み込み時に時間更新を開始（音楽関連は削除）
-document.addEventListener("DOMContentLoaded", () => {
-    setInterval(updateTime, 1000); // 時間更新を継続
-    updateTime(); // 即時更新
+// ウィンドウサイズが変更されたときやスクロール時にズームをリセット
+window.addEventListener('resize', function() {
+    document.body.style.zoom = 'reset';
+    document.body.style.transform = 'none';
 });
+
+window.addEventListener('scroll', function() {
+    document.body.style.zoom = 'reset';
+});
+
+// 音楽プレイヤーや要素をスマホで安定させる
+function adjustElementsForMobile() {
+    if (window.innerWidth <= 767) { // スマホサイズ（767px以下）
+        var musicPlayer = document.querySelector('.music-player');
+        if (musicPlayer) {
+            musicPlayer.style.position = 'static';
+            musicPlayer.style.width = '100%';
+        }
+    }
+}
+
+// ページ読み込み時とリサイズ時に調整
+document.addEventListener("DOMContentLoaded", () => {
+    setInterval(updateTime, 5000); // 5秒ごとに時間更新
+    updateTime(); // 即時更新
+    adjustElementsForMobile(); // スマホ対応の調整
+});
+
+window.addEventListener('resize', adjustElementsForMobile);
