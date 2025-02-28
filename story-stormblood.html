@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>紅蓮の解放者 - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-sb">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1 class="theme-sb">紅蓮の解放者</h1>
+    <p>あらすじ: NebelfeeとSchattenfeeはドマとアラミゴを巡り、神龍と暗殺者に挑み、紅蓮の自由を求める。</p>
+    <div class="story-content">
+        <h2>第一章: クガネの港</h2>
+        <p>クガネの港に船が着き、Nebelfeeは霧を纏い東方へ足を踏み入れる。</p>
+        <p>Schattenfeeが影から現れ、ヒエンがドマの苦しみを語った。</p>
+        <p>紅蓮の風が吹き、姉弟は解放の旅を始める。</p>
+        <p>港の灯りが揺れ、運命が動き出した。</p>
+        <h2>第二章: 紅玉海の怒り</h2>
+        <p>紅玉海で蛮神スサノオが波を荒らし、船が揺れる。</p>
+        <p>リセが剣を手に立ち、Nebelfeeは霧で嵐を鎮めた。</p>
+        <p>Schattenfeeが忍術でスサノオを翻弄し、ゴウセツが援護する。</p>
+        <p>スサノオが沈み、海に静けさが戻った。</p>
+        <h2>第三章: ヤンサの白虎</h2>
+        <p>ヤンサの山で蛮神白虎が咆哮し、風が荒ぶる。</p>
+        <p>アルフィノが魔法で援護し、Nebelfeeは霧で動きを封じる。</p>
+        <p>Schattenfeeが忍術で弱点を突き、白虎が膝をついた。</p>
+        <p>山に風が静まり、姉弟は絆を深める。</p>
+        <h2>第四章: 影哭の丘の暗殺者</h2>
+        <p>影哭の丘で暗殺者カズヤがヒエンを狙い、影が蠢く。</p>
+        <p>サンクレッドが援護し、Nebelfeeは霧で動きを止めた。</p>
+        <p>Schattenfeeが忍術でカズヤを追い詰め、ヨツユが裏切る。</p>
+        <p>カズヤが倒れ、丘に静寂が訪れる。</p>
+        <h2>第五章: ドマ城の月光</h2>
+        <p>ドマ城で蛮神ツクヨミが現れ、夜が闇に染まる。</p>
+        <p>リーンとヤ・シュトラが援護し、Nebelfeeは霧で闇を散らす。</p>
+        <p>Schattenfeeが忍術でツクヨミを倒し、月光が輝いた。</p>
+        <p>城に希望が灯り、解放が近づく。</p>
+        <h2>第六章: アジムステップの炎</h2>
+        <p>アジムステップで蛮神朱雀が炎を放ち、草原が燃える。</p>
+        <p>ウリエンジェが魔法で援護し、Nebelfeeは霧で火を抑えた。</p>
+        <p>Schattenfeeが忍術で炎を断ち、朱雀が消える。</p>
+        <p>草原に風が吹き、姉弟は決意を新たにする。</p>
+        <h2>第七章: 次元の狭間の機械</h2>
+        <p>次元の狭間でオメガが起動し、機械の咆哮が響く。</p>
+        <p>シドが分析し、Nebelfeeは霧で視界を奪った。</p>
+        <p>Schattenfeeが忍術で弱点を突き、オメガが停止する。</p>
+        <p>異次元の静寂の中、戦いが続く。</p>
+        <h2>第八章: アラミゴの幻惑</h2>
+        <p>アラミゴで蛮神ラクシュミが民を惑わし、Nebelfeeは霧で幻を破る。</p>
+        <p>イダとパパリモが援護し、Schattenfeeが忍術でラクシュミを倒す。</p>
+        <p>街に自由の風が吹き、解放の希望が広がった。</p>
+        <p>だが、神龍の影がドマに迫る。</p>
+        <h2>第九章: ドマの神龍</h2>
+        <p>ドマでゼノスが神龍を復活させ、天空が裂ける。</p>
+        <p>クルルとタタルが駆けつけ、Nebelfeeは霧を嵐に変えた。</p>
+        <p>Schattenfeeが忍術でゼノスの動きを封じ、戦いが激化する。</p>
+        <p>神龍の咆哮が響き、姉弟は最終戦に挑む。</p>
+        <h2>第十章: 紅蓮の自由</h2>
+        <p>ドマ城で神龍が咆哮し、Nebelfeeの双剣が鱗を砕く。</p>
+        <p>Schattenfeeが忍術で心臓を突き、神龍が倒れた。</p>
+        <p>ヒエンと暁の祈りと共にドマとアラミゴが解放される。</p>
+        <p>紅蓮の夜明けが訪れ、姉弟は新たな旅へ進む。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-heavensward.html">前章: 蒼天のイシュガルド</a>
+        <a href="story-shadowbringers.html">次章: 漆黒のヴィランズ</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Revolutions.mp3", "name": "Revolutions"},
+                {"src": "assets/エスケープ ～次元の狭間オメガアルファ編～.mp3", "name": "エスケープ"},
+                {"src": "assets/バトル2 ～次元の狭間オメガデルタ編～.mp3", "name": "バトル2"},
+                {"src": "assets/千年の暁 ～朱雀征魂戦～.mp3", "name": "千年の暁"},
+                {"src": "assets/天つ風 ～白虎征魂戦～.mp3", "name": "天つ風"},
+                {"src": "assets/月下彼岸花 ～蛮神ツクヨミ討滅戦～.mp3", "name": "月華彼岸花"},
+                {"src": "assets/紅の夜明け ～クガネ昼～.mp3", "name": "紅の夜明け"},
+                {"src": "assets/血の嵐.mp3", "name": "血の嵐"},
+                {"src": "assets/鬨の声.mp3", "name": "鬨の声"},
+                {"src": "assets/龍の尾 ～神龍討滅戦～.mp3", "name": "龍の尾"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

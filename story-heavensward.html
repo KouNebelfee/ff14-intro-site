@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>蒼天のイシュガルド - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-hw">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1 class="theme-hw">蒼天のイシュガルド</h1>
+    <p>あらすじ: 竜と人の抗争の中、NebelfeeとSchattenfeeはイシュガルドと氷風の峠でニーズヘッグと氷の使徒に挑み、蒼天の真実を求める。</p>
+    <div class="story-content">
+        <h2>第一章: クルザスの雪</h2>
+        <p>クルザス西部高地の雪原でNebelfeeは霧を纏い、旅を始める。</p>
+        <p>Schattenfeeが影から現れ、アイメリク卿が二人をイシュガルドへ導く。</p>
+        <p>竜詩戦争の傷跡が雪に刻まれ、姉弟の心に響いた。</p>
+        <p>蒼天の旅が始まり、霧が雪に溶けていく。</p>
+        <h2>第二章: 雲海の巨獣</h2>
+        <p>アバラシア雲海で蛮神ビスマルクが咆哮し、空が揺れる。</p>
+        <p>イゼルが竜の声を代弁し、Nebelfeeは霧で巨体を包む。</p>
+        <p>Schattenfeeが忍術で翼を狙い、アルフィノが魔法で援護した。</p>
+        <p>ビスマルクが沈み、雲海に静寂が広がる。</p>
+        <h2>第三章: 氷風の峠の使徒</h2>
+        <p>氷風の峠で氷と風を操る使徒が現れ、ニーズヘッグの名を叫ぶ。</p>
+        <p>エスティニアンが竜の眼を手に持つ中、Nebelfeeは霧で氷を散らす。</p>
+        <p>Schattenfeeが影から迫り、イダが傷を癒した。</p>
+        <p>使徒が倒れ、峠に冷たい風が吹き抜ける。</p>
+        <h2>第四章: ドラヴァニアの幻影</h2>
+        <p>高地ドラヴァニアで蛮神シヴァが現れ、氷の舞が響く。</p>
+        <p>イゼルの記憶が響き、Nebelfeeは霧で幻影を切り裂く。</p>
+        <p>Schattenfeeが忍術で動きを封じ、シヴァが消えた。</p>
+        <p>氷の涙が地に落ち、姉弟は真実を見つめる。</p>
+        <h2>第五章: アジス・ラーの鼓動</h2>
+        <p>アジス・ラーで機工城アレクサンダーが目覚め、時が歪む。</p>
+        <p>シドが警告を発し、Nebelfeeは霧で視界を奪った。</p>
+        <p>Schattenfeeが忍術で核を突き、アレクサンダーが止まる。</p>
+        <p>古代の遺跡に静寂が訪れ、竜の咆哮が近づく。</p>
+        <h2>第六章: イシュガルドの誓い</h2>
+        <p>イシュガルドでナイツ・オブ・ラウンドが現れ、王の名を掲げる。</p>
+        <p>アイメリクが剣を手に立ち、Nebelfeeは霧で守りを固めた。</p>
+        <p>Schattenfeeが影から騎士を翻弄し、誓いが砕ける。</p>
+        <p>聖堂に静けさが戻り、姉弟は決意を新たにする。</p>
+        <h2>第七章: 魔神の森</h2>
+        <p>低地ドラヴァニアで蛮神セフィロトが木々を飲み込み、生命を吸う。</p>
+        <p>ウリエンジェが魔法を放ち、Nebelfeeは霧で力を抑えた。</p>
+        <p>Schattenfeeが忍術で根を断ち、セフィロトが倒れる。</p>
+        <p>森が息を吹き返し、姉弟に希望が灯る。</p>
+        <h2>第八章: 竜眼の丘の咆哮</h2>
+        <p>竜眼の丘でエスティニアンが竜の眼に飲み込まれ、ニーズヘッグが現れる。</p>
+        <p>リーン・ウォータースが叫び、Nebelfeeは霧で竜を守る。</p>
+        <p>Schattenfeeが影からエスティニアンに近づき、心を呼び覚ます。</p>
+        <p>竜の眼が輝き、戦いの終わりが近づいた。</p>
+        <h2>第九章: ファルコンネストの祈り</h2>
+        <p>ファルコンネストでミンフィリアが祈り、Nebelfeeの霧が仲間を守る。</p>
+        <p>Schattenfeeが忍術でニーズヘッグに迫り、アイメリクが命を賭ける。</p>
+        <p>アルフィノとイダが魔法と癒しで支え、希望が雪に輝いた。</p>
+        <p>竜の咆哮が響き、最後の戦いが始まる。</p>
+        <h2>第十章: 蒼天の夜明け</h2>
+        <p>イシュガルドでニーズヘッグが咆哮し、Nebelfeeの霧が嵐となる。</p>
+        <p>Schattenfeeが忍術で心臓を突き、エスティニアンが解放された。</p>
+        <p>アイメリクの犠牲と共にニーズヘッグが倒れ、雪が静かに降る。</p>
+        <p>蒼天に夜明けが訪れ、姉弟は新たな旅を誓う。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-a-realm-reborn.html">前章: 新生エオルゼア</a>
+        <a href="story-stormblood.html">次章: 紅蓮の解放者</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Dragonsong.mp3", "name": "Dragonsong"},
+                {"src": "assets/Heavensward.mp3", "name": "Heavensward"},
+                {"src": "assets/アンブレーカブル ～博物戦艦 フラクタル･コンティニアム～.mp3", "name": "アンブレーカブル"},
+                {"src": "assets/ライズ ～機工城アレキサンダー天動編～.mp3", "name": "ライズ"},
+                {"src": "assets/ローカス ～機工城アレキサンダー起動編～.mp3", "name": "ローカス"},
+                {"src": "assets/彩られし山麓 ～高地ドラヴァニア昼～.mp3", "name": "彩られし山麓"},
+                {"src": "assets/忘却の彼方 ～蛮神シヴァ討滅戦～.mp3", "name": "忘却の彼方"},
+                {"src": "assets/英傑 ～ナイツ･オブ･ラウンド討滅戦～.mp3", "name": "英傑"},
+                {"src": "assets/逆襲の咆哮.mp3", "name": "逆襲の咆哮"},
+                {"src": "assets/魔神 ～魔神セフィロト討滅戦～.mp3", "name": "魔神"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

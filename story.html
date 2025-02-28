@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ストーリー - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-story">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>二人の物語</h1>
+    <p class="disclaimer">※これは、既存をリスペクトしたオリジナルのストーリーです。</p>
+    <section class="story starfall origin-effect">
+        <h2><a href="story-origin.html">第零章: NebelfeeとSchattenfeeの出生</a></h2>
+        <p>霧と影に生まれし姉弟の運命が始まる。</p>
+        <p>あらすじ: グリダニアの深奥、霧隠れの谷で生まれたNebelfeeとSchattenfeeは、ヴァイパーと忍者の血を受け継ぐ。両親を失い、霧と影の中で育った二人の旅がここから始まる。</p>
+    </section>
+    <section class="story starfall arr-effect">
+        <h2><a href="story-a-realm-reborn.html">新生エオルゼア</a></h2>
+        <p>霧と影、二つの魂が出会う。</p>
+        <p>あらすじ: エオルゼアの危機に立ち向かうため、NebelfeeとSchattenfeeはグリダニアで再会。アルテマウェポンと霧を喰らう竜に挑み、姉弟の絆が試される。</p>
+    </section>
+    <section class="story starfall hw-effect">
+        <h2><a href="story-heavensward.html">蒼天のイシュガルド</a></h2>
+        <p>霧の中のヴァイパーが刃を研ぐ。</p>
+        <p>あらすじ: イシュガルドの竜詩戦争に巻き込まれたNebelfeeは霧を操り、ニーズヘッグに挑む。Schattenfeeは影から姉を支え、和平への道を模索する。</p>
+    </section>
+    <section class="story starfall sb-effect">
+        <h2><a href="story-stormblood.html">紅蓮の解放者</a></h2>
+        <p>忍者の故郷で、Schattenfeeが影の技を極める。</p>
+        <p>あらすじ: ドマとアラミゴの解放を目指し、Schattenfeeは忍者として故郷で暗躍。Nebelfeeはヴァイパーとして前線に立ち、神龍との戦いで絆が試される。</p>
+    </section>
+    <section class="story starfall shb-effect">
+        <h2><a href="story-shadowbringers.html">漆黒のヴィランズ</a></h2>
+        <p>影の世界で忍者が暗躍する。</p>
+        <p>あらすじ: 第一世界で光と闇が崩れる中、Schattenfeeは影から動き、Nebelfeeは霧で戦う。ハーデスに挑み、二人は別々の道で世界を救う。</p>
+    </section>
+    <section class="story starfall ew-effect">
+        <h2><a href="story-endwalker.html">暁月の終焉</a></h2>
+        <p>再会を果たした二人が最終戦に挑む。</p>
+        <p>あらすじ: 宇宙の果てで再会したNebelfeeとSchattenfeeは、メーティオンと終末に立ち向かう。霧と影が交わり、世界の未来が決まる。</p>
+    </section>
+    <section class="story starfall dt-effect">
+        <h2><a href="story-dawntrail.html">黄金のレガシー</a></h2>
+        <p>ヴァイパーとして新天地を切り開く。</p>
+        <p>あらすじ: トラルでNebelfeeはヴァイパーとして遺産を守り、Schattenfeeは忍者として影を探る。黄金の守護者と侵略者に挑み、新たな未来を切り開く。</p>
+    </section>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker - Footfalls" },
+                { src: "assets/Dawntrail.mp3", name: "Dawntrail" },
+                { src: "assets/Shadowbringers.mp3", name: "Shadowbringers" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>新生エオルゼア - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-arr">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1 class="theme-arr">新生エオルゼア</h1>
+    <p>あらすじ: 霧と影、二つの魂が出会い、エオルゼアと霧隠れの谷を巡り、アルテマウェポンと霧を喰らう竜に立ち向かう。</p>
+    <div class="story-content">
+        <h2>第一章: グリダニアの霧</h2>
+        <p>グリダニアの森に霧が漂う中、Nebelfeeは母の双剣を手に静かに佇む。</p>
+        <p>Schattenfeeが木々の影から現れ、姉弟は再会の温もりに涙した。</p>
+        <p>ミンフィリアが森の奥から歩み出て、エオルゼアの危機を告げる。</p>
+        <p>霧が二人を包み、運命の旅が始まった。</p>
+        <h2>第二章: リムサ・ロミンサの炎</h2>
+        <p>リムサ・ロミンサの港で蛮神イフリートが炎を噴き、海が赤く染まる。</p>
+        <p>タタルが怯える船員を励まし、Nebelfeeは霧で炎を鎮めた。</p>
+        <p>Schattenfeeが影から手裏剣を放ち、ウリエンジェが魔法で援護する。</p>
+        <p>イフリートが倒れ、海風が静かに灰を運び去った。</p>
+        <h2>第三章: サゴリーの雷鳴</h2>
+        <p>サゴリー砂漠に蛮神ラムウが現れ、雷が砂を焦がす。</p>
+        <p>パパリモが詠唱で雷を弱め、Nebelfeeは霧で視界を奪った。</p>
+        <p>Schattenfeeが忍術で動きを封じ、砂嵐が静寂に変わる。</p>
+        <p>ラムウが去り、砂漠に穏やかな陽光が戻った。</p>
+        <h2>第四章: タナランの怒り</h2>
+        <p>タナランの荒野で蛮神タイタンが咆哮し、ウルダハが震える。</p>
+        <p>イダが傷ついた民を癒し、Nebelfeeは霧で巨体を包み込む。</p>
+        <p>Schattenfeeが影から核を突き、タイタンが膝をついた。</p>
+        <p>岩石が砕け、姉弟は絆の深さを噛みしめる。</p>
+        <h2>第五章: 霧隠れの谷の竜</h2>
+        <p>霧隠れの谷で霧を喰らう竜が現れ、空が灰色に染まる。</p>
+        <p>ノゾミが竜の鱗を指差し、Nebelfeeは霧を盾に立ち向かう。</p>
+        <p>Schattenfeeが忍術で核を破壊し、谷に静けさが戻った。</p>
+        <p>だが、遠くモードゥナで帝国の影が動き出す。</p>
+        <h2>第六章: ラノシアの野望</h2>
+        <p>低地ラノシアでガレマール帝国が動き、シドがアルテマの脅威を警告。</p>
+        <p>クルルが飛空艇で援護し、Nebelfeeは霧で敵を混乱させた。</p>
+        <p>Schattenfeeが忍者として帝国兵を翻弄し、海岸が静まる。</p>
+        <p>アルテマウェポンの鼓動が響き、姉弟の心が震えた。</p>
+        <h2>第七章: 影哭の丘の幻影</h2>
+        <p>影哭の丘で魔導王アレクサンダーの幻影が現れ、時が歪む。</p>
+        <p>アルフィノが魔法で支え、Nebelfeeは霧で視界を奪う。</p>
+        <p>Schattenfeeが手裏剣で弱点を突き、アレクサンダーが消えた。</p>
+        <p>丘の風が冷たく吹き、決戦の時が近づく。</p>
+        <h2>第八章: カストルム・セントリの剣</h2>
+        <p>カストルム・セントリでガイウスが剣を掲げ、アルテマが起動する。</p>
+        <p>リーンとサンクレッドが駆けつけ、Nebelfeeは霧を嵐に変えた。</p>
+        <p>Schattenfeeが忍術でガイウスに迫り、剣戟が響き合う。</p>
+        <p>要塞の壁が揺らぎ、暁の仲間が集う。</p>
+        <h2>第九章: シルバーティアの祈り</h2>
+        <p>シルバーティア森林でヤ・シュトラがアルテマの弱点を解き明かす。</p>
+        <p>エスティニアンが槍を手に立ち、NebelfeeとSchattenfeeが連携。</p>
+        <p>暁の血盟が祈りを捧げ、エオルゼアに希望が灯る。</p>
+        <p>森の静寂の中、最後の戦いが待っていた。</p>
+        <h2>第十章: プラエトリウムの夜明け</h2>
+        <p>プラエトリウムでアルテマウェポンが咆哮し、Nebelfeeの双剣が閃く。</p>
+        <p>Schattenfeeが忍術で核心を突き、ガイウスが膝をついた。</p>
+        <p>ミンフィリアの声が響き、アルテマが砕け散る。</p>
+        <p>エオルゼアに夜明けが訪れ、姉弟は未来を見据える。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-origin.html">前章: 第零章</a>
+        <a href="story-heavensward.html">次章: 蒼天のイシュガルド</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Answers.mp3", "name": "Answers"},
+                {"src": "assets/ビッグブリッヂの死闘 ～新生～.mp3", "name": "ビッグブリッヂの死闘 ～新生～"},
+                {"src": "assets/不吉なる前兆.mp3", "name": "不吉なる前兆"},
+                {"src": "assets/原始の審判.mp3", "name": "原始の審判"},
+                {"src": "assets/堕天せし者.mp3", "name": "堕天せし者"},
+                {"src": "assets/天より降りし力.mp3", "name": "天より降りし力"},
+                {"src": "assets/灰より生まれし者.mp3", "name": "灰より生まれし者"},
+                {"src": "assets/究極幻想.mp3", "name": "究極幻想"},
+                {"src": "assets/過重圧殺! ～蛮神タイタン討滅戦～.mp3", "name": "過重圧殺!"},
+                {"src": "assets/雷光雷鳴 ～蛮神ラムウ討滅戦～.mp3", "name": "雷光雷鳴"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

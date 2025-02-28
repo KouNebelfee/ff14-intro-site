@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>レイド履歴 - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-raid">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>レイド履歴</h1>
+    <section class="raid shockwave">
+        <h2>Nebelfee</h2>
+        <p>万魔殿パンデモニウム：天獄編 - 2024/03/01 忍者でクリア</p>
+        <p>絶アルテマ - 2024/06/01 忍者でクリア</p>
+        <p>アルカディア：ライトヘビー級 - 2024/08/25 ヴァイパーでクリア</p>
+        <p>滅暗黒の雲 - 2024/12/29 ヴァイパーでクリア</p>
+        <p>絶踏破をいつかしたいのでっす♪</p>
+        <h2>Schattenfee</h2>
+        <p>まだまだ見習い中★</p>
+    </section>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Bee My Honey ～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Bee My Honey" },
+                { src: "assets/Give It All～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Give It All" },
+                { src: "assets/Scream ～万魔殿パンデモニウム：煉獄編～.mp3", "name": "Scream" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+            }
+
+            // ランダム再生
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            bgm.play().catch(error => console.log("再生エラー:", error));
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+        });
+    </script>
+</body>
+</html>

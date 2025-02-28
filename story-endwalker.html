@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>暁月の終焉 - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-ew">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>暁月の終焉</h1>
+    <p>あらすじ: NebelfeeとSchattenfeeはラヴィリンソスと星泪の海を巡り、メーティオンと不屈の女神に挑み、暁月の終焉を迎える。</p>
+    <div class="story-content">
+        <h2>第一章: ラヴィリンソスの再会</h2>
+        <p>ラヴィリンソスの地下でNebelfeeとSchattenfeeが再会し、霧と影が交わる。</p>
+        <p>アルフィノが二人を導き、終末の危機が明らかになる。</p>
+        <p>暁の仲間が集い、世界を救う決意が響いた。</p>
+        <p>姉弟は終焉への旅を始める。</p>
+        <h2>第二章: オールド・シャーレアンの試練</h2>
+        <p>オールド・シャーレアンで蛮神ゾディアークが現れ、闇が広がる。</p>
+        <p>ヤ・シュトラが魔法で援護し、Nebelfeeは霧で闇を散らす。</p>
+        <p>Schattenfeeが忍術で動きを封じ、ゾディアークが倒れた。</p>
+        <p>知識の都に静けさが戻り、姉弟は次へ進む。</p>
+        <h2>第三章: サベネアの不屈</h2>
+        <p>サベネア島で不屈の女神アテナが現れ、終末を加速させる。</p>
+        <p>ウリエンジェが魔法で援護し、Nebelfeeは霧で動きを封じる。</p>
+        <p>Schattenfeeが忍術で弱点を突き、アテナが膝をついた。</p>
+        <p>島に風が吹き、姉弟は希望を抱く。</p>
+        <h2>第四章: ガレマール帝国の混沌</h2>
+        <p>ガレマール帝国で蛮神アナンタが咆哮し、氷が砕ける。</p>
+        <p>エスティニアンが槍を手に立ち、Nebelfeeは霧で氷を散らす。</p>
+        <p>Schattenfeeが忍術でアナンタを倒し、帝国に静寂が訪れる。</p>
+        <p>廃墟の中、姉弟は終末の影を感じた。</p>
+        <h2>第五章: 万魔殿の咆哮</h2>
+        <p>万魔殿パンデモニウムで混沌が目覚め、闇が響き合う。</p>
+        <p>リーンとサンクレッドが援護し、Nebelfeeは霧で闇を抑える。</p>
+        <p>Schattenfeeが忍術で核を突き、パンデモニウムが止まった。</p>
+        <p>深淵の静寂が広がり、姉弟は次へ進む。</p>
+        <h2>第六章: エルピスの花園</h2>
+        <p>エルピスで蛮神ハイデリンが現れ、光が世界を包む。</p>
+        <p>イダが癒しを与え、Nebelfeeは霧で光を調和させた。</p>
+        <p>Schattenfeeが忍術でハイデリンを支え、花園が輝く。</p>
+        <p>古代の地に希望が灯り、姉弟は決意を新たにする。</p>
+        <h2>第七章: 星泪の海の絶望</h2>
+        <p>星泪の海でメーティオンが現れ、絶望が宇宙を覆う。</p>
+        <p>クルルが援護し、Nebelfeeは霧で絶望を散らした。</p>
+        <p>Schattenfeeが忍術で背後を突き、メーティオンが静まる。</p>
+        <p>星々の歌が響き、最後の戦いが近づく。</p>
+        <h2>第八章: トラールの大峡谷</h2>
+        <p>トラールの大峡谷で蛮神ガルーダが風を荒らし、空が裂ける。</p>
+        <p>タタルが祈りを捧げ、Nebelfeeは霧で風を鎮めた。</p>
+        <p>Schattenfeeが忍術でガルーダを倒し、峡谷に静けさが戻る。</p>
+        <p>姉弟は終末への道を進む。</p>
+        <h2>第九章: 月の祈り</h2>
+        <p>月の地下で暁の仲間が集い、Nebelfeeの霧が希望を守る。</p>
+        <p>Schattenfeeが忍術でメーティオンに迫り、アルフィノが支える。</p>
+        <p>リーンとウリエンジェが力を合わせ、終末が近づく。</p>
+        <p>月の光が輝き、姉弟は最後の一歩を踏み出す。</p>
+        <h2>第十章: 暁月の夜明け</h2>
+        <p>星泪の海でメーティオンが咆哮し、Nebelfeeの双剣が絶望を裂く。</p>
+        <p>Schattenfeeが忍術で希望を打ち立て、メーティオンが倒れた。</p>
+        <p>暁の祈りと共に世界が息を吹き返し、夜明けが訪れる。</p>
+        <p>姉弟は新たな旅を誓い、星空を見上げた。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-shadowbringers.html">前章: 漆黒のヴィランズ</a>
+        <a href="story-dawntrail.html">次章: 黄金のレガシー</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Athena the Tireless One.mp3", "name": "不屈のアテナ"},
+                {"src": "assets/Close in the Distance.mp3", "name": "Close in the Distance"},
+                {"src": "assets/Endwalker - Footfalls.mp3", "name": "Endwalker - Footfalls"},
+                {"src": "assets/Flow.mp3", "name": "Flow"},
+                {"src": "assets/Scream ～万魔殿パンデモニウム：煉獄編～.mp3", "name": "Scream"},
+                {"src": "assets/White Stone Black ～万魔殿パンデモニウム：煉獄編～.mp3", "name": "White Stone Black"},
+                {"src": "assets/Your Answer ～ハイデリン討滅戦～.mp3", "name": "Your Answer"},
+                {"src": "assets/想いが動かす力.mp3", "name": "想いが動かす力"},
+                {"src": "assets/終焉の戦い.mp3", "name": "終焉の戦い"},
+                {"src": "assets/迷夢 ～ラヴィリンソス：夜～.mp3", "name": "迷夢"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

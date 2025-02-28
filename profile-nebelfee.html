@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Nebelfee - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-nebelfee">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>Nebelfee</h1>
+    <img src="assets/nebelfee.jpg" alt="Nebelfee" class="profile-img">
+    <p>種族: ララフェル</p>
+    <p>性別: メス</p>
+    <p>関係: 姉</p>
+    <p>ジョブ: ヴァイパー（たまに学者）</p>
+    <p>誕生日: 霧の月5日</p>
+    <p>霧の中を舞う双剣の使い手。レイドで鋭い攻撃を繰り出す。</p>
+    <p>好きなエリア: ラケティカ大森林 - 霧深い森の雰囲気が好き</p>
+    <p>得意なコンテンツ: 高難度レイド - 仲間との連携が楽しい</p>
+    <p>愛用の装備: ミラプリは「ミラージュドレッサー」で保管した霧色のローブ</p>
+    <p>一言コメント: 「霧の向こうに勝利が見えるよ！」</p>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/忘却の此方.mp3", name: "忘却の此方" },
+                { src: "assets/Scream ～万魔殿パンデモニウム：煉獄編～.mp3", name: "慟哭" },
+                { src: "assets/Athena the Tireless One.mp3", name: "不屈のアテナ" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

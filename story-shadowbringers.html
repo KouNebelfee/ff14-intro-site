@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>漆黒のヴィランズ - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-shb">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1 class="theme-shb">漆黒のヴィランズ</h1>
+    <p>あらすじ: 第一世界でNebelfeeとSchattenfeeはクリスタリウムと光哭の森を巡り、ハーデスと光の罪喰いに挑み、夜を取り戻す。</p>
+    <div class="story-content">
+        <h2>第一章: クリスタリウムの召喚</h2>
+        <p>クリスタリウムの光に包まれ、Nebelfeeは第一世界へ召喚される。</p>
+        <p>Schattenfeeが影から現れ、リューサンが二人を迎え入れた。</p>
+        <p>暁の仲間が集い、光に飲まれた世界の真実が明らかになる。</p>
+        <p>姉弟は光と闇の旅を始める。</p>
+        <h2>第二章: イル・メグの妖精</h2>
+        <p>イル・メグで蛮神ティターニアが舞い、花が光に染まる。</p>
+        <p>リーンとNebelfeeは霧で幻惑を散らし、戦いを挑む。</p>
+        <p>Schattenfeeが忍術で弱点を突き、ティターニアが倒れた。</p>
+        <p>花畑に静けさが戻り、姉弟は息を整える。</p>
+        <h2>第三章: 光哭の森の罪喰い</h2>
+        <p>光哭の森で光を操る罪喰いルナが現れ、木々が白く輝く。</p>
+        <p>ウリエンジェが魔法で援護し、Nebelfeeは霧で光を抑えた。</p>
+        <p>Schattenfeeが忍術でエーテルを断ち、ルナが消える。</p>
+        <p>森に闇が戻り、姉弟は次の試練へ進む。</p>
+        <h2>第四章: ラク・ハヤの虚栄</h2>
+        <p>ラク・ハヤで蛮神イノセンスが現れ、光の王座が輝く。</p>
+        <p>ヤ・シュトラが魔法で援護し、Nebelfeeは霧で幻を破る。</p>
+        <p>Schattenfeeが忍術でイノセンスを倒し、王座が静まる。</p>
+        <p>砂漠に風が吹き、姉弟は運命を感じた。</p>
+        <h2>第五章: アム・アレーンの園</h2>
+        <p>アム・アレーンで希望の園エデンが目覚め、重力が歪む。</p>
+        <p>リューサンが警告を発し、Nebelfeeは霧で動きを封じる。</p>
+        <p>Schattenfeeが忍術で弱点を突き、エデンが止まった。</p>
+        <p>砂漠の静寂の中、姉弟は光の真実を見つめる。</p>
+        <h2>第六章: コルシア島の深海</h2>
+        <p>コルシア島の海底で蛮神リヴァイアサンが咆哮し、波が荒ぶる。</p>
+        <p>サンクレッドが援護し、Nebelfeeは霧で波を鎮めた。</p>
+        <p>Schattenfeeが忍術でリヴァイアサンを倒し、海が静まる。</p>
+        <p>深海に光が差し込み、姉弟は絆を深める。</p>
+        <h2>第七章: テンペストの闇</h2>
+        <p>テンペストでエメトセルクが現れ、闇が世界を包む。</p>
+        <p>アルフィノが魔法で支え、Nebelfeeは霧で闇を散らす。</p>
+        <p>Schattenfeeが忍術で背後を突き、エメトセルクが笑う。</p>
+        <p>海底の静寂が響き、最後の戦いが近づく。</p>
+        <h2>第八章: ラケティカの古木</h2>
+        <p>ラケティカ大森林で蛮神ラムウが雷を放ち、木々が震える。</p>
+        <p>イダが癒しを与え、Nebelfeeは霧で雷を抑えた。</p>
+        <p>Schattenfeeが忍術で動きを封じ、ラムウが去る。</p>
+        <p>森に静けさが戻り、姉弟は決意を新たにする。</p>
+        <h2>第九章: ノルヴラントの祈り</h2>
+        <p>ノルヴラントで暁の仲間が集い、Nebelfeeの霧が希望を守る。</p>
+        <p>Schattenfeeが忍術でハーデスに迫り、リューサンが祈りを捧げる。</p>
+        <p>リーンとウリエンジェが力を合わせ、光と闇が交錯した。</p>
+        <p>夜の訪れが近づき、姉弟は最後の一歩を踏み出す。</p>
+        <h2>第十章: 漆黒の夜明け</h2>
+        <p>テンペストでハーデスが咆哮し、Nebelfeeの双剣が闇を裂く。</p>
+        <p>Schattenfeeが忍術で光を打ち砕き、ハーデスが膝をついた。</p>
+        <p>エメトセルクの笑顔と共に夜が戻り、第一世界が息を吹き返す。</p>
+        <p>漆黒の夜明けが訪れ、姉弟は新たな旅を誓う。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-stormblood.html">前章: 紅蓮の解放者</a>
+        <a href="story-endwalker.html">次章: 暁月の終焉</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Shadowbringers.mp3", "name": "Shadowbringers"},
+                {"src": "assets/To the Edge.mp3", "name": "To the Edge"},
+                {"src": "assets/Weight of the World／Prelude Version.mp3", "name": "Weight of the World／Prelude Version"},
+                {"src": "assets/ランドスライド ～希望の園エデン覚醒編～.mp3", "name": "ランドスライド"},
+                {"src": "assets/ロングフォール ～異界遺構 シルクス･ツイニング～.mp3", "name": "ロングフォール"},
+                {"src": "assets/冥き水底 ～テンペスト深部～.mp3", "name": "冥き水底"},
+                {"src": "assets/忘却の此方.mp3", "name": "忘却の此方"},
+                {"src": "assets/目覚めの御使い ～ティターニア討滅戦～.mp3", "name": "目覚めの御使い"},
+                {"src": "assets/砕けぬ思い ～ハーデス討滅戦～.mp3", "name": "砕けぬ思い"},
+                {"src": "assets/貪欲.mp3", "name": "貪欲"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

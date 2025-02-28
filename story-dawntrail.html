@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>黄金のレガシー - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-dt">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1 class="theme-dt">黄金のレガシー</h1>
+    <p>あらすじ: NebelfeeとSchattenfeeはトライヨラと金光の峰を巡り、黄金の守護者と侵略者に挑み、新天地の遺産を守る。</p>
+    <div class="story-content">
+        <h2>第一章: トライヨラの船出</h2>
+        <p>トライヨラの港でNebelfeeは霧を纏い、新大陸へ船を進める。</p>
+        <p>Schattenfeeが影から現れ、クルレが二人を迎え入れた。</p>
+        <p>黄金の遺産の噂が響き、姉弟は旅を始める。</p>
+        <p>海風が船を押し、新天地が近づく。</p>
+        <h2>第二章: オルコ・パチャの風</h2>
+        <p>オルコ・パチャで蛮神ヴァリガルマンダが咆哮し、風が荒ぶる。</p>
+        <p>ウクランドが援護し、Nebelfeeは霧で毒を散らした。</p>
+        <p>Schattenfeeが忍術で動きを封じ、ヴァリガルマンダが倒れる。</p>
+        <p>山峡に静けさが戻り、姉弟は絆を深める。</p>
+        <h2>第三章: 金光の峰の守護者</h2>
+        <p>金光の峰で黄金の守護者ゴルドランが現れ、遺産を守る。</p>
+        <p>エリナが剣を手に立ち、Nebelfeeは霧で光を抑えた。</p>
+        <p>Schattenfeeが忍術で弱点を突き、ゴルドランが膝をつく。</p>
+        <p>峰に静寂が訪れ、姉弟は遺産の重さを知る。</p>
+        <h2>第四章: ソリューション・ナインの試練</h2>
+        <p>ソリューション・ナインで至天の座アルカディアが目覚め、電撃が響く。</p>
+        <p>クルレが分析し、Nebelfeeは霧で動きを封じる。</p>
+        <p>Schattenfeeが忍術で核を突き、アルカディアが止まった。</p>
+        <p>未来都市に静けさが戻り、姉弟は次へ進む。</p>
+        <h2>第五章: ウルクンチャイの雷</h2>
+        <p>ウルクンチャイで蛮神ラムウが雷を放ち、森が震える。</p>
+        <p>アルフィノが魔法で援護し、Nebelfeeは霧で雷を散らす。</p>
+        <p>Schattenfeeが忍術で動きを封じ、ラムウが去った。</p>
+        <p>森に静寂が広がり、姉弟は決意を新たにする。</p>
+        <h2>第六章: コザマルカの幻惑</h2>
+        <p>コザマルカで蛮神ラクシュミが民を惑わし、Nebelfeeは霧で幻を破る。</p>
+        <p>リーンとサンクレッドが援護し、Schattenfeeが忍術で倒す。</p>
+        <p>村に風が吹き、姉弟は遺産の守護を誓う。</p>
+        <p>だが、侵略者の影が近づいていた。</p>
+        <h2>第七章: ヤク・テルの炎</h2>
+        <p>ヤク・テルで蛮神イフリートが炎を噴き、砂が燃える。</p>
+        <p>ウリエンジェが魔法で援護し、Nebelfeeは霧で炎を鎮めた。</p>
+        <p>Schattenfeeが忍術でイフリートを倒し、砂漠に静けさが戻る。</p>
+        <p>姉弟は新天地の試練に立ち向かう。</p>
+        <h2>第八章: 星哭の谷の侵略者</h2>
+        <p>星哭の谷で侵略者ザラが現れ、遺産を奪おうとする。</p>
+        <p>エスティニアンが槍を手に立ち、Nebelfeeは霧で動きを封じる。</p>
+        <p>Schattenfeeが忍術で背後を突き、ザラが倒れた。</p>
+        <p>谷に静寂が訪れ、姉弟は未来を見据える。</p>
+        <h2>第九章: トゥララクの祈り</h2>
+        <p>トゥララクで暁の仲間が集い、Nebelfeeの霧が希望を守る。</p>
+        <p>Schattenfeeが忍術でザラの残党に迫り、クルレが祈りを捧げる。</p>
+        <p>リーンとウリエンジェが力を合わせ、遺産が輝いた。</p>
+        <p>黄金の未来が近づき、姉弟は最後の一歩を踏み出す。</p>
+        <h2>第十章: 黄金の夜明け</h2>
+        <p>トライヨラでザラが最後の咆哮を上げ、Nebelfeeの双剣が閃く。</p>
+        <p>Schattenfeeが忍術で未来を打ち立て、ザラが倒れた。</p>
+        <p>暁の祈りと共に遺産が守られ、新天地に夜明けが訪れる。</p>
+        <p>姉弟は新たな旅を誓い、黄金の空を見上げた。</p>
+    </div>
+    <div class="story-nav">
+        <a href="story-endwalker.html">前章: 暁月の終焉</a>
+        <span class="disabled">次章</span>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Bee My Honey ～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Bee My Honey"},
+                {"src": "assets/Dawntrail.mp3", "name": "Dawntrail"},
+                {"src": "assets/Give It All～至天の座アルカディア：ライトヘビー級～.mp3", "name": "Give It All"},
+                {"src": "assets/一つの路.mp3", "name": "一つの路"},
+                {"src": "assets/二人の路.mp3", "name": "二つの路"},
+                {"src": "assets/山峡の涼風 ～オルコ・パチャ：昼～.mp3", "name": "山峡の涼風"},
+                {"src": "assets/星なき摩天楼 ～ソリューション・ナイン～.mp3", "name": "星なき摩天楼"},
+                {"src": "assets/火花と閃光～外征前哨ヴァンガード～.mp3", "name": "火花と閃光"},
+                {"src": "assets/終わりなき軌跡.mp3", "name": "終わりなき軌跡"},
+                {"src": "assets/金煌なる民 〜トライヨラ：昼〜 .mp3", "name": "金煌なる民"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

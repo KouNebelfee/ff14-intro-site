@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>第零章: NebelfeeとSchattenfeeの出生 - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-origin">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>第零章: NebelfeeとSchattenfeeの出生</h1>
+    <p>あらすじ: 霧と影に生まれし姉弟、NebelfeeとSchattenfeeは、グリダニアの深奥で運命に導かれ、エオルゼアの危機に立ち向かうための力を育む。</p>
+    <div class="story-content">
+        <h2>第一章: 霧隠れの谷の誕生</h2>
+        <p>グリダニアの深奥、霧隠れの谷でNebelfeeが生まれた。母ミスティアは霧を操るヴァイパーだった。</p>
+        <p>谷の静寂に響く産声の中、ミンフィリアが遠くからその子を見守っていた。</p>
+        <p>霧が新月の夜を包み、運命の姉がこの地に刻まれる。</p>
+        <p>母は娘に双剣を手に持つ未来を夢見た。</p>
+        <h2>第二章: 影深き洞窟の誕生</h2>
+        <p>数年後、同じ谷の影深い洞窟でSchattenfeeが生まれた。父カゲロウは忍者の技を極めた男だった。</p>
+        <p>タタルが物資を運び、幼いNebelfeeが弟の誕生に目を輝かせる。</p>
+        <p>影が星のない夜を覆い、運命の弟が谷に現れる。</p>
+        <p>父は息子に手裏剣を握る未来を夢見た。</p>
+        <h2>第三章: グリダニアの絆</h2>
+        <p>グリダニアの森で姉弟は幼少期を過ごし、霧と影の中で互いを支えた。</p>
+        <p>ウリエンジェが谷を訪れ、ミスティアにエーテルの流れを教える。</p>
+        <p>Nebelfeeが霧を操り、Schattenfeeが木々の影に隠れる術を学ぶ。</p>
+        <p>姉弟の笑顔が森に響き、家族の絆が深まる。</p>
+        <h2>第四章: 霊災の影</h2>
+        <p>第七霊災の前兆がグリダニアに迫り、霧隠れの谷に暗雲が垂れ込める。</p>
+        <p>シドが飛空艇で訪れ、カゲロウに帝国の動きを警告する。</p>
+        <p>ミスティアとカゲロウは谷を守るため、蛮神イフリートの召喚に備えた。</p>
+        <p>炎が谷を照らし、姉弟は初めて恐怖を知る。</p>
+        <h2>第五章: 霧と炎の戦い</h2>
+        <p>霧隠れの谷で蛮神イフリートが現れ、ミスティアは霧を嵐に変えて立ち向かう。</p>
+        <p>カゲロウが影から忍術を放ち、パパリモが魔法で援護した。</p>
+        <p>NebelfeeとSchattenfeeは隠れ、両親の戦いを見つめる。</p>
+        <p>イフリートが倒れるが、谷に傷痕が残った。</p>
+        <h2>第六章: 両親の犠牲</h2>
+        <p>霊災の混乱で蛮神タイタンがグリダニアを襲い、ミスティアとカゲロウが戦場へ駆ける。</p>
+        <p>アルフィノが援軍を率い、NebelfeeとSchattenfeeを谷に隠す。</p>
+        <p>両親はタイタンを封じるため命を捧げ、姉弟は孤児となる。</p>
+        <p>霧と影が二人を包み、静寂が谷を覆った。</p>
+        <h2>第七章: 霧の双剣</h2>
+        <p>Nebelfeeは母の双剣を見つけ、霧の中でその重さを感じた。</p>
+        <p>リーン・ウォータースが谷を訪れ、姉に剣術の基礎を教える。</p>
+        <p>霧が彼女の心を包み、ヴァイパーとしての道が開かれる。</p>
+        <p>姉は母の意志を継ぐ決意を固めた。</p>
+        <h2>第八章: 影の手裏剣</h2>
+        <p>Schattenfeeは父の手裏剣を手にし、影の中でその鋭さを知る。</p>
+        <p>サンクレッドが谷に現れ、弟に忍者の技を伝授する。</p>
+        <p>影が彼の心を覆い、忍者としての道が刻まれる。</p>
+        <p>弟は父の遺志を継ぐ決意を固めた。</p>
+        <h2>第九章: 暁の導き</h2>
+        <p>グリダニアで暁の血盟が動き、ミンフィリアが姉弟に手を差し伸べる。</p>
+        <p>ノゾミが谷を訪れ、二人の才能を見抜き、旅立ちを促した。</p>
+        <p>霧と影が交わり、エオルゼアの危機が二人を呼ぶ。</p>
+        <p>姉弟は谷を後にし、運命の道を歩み始める。</p>
+        <h2>第十章: 運命の始まり</h2>
+        <p>霧隠れの谷の出口で、NebelfeeとSchattenfeeは互いの手を握った。</p>
+        <p>ヤ・シュトラが予言を告げ、エオルゼアの未来を二人に託す。</p>
+        <p>霧と影が彼らを包み、新たな冒険が幕を開ける。</p>
+        <p>姉弟の物語はここから始まり、エオルゼアへと続く。</p>
+    </div>
+    <div class="story-nav">
+        <span class="disabled">前章</span>
+        <a href="story-a-realm-reborn.html">次章: 新生エオルゼア</a>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                {"src": "assets/Answers.mp3", "name": "Answers"},
+                {"src": "assets/原始の審判.mp3", "name": "原始の審判"},
+                {"src": "assets/過重圧殺! ～蛮神タイタン討滅戦～.mp3", "name": "過重圧殺!"}
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

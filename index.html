@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>FF14 冒険者の記録</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-index">
+    <div class="music-player">
+        <audio id="bgm" loop>
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+    </nav>
+    <h1>霧と影は交わるべからず</h1>
+    <p>交われば、世界の均衡が崩れる</p>
+    <div class="characters">
+        <a href="profile-nebelfee.html"><img src="assets/nebelfee.jpg" alt="Nebelfee" class="circle-img"></a>
+        <a href="profile-schattenfee.html"><img src="assets/schattenfee.jpg" alt="Schattenfee" class="circle-img"></a>
+    </div>
+    <div class="time">
+        <p>リアルタイム: <span id="real-time"></span></p>
+        <p>エオルゼアタイム: <span id="eorzea-time"></span></p>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
+                { src: "assets/二人の路.mp3", name: "二つの路" },
+                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = 0;
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load(); // 新しいトラックを読み込む
+                bgm.play().catch(error => console.log("再生エラー:", error)); // 自動再生を試みる
+            }
+
+            // ページ読み込み時にランダムなトラックを選択して再生
+            currentIndex = Math.floor(Math.random() * tracks.length);
+            updateTrack();
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+        });
+    </script>
+</body>
+</html>

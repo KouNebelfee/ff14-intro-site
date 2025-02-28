@@ -1,0 +1,328 @@
+body {
+    background-color: #1a1a2e;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    position: relative;
+}
+
+h1 { color: #ff6f61; font-size: 36px; }
+
+.music-player {
+    background-color: #16213e;
+    padding: 10px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border-radius: 5px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+}
+
+.music-player button {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.music-player button:hover { background-color: #e65a50; }
+
+.music-player input[type="range"] {
+    width: 100px;
+    margin: 0 5px;
+}
+
+.nav-btn {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.nav-btn:hover {
+    background-color: #e65a50;
+}
+
+.music-player p {
+    margin: 0 5px;
+}
+
+nav {
+    background-color: #16213e;
+    padding: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 5;
+}
+
+nav a {
+    color: #ff6f61;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+nav a:hover { color: white; }
+
+/* トップページの丸い画像 */
+.circle-img {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    margin: 15px;
+    transition: transform 0.3s;
+}
+
+.circle-img:hover {
+    transform: scale(1.2);
+}
+
+/* トップページのキャラクター配置 */
+.characters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* プロフィール画像 */
+.profile-img {
+    width: 200px;
+    height: 200px;
+    margin: 10px;
+}
+
+/* キャラクター画像（ギャラリーとは別） */
+.characters img {
+    width: 200px;
+    margin: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.characters img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #ff6f61;
+}
+
+.time { margin-top: 20px; font-size: 18px; }
+
+/* mist アニメーション */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: mist 10s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    will-change: transform;
+}
+
+@keyframes mist {
+    0% { transform: translateX(-100%) translateY(0); }
+    100% { transform: translateX(100%) translateY(0); }
+}
+
+.story { position: relative; z-index: 2; }
+
+.story h2 a {
+    color: #ff6f61;
+    text-decoration: none;
+}
+
+.story h2 a:hover { color: white; }
+
+/* ストーリーナビ */
+.story-nav {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.story-nav a {
+    color: #ff6f61;
+    text-decoration: none;
+    margin: 0 20px;
+}
+
+.story-nav a:hover { color: white; }
+
+.story-nav .disabled {
+    color: #666;
+    margin: 0 20px;
+    pointer-events: none;
+}
+
+/* ストーリーコンテンツの文章を見やすく */
+.story-content {
+    max-width: 800px;
+    margin: 20px auto;
+    line-height: 1.6;
+    background-color: rgba(22, 33, 62, 0.9); /* 半透明の暗い背景 */
+    padding: 20px; /* 内側余白を追加 */
+    border-radius: 5px; /* 角を丸く */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 軽い影で浮き上がらせる */
+    position: relative;
+    z-index: 3;
+}
+
+.story-content p {
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.story-content h2 {
+    color: #ff6f61;
+    background-color: rgba(22, 33, 62, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* あらすじ部分 */
+body > p {
+    background-color: rgba(22, 33, 62, 0.9);
+    padding: 15px;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* 背景画像にオーバーレイ */
+body[class^="bg-"] {
+    background-size: cover;
+    position: relative;
+}
+
+body[class^="bg-"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* z-index調整 */
+nav, .music-player, .story-content, h1, .story-nav {
+    position: relative;
+    z-index: 3;
+}
+
+/* スライドショーのコンテナ */
+.slideshow {
+    position: relative;
+    max-width: 600px;
+    max-height: 400px;
+    margin: 20px auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* スライドショーの画像 */
+.slide {
+    display: none;
+    max-width: 100%;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* ギャラリー全体のスタイル */
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    background: none;
+}
+
+/* ギャラリーアイテムのコンテナ */
+.gallery-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    height: 350px;
+    text-align: center;
+    background: none;
+}
+
+/* ギャラリー内の画像 */
+.gallery img {
+    max-width: 100%;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px #ff6f61;
+}
+
+/* キャプションのスタイル */
+.gallery-item p {
+    margin: 10px 0 0;
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.shockwave:hover { animation: shockwave 1s ease-out; }
+
+@keyframes shockwave {
+    0% { box-shadow: 0 0 0 0 rgba(255, 111, 97, 0.7); }
+    100% { box-shadow: 0 0 0 20px rgba(255, 111, 97, 0); }
+}
+
+section {
+    background-color: #16213e;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 2;
+}
+
+/* テーマ色ごとの h1 スタイル */
+.theme-arr { color: #2ecc71; }
+.theme-hw { color: #3498db; }
+.theme-sb { color: #e74c3c; }
+.theme-shb { color: #9b59b6; }
+.theme-ew { color: #f1c40f; }
+.theme-dt { color: #e67e22; }
+
+/* 背景 */
+.bg-index { background: url("assets/bg-index.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-nebelfee { background: url("assets/bg-nebelfee.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-schattenfee { background: url("assets/bg-schattenfee.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-story { background: url("assets/bg-story.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-origin { background: url("assets/bg-origin.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-arr { background: url("assets/bg-arr.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-hw { background: url("assets/bg-hw.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-sb { background: url("assets/bg-sb.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-shb { background: url("assets/bg-shb.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-ew { background: url("assets/bg-ew.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-dt { background: url("assets/bg-dt.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-gallery { background: url("assets/bg-gallery.jpg") no-repeat center center scroll; background-size: cover; }
+.bg-raid { background: url("assets/bg-raid.jpg") no-repeat center center scroll; background-size: cover; }
