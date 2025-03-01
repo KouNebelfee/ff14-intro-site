@@ -6,11 +6,12 @@
     <title>ギャラリー</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* gallery.html用のインラインCSS */
         .slideshow {
             position: relative;
-            max-width: 600px;
+            max-width: 800px;
             width: 100%;
-            height: 400px; /* 高さを明示 */
+            height: 600px;
             margin: 20px auto;
             overflow: hidden;
             background-color: rgba(0, 0, 0, 0.2);
@@ -28,6 +29,104 @@
         }
         .slide.active {
             opacity: 1;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .gallery-item {
+            text-align: center;
+            position: relative;
+        }
+        .gallery-item img {
+            width: 400px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .gallery-item p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        #admin-mode {
+            display: none;
+            margin: 20px auto;
+            text-align: center;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #preview-image {
+            max-width: 200px;
+            height: auto;
+            margin-top: 10px;
+        }
+        /* ヘッダーとフッターのサイズ統一 */
+        nav {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        footer {
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0;
+            text-align: center;
+            font-size: 12px;
+        }
+        footer p {
+            color: #ffffff; /* 著作権マークを白に */
+            margin: 0;
+        }
+        /* music-playerの位置調整 - ヘッダーから少し離す */
+        .music-player {
+            position: fixed;
+            top: 80px; /* ヘッダー(60px) + 隙間(10px) */
+            left: 10px;
+            right: 10px;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        #admin-command {
+            width: 50px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.3); /* 薄い白で目立たなく */
+            font-size: 10px;
+            outline: none;
+        }
+        #admin-command::placeholder {
+            color: rgba(255, 255, 255, 0.3); /* プレースホルダーも薄く */
+        }
+        .admin-controls {
+            display: none;
+            margin-top: 10px;
+        }
+        .gallery-item[data-public="false"]:not(.admin-view),
+        .slide[data-public="false"]:not(.admin-view) {
+            display: none;
+        }
+        .admin-controls select, .admin-controls button {
+            margin: 5px;
+        }
+        .edit-input {
+            display: none;
+            margin: 5px;
+            width: 80%;
         }
     </style>
 </head>
@@ -52,82 +151,44 @@
         <a href="story.html">ストーリー</a>
         <a href="gallery.html">ギャラリー</a>
         <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
     </nav>
 
     <div class="content-wrapper">
-        <div class="slideshow">
-            <img src="assets/ss1.jpg" alt="SS1" class="slide active">
-            <img src="assets/ss2.jpg" alt="SS2" class="slide">
-            <img src="assets/ss3.jpg" alt="SS3" class="slide">
-            <img src="assets/ss4.jpg" alt="SS4" class="slide">
-            <img src="assets/ss5.jpg" alt="SS5" class="slide">
-            <img src="assets/ss6.jpg" alt="SS6" class="slide">
-            <img src="assets/ss7.jpg" alt="SS7" class="slide">
-            <img src="assets/ss8.jpg" alt="SS8" class="slide">
-            <img src="assets/ss9.jpg" alt="SS9" class="slide">
-            <img src="assets/ss10.jpg" alt="SS10" class="slide">
+        <div class="slideshow" id="slideshow">
+            <!-- 初期アイテムなし -->
+        </div>
+
+        <!-- 管理者モード -->
+        <div id="admin-mode">
+            <h2>管理者モード</h2>
+            <div>
+                <input type="file" id="image-upload" accept="image/*">
+                <input type="text" id="caption-input" placeholder="一言を入力">
+                <button onclick="addGalleryItem()">追加</button>
+                <img id="preview-image" src="" alt="プレビュー" style="display: none;">
+            </div>
         </div>
 
         <h1>冒険の記録</h1>
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="assets/ss1.jpg" alt="いたずら">
-                <p>秘密のウィンク！</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss2.jpg" alt="穏やか">
-                <p>静かな勇気</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss3.jpg" alt="弾む">
-                <p>無重力の喜び！</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss4.jpg" alt="決意">
-                <p>闇の戦士</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss5.jpg" alt="信頼">
-                <p>静かな絆</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss6.jpg" alt="発見">
-                <p>好奇心の輝き！</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss7.jpg" alt="穏和">
-                <p>音楽の共鳴</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss8.jpg" alt="自由">
-                <p>リズムに載せて！</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss9.jpg" alt="楽しい">
-                <p>スイーツの魔法！</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss10.jpg" alt="リラックス">
-                <p>穏やかな夢</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss11.jpg" alt="自信">
-                <p>未来の戦士</p>
-            </div>
-            <div class="gallery-item">
-                <img src="assets/ss12.jpg" alt="希望">
-                <p>星空の約束</p>
-            </div>
+        <div class="gallery" id="gallery">
+            <!-- 初期アイテムなし -->
         </div>
     </div>
 
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. | <input type="text" id="admin-command" placeholder="..." oninput="checkAdminCommand()"></p>
     </footer>
 
     <script>
+        let isAdmin = false;
+        let nextId = 1;
+
         document.addEventListener("DOMContentLoaded", () => {
-            // ミュージックプレイヤーの設定
             const tracks = [
                 { src: "assets/White Stone Black ～万魔殿パンデモニウム：煉獄編～.mp3", "name": "White Stone Black" },
                 { src: "assets/Flow.mp3", "name": "Flow" },
@@ -143,56 +204,271 @@
                 bgm.load();
                 bgm.play().catch(error => console.log("再生エラー:", error));
             }
-
             updateTrack();
-
             bgm.addEventListener('ended', () => {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
             });
+            window.prevTrack = () => { currentIndex = (currentIndex - 1 + tracks.length) % tracks.length; updateTrack(); };
+            window.nextTrack = () => { currentIndex = (currentIndex + 1) % tracks.length; updateTrack(); };
+            window.startBGM = () => { bgm.play().catch(error => console.log("再生エラー:", error)); };
+            window.toggleBGM = () => { bgm.paused ? bgm.play().catch(error => console.log("再生エラー:", error)) : bgm.pause(); };
+            window.adjustVolume = () => { bgm.volume = document.getElementById("volume").value; };
 
-            window.prevTrack = function() {
-                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
-                updateTrack();
-            };
-
-            window.nextTrack = function() {
-                currentIndex = (currentIndex + 1) % tracks.length;
-                updateTrack();
-            };
-
-            window.startBGM = function() {
-                bgm.play().catch(error => console.log("再生エラー:", error));
-            };
-
-            window.toggleBGM = function() {
-                if (bgm.paused) {
-                    bgm.play().catch(error => console.log("再生エラー:", error));
-                } else {
-                    bgm.pause();
-                }
-            };
-
-            window.adjustVolume = function() {
-                bgm.volume = document.getElementById("volume").value;
-            };
-
-            // スライドショーの設定
-            const slides = document.querySelectorAll('.slide');
+            let slides = document.querySelectorAll('.slide');
             let slideIndex = 0;
 
             function showNextSlide() {
-                slides[slideIndex].classList.remove('active');
-                slideIndex = (slideIndex + 1) % slides.length;
-                slides[slideIndex].classList.add('active');
+                slides = document.querySelectorAll('.slide:not([data-public="false"])');
+                if (isAdmin) slides = document.querySelectorAll('.slide');
+                if (slides.length > 0) {
+                    slides[slideIndex].classList.remove('active');
+                    slideIndex = (slideIndex + 1) % slides.length;
+                    slides[slideIndex].classList.add('active');
+                }
+            }
+            setInterval(showNextSlide, 5000);
+
+            loadSavedItems();
+
+            document.getElementById("image-upload").addEventListener("change", function() {
+                const previewImage = document.getElementById("preview-image");
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewImage.style.display = "block";
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                } else {
+                    previewImage.style.display = "none";
+                }
+            });
+        });
+
+        function checkAdminCommand() {
+            const command = document.getElementById("admin-command").value.toLowerCase();
+            const adminMode = document.getElementById("admin-mode");
+            const controls = document.querySelectorAll(".admin-controls");
+            const galleryItems = document.querySelectorAll(".gallery-item");
+            const slides = document.querySelectorAll(".slide");
+
+            if (command === "admin") {
+                adminMode.style.display = "block";
+                controls.forEach(control => control.style.display = "block");
+                galleryItems.forEach(item => {
+                    item.classList.add("admin-view");
+                    item.style.display = "block";
+                });
+                slides.forEach(slide => {
+                    slide.classList.add("admin-view");
+                    slide.style.display = "block";
+                });
+                isAdmin = true;
+            } else {
+                adminMode.style.display = "none";
+                controls.forEach(control => control.style.display = "none");
+                galleryItems.forEach(item => {
+                    item.classList.remove("admin-view");
+                    item.style.display = item.getAttribute("data-public") === "true" ? "block" : "none";
+                });
+                slides.forEach(slide => {
+                    slide.classList.remove("admin-view");
+                    slide.style.display = slide.getAttribute("data-public") === "true" ? "block" : "none";
+                });
+                isAdmin = false;
+            }
+        }
+
+        function loadSavedItems() {
+            const savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
+            const gallery = document.getElementById("gallery");
+            const slideshow = document.getElementById("slideshow");
+
+            gallery.innerHTML = "";
+            slideshow.innerHTML = "";
+
+            savedItems.forEach(item => {
+                const newItem = document.createElement("div");
+                newItem.className = "gallery-item";
+                newItem.setAttribute("data-id", item.id);
+                newItem.setAttribute("data-public", item.isPublic);
+                if (isAdmin) {
+                    newItem.classList.add("admin-view");
+                    newItem.style.display = "block";
+                } else if (item.isPublic === "false") {
+                    newItem.style.display = "none";
+                }
+                newItem.innerHTML = `
+                    <img src="${item.src}" alt="${item.caption}">
+                    <p>${item.caption}</p>
+                    <div class="admin-controls" style="${isAdmin ? 'display: block;' : 'display: none;'}">
+                        <select onchange="togglePublic(this)">
+                            <option value="true" ${item.isPublic === "true" ? "selected" : ""}>公開</option>
+                            <option value="false" ${item.isPublic === "false" ? "selected" : ""}>非公開</option>
+                        </select>
+                        <button onclick="deleteGalleryItem(this)">削除</button>
+                        <button onclick="startEditCaption(this)">編集</button>
+                        <input type="text" class="edit-input" value="${item.caption}" onblur="saveCaption(this)">
+                    </div>
+                `;
+                gallery.appendChild(newItem);
+
+                const newSlide = document.createElement("img");
+                newSlide.src = item.src;
+                newSlide.alt = item.caption;
+                newSlide.className = "slide";
+                newSlide.setAttribute("data-id", item.id);
+                newSlide.setAttribute("data-public", item.isPublic);
+                if (isAdmin) {
+                    newSlide.classList.add("admin-view");
+                    newSlide.style.display = "block";
+                } else if (item.isPublic === "false") {
+                    newSlide.style.display = "none";
+                }
+                slideshow.appendChild(newSlide);
+
+                const itemId = parseInt(item.id);
+                if (itemId >= nextId) nextId = itemId + 1;
+            });
+
+            const slides = document.querySelectorAll('.slide');
+            if (slides.length > 0) slides[0].classList.add("active");
+        }
+
+        function addGalleryItem() {
+            const fileInput = document.getElementById("image-upload");
+            const captionInput = document.getElementById("caption-input");
+            const gallery = document.getElementById("gallery");
+            const slideshow = document.getElementById("slideshow");
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgSrc = e.target.result;
+                    const caption = captionInput.value || "新しい冒険";
+                    const id = nextId++;
+
+                    const newItem = document.createElement("div");
+                    newItem.className = "gallery-item";
+                    newItem.setAttribute("data-id", id);
+                    newItem.setAttribute("data-public", "true");
+                    if (isAdmin) newItem.classList.add("admin-view");
+                    newItem.innerHTML = `
+                        <img src="${imgSrc}" alt="${caption}">
+                        <p>${caption}</p>
+                        <div class="admin-controls" style="${isAdmin ? 'display: block;' : 'display: none;'}">
+                            <select onchange="togglePublic(this)">
+                                <option value="true" selected>公開</option>
+                                <option value="false">非公開</option>
+                            </select>
+                            <button onclick="deleteGalleryItem(this)">削除</button>
+                            <button onclick="startEditCaption(this)">編集</button>
+                            <input type="text" class="edit-input" value="${caption}" onblur="saveCaption(this)">
+                        </div>
+                    `;
+                    gallery.appendChild(newItem);
+
+                    const newSlide = document.createElement("img");
+                    newSlide.src = imgSrc;
+                    newSlide.alt = caption;
+                    newSlide.className = "slide";
+                    newSlide.setAttribute("data-id", id);
+                    newSlide.setAttribute("data-public", "true");
+                    if (isAdmin) newSlide.classList.add("admin-view");
+                    slideshow.appendChild(newSlide);
+
+                    const savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
+                    savedItems.push({ id: id.toString(), src: imgSrc, caption: caption, isPublic: "true" });
+                    localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+
+                    fileInput.value = "";
+                    captionInput.value = "";
+                    document.getElementById("preview-image").style.display = "none";
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                alert("画像を選択してください");
+            }
+        }
+
+        function deleteGalleryItem(button) {
+            const item = button.closest(".gallery-item");
+            if (confirm("この画像を削除しますか？")) {
+                const id = item.getAttribute("data-id");
+                item.remove();
+
+                const slide = document.querySelector(`.slide[data-id="${id}"]`);
+                if (slide) slide.remove();
+
+                let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
+                savedItems = savedItems.filter(saved => saved.id !== id);
+                localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+            }
+        }
+
+        function startEditCaption(button) {
+            const item = button.closest(".gallery-item");
+            const captionP = item.querySelector("p");
+            const editInput = item.querySelector(".edit-input");
+            captionP.style.display = "none";
+            editInput.style.display = "block";
+            editInput.focus();
+        }
+
+        function saveCaption(input) {
+            const item = input.closest(".gallery-item");
+            const captionP = item.querySelector("p");
+            const newCaption = input.value.trim();
+            const id = item.getAttribute("data-id");
+
+            if (newCaption) {
+                captionP.textContent = newCaption;
+                input.value = newCaption;
+
+                const slide = document.querySelector(`.slide[data-id="${id}"]`);
+                if (slide) slide.alt = newCaption;
+
+                let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
+                const index = savedItems.findIndex(saved => saved.id === id);
+                if (index !== -1) {
+                    savedItems[index].caption = newCaption;
+                    localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+                }
+            }
+            captionP.style.display = "block";
+            input.style.display = "none";
+        }
+
+        function togglePublic(select) {
+            const item = select.closest(".gallery-item");
+            const isPublic = select.value === "true";
+            const id = item.getAttribute("data-id");
+
+            item.setAttribute("data-public", isPublic);
+            if (!isAdmin && !isPublic) {
+                item.style.display = "none";
+            } else {
+                item.style.display = "block";
             }
 
-            if (slides.length > 0) {
-                setInterval(showNextSlide, 3000);
-            } else {
-                console.error("スライドが見つかりません");
+            const slide = document.querySelector(`.slide[data-id="${id}"]`);
+            if (slide) {
+                slide.setAttribute("data-public", isPublic);
+                if (!isAdmin && !isPublic) {
+                    slide.style.display = "none";
+                } else {
+                    slide.style.display = "block";
+                }
             }
-        });
+
+            let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
+            const index = savedItems.findIndex(saved => saved.id === id);
+            if (index !== -1) {
+                savedItems[index].isPublic = isPublic;
+                localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+            }
+        }
     </script>
 </body>
 </html>

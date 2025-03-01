@@ -5,6 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FF14 冒険者の記録</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* index.html用の追加CSS */
+        h1 {
+            color: #ff6f61;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* 視認性強化 */
+        }
+
+        p {
+            color: #ffffff;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* 視認性強化 */
+        }
+
+        .characters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .circle-img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 50%;
+            margin: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .circle-img:hover {
+            transform: scale(1.2) rotate(5deg);
+            box-shadow: 0 0 15px rgba(255, 111, 97, 0.8);
+        }
+
+        .time p {
+            margin: 10px 0;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* 時間表示の視認性向上 */
+        }
+
+        /* 背景オーバーレイ調整 - 黒い幕を軽減 */
+        body.bg-index::after {
+            background: rgba(0, 0, 0, 0.3) !important; /* 透明度を0.5から0.3に下げて軽減 */
+        }
+    </style>
 </head>
 <body class="bg-index">
     <div class="music-player">
@@ -26,6 +73,11 @@
         <a href="story.html">ストーリー</a>
         <a href="gallery.html">ギャラリー</a>
         <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
     </nav>
     <h1>霧と影は交わるべからず</h1>
     <p>交われば、世界の均衡が崩れる</p>
@@ -42,14 +94,42 @@
     </footer>
     <script src="script.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tracks = [
-                { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
-                { src: "assets/二人の路.mp3", name: "二つの路" },
-                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
-            ];
+        // BGM関連関数
+        function toggleBGM() {
+            const bgm = document.getElementById("bgm");
+            if (bgm && bgm.paused) {
+                bgm.play().catch(error => {
+                    console.log("再生エラー:", error);
+                    alert("BGMの再生にはタップが必要です。ボタンを再度押してください。");
+                });
+            } else if (bgm) {
+                bgm.pause();
+            }
+        }
+
+        function startBGM() {
+            const bgm = document.getElementById("bgm");
+            if (bgm) {
+                bgm.play().catch(error => {
+                    console.log("再生エラー:", error);
+                    alert("BGMの再生にはタップが必要です。");
+                });
+            }
+        }
+
+        function adjustVolume() {
+            const bgm = document.getElementById("bgm");
+            const volume = document.getElementById("volume");
+            if (bgm && volume) {
+                bgm.volume = volume.value;
+            }
+        }
+
+        function setupBGM(tracks) {
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
+            if (!bgm || !currentTrack) return;
+
             let currentIndex = Math.floor(Math.random() * tracks.length);
 
             function updateTrack() {
@@ -75,22 +155,33 @@
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
             };
+        }
 
-            window.startBGM = function() {
-                bgm.play().catch(error => console.log("再生エラー:", error));
-            };
+        // 時間表示関数
+        function updateTime() {
+            const now = new Date();
+            const realTime = now.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+            document.querySelectorAll("#real-time").forEach(el => el.textContent = realTime);
 
-            window.toggleBGM = function() {
-                if (bgm.paused) {
-                    bgm.play().catch(error => console.log("再生エラー:", error));
-                } else {
-                    bgm.pause();
-                }
-            };
+            const eorzeaTimeMs = now.getTime() * (3600 / 175) / 1000;
+            const eorzeaHours = Math.floor(eorzeaTimeMs / 3600) % 24;
+            const eorzeaMinutes = Math.floor((eorzeaTimeMs % 3600) / 60);
+            const eorzeaTime = `${String(eorzeaHours).padStart(2, "0")}:${String(eorzeaMinutes).padStart(2, "0")}`;
+            document.querySelectorAll("#eorzea-time").forEach(el => el.textContent = eorzeaTime);
+        }
 
-            window.adjustVolume = function() {
-                bgm.volume = document.getElementById("volume").value;
-            };
+        // 初期化とイベントリスナー
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
+                { src: "assets/二人の路.mp3", name: "二つの路" },
+                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
+            ];
+            setupBGM(tracks);
+
+            // 時間更新を初期化
+            updateTime(); // 初回即時実行
+            setInterval(updateTime, 500); // 500ms間隔で更新
         });
     </script>
 </body>

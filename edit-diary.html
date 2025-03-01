@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>日記を編集 - FF14 冒険者の記録</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-diary">
+    <div class="music-player">
+        <audio id="bgm">
+            <source id="bgm-source" src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
+    </nav>
+    <div class="content-wrapper">
+        <h1>日記を編集</h1>
+        <section class="story-section">
+            <form id="diary-form">
+                <label for="date">日付:</label>
+                <input type="date" id="date" name="date" required><br>
+                <label for="summary">概要:</label>
+                <input type="text" id="summary" name="summary" placeholder="短い説明" required><br>
+                <label for="content">詳細:</label>
+                <textarea id="content" name="content" placeholder="日記の内容" rows="5" required></textarea><br>
+                <label for="image">画像（任意）:</label>
+                <input type="file" id="image" name="image" accept="image/*"><br>
+                <div id="current-image"></div>
+                <button type="submit">保存</button>
+                <a href="diary.html" class="back-link">キャンセル</a>
+            </form>
+        </section>
+    </div>
+    <footer>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Flow.mp3", name: "Flow" },
+                { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
+            ];
+            setupBGM(tracks);
+
+            if (localStorage.getItem("isAdmin") !== "true") {
+                alert("管理者権限が必要です。");
+                window.location.href = "diary.html";
+                return;
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const diaryId = urlParams.get("id");
+
+            const dbName = "FF14DiaryDB";
+            const storeName = "diaries";
+            let db;
+            const request = indexedDB.open(dbName, 1);
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                loadDiary(diaryId);
+                console.log("IndexedDB 接続成功");
+            };
+
+            request.onerror = (event) => {
+                console.error("IndexedDBエラー:", event.target.error);
+            };
+
+            function loadDiary(id) {
+                const transaction = db.transaction([storeName], "readonly");
+                const store = transaction.objectStore(storeName);
+                const request = store.get(Number(id));
+
+                request.onsuccess = () => {
+                    const diary = request.result;
+                    document.getElementById("date").value = diary.date.replace(/\//g, "-");
+                    document.getElementById("summary").value = diary.summary;
+                    document.getElementById("content").value = diary.content;
+                    if (diary.image) {
+                        document.getElementById("current-image").innerHTML = `
+                            <p>現在の画像:</p>
+                            <img src="${diary.image}" alt="現在の画像" class="diary-image">
+                        `;
+                    }
+                };
+            }
+
+            document.getElementById("diary-form").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const date = document.getElementById("date").value.replace(/-/g, "/");
+                const summary = document.getElementById("summary").value;
+                const content = document.getElementById("content").value;
+                const imageInput = document.getElementById("image");
+
+                const diaryData = { id: Number(diaryId), date, summary, content };
+
+                if (imageInput.files && imageInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        diaryData.image = event.target.result;
+                        updateDiary(diaryData);
+                    };
+                    reader.readAsDataURL(imageInput.files[0]);
+                } else {
+                    updateDiary(diaryData);
+                }
+            });
+
+            function updateDiary(diaryData) {
+                const transaction = db.transaction([storeName], "readwrite");
+                const store = transaction.objectStore(storeName);
+                store.put(diaryData);
+
+                transaction.oncomplete = () => {
+                    alert("日記を更新しました。");
+                    window.location.href = "diary.html";
+                };
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>リンク集 - FF14 冒険者の記録</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* links.html用の追加CSS */
+        .links-section {
+            background-color: rgba(22, 33, 62, 0.9); /* ダークブルーで統一感 */
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .links-card {
+            background-color: rgba(255, 255, 255, 0.1); /* 薄い白で視認性アップ */
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 111, 97, 0.3); /* テーマカラーで枠 */
+            text-align: left;
+        }
+
+        .links-card h2 {
+            color: #ff6f61;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            margin-bottom: 10px;
+        }
+
+        .links-card ul {
+            list-style-type: none;
+            padding-left: 0;
+            color: #ffffff;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            line-height: 1.6;
+        }
+
+        .links-card ul li {
+            position: relative;
+            padding-left: 20px;
+            margin: 8px 0;
+        }
+
+        .social-links li:before {
+            content: "🌟"; /* SNS用アイコン */
+            position: absolute;
+            left: 0;
+            color: #ff6f61;
+        }
+
+        .external-links li:before {
+            content: "🔗"; /* 外部リンク用アイコン */
+            position: absolute;
+            left: 0;
+            color: #ff6f61;
+        }
+
+        .links-card a {
+            color: #ffd700; /* ゴールドでリンクを目立たせる */
+            text-decoration: none;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .links-card a:hover {
+            background-color: rgba(255, 111, 97, 0.2);
+            color: white;
+        }
+
+        .memo {
+            color: #ccc; /* メモは薄いグレーで控えめに */
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .copyable {
+            color: #ffd700;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .copyable:hover {
+            background-color: rgba(255, 111, 97, 0.2);
+            color: white;
+        }
+
+        .track {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* linksページの背景オーバーレイ調整（必要に応じて） */
+        body.bg-links::after {
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+    </style>
+</head>
+<body class="bg-links">
+    <div class="music-player">
+        <audio id="bgm">
+            <source id="bgm-source" src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
+    </nav>
+    <div class="content-wrapper">
+        <header class="links-header">
+            <h1>🌐 リンク集</h1>
+            <p>私の冒険の記録やお気に入りを集めたよ♪</p>
+        </header>
+        <section class="links-section">
+            <div class="links-card">
+                <h2>📱 私のSNS & 交流</h2>
+                <ul class="social-links">
+                    <li>
+                        <a href="https://twitter.com/Kou_Nebelfee_re" target="_blank">@Kou_Nebelfee</a> 
+                        <span class="memo"> - 姉の垢！SSや日常を呟いてるよ✨</span>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/Kou_Schattenfee" target="_blank">@Kou_Schattenfee</a> 
+                        <span class="memo"> - 弟の垢！旅の路をつぶやいていこっかな！</span>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/Kou_RP" target="_blank">@Kou_RP</a> 
+                        <span class="memo"> - RP垢🍾対話店の感想や宣伝などを行ってるよ～</span>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/KouNS_SS" target="_blank">@KouNS_SS</a> 
+                        <span class="memo"> - SS垢📷最近さぼり気味</span>
+                    </li>
+                    <li>
+                        <a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> 
+                        <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span>
+                    </li>
+                    <li>
+                        <a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> 
+                        <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span>
+                    </li>
+                    <li>
+                        <span class="copyable" onclick="copyToClipboard('kounebelfee_schattenfee')">Discord: kounebelfee_schattenfee</span> 
+                        <span class="memo"> - 一緒にチャットや冒険を楽しもう🎉（クリックでコピーしてフレンド申請してね！）</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="links-card">
+                <h2>🔗 おすすめサイト</h2>
+                <ul class="external-links">
+                    <!-- 公式サイト -->
+                    <li>
+                        <a href="https://jp.finalfantasyxiv.com/" target="_blank">FFXIV公式サイト</a> 
+                        <span class="memo"> - 最新情報やパッチノートはここで！</span>
+                    </li>
+                    <li>
+                        <a href="https://jp.finalfantasyxiv.com/lodestone/" target="_blank">The Lodestone</a> 
+                        <span class="memo"> - 公式コミュニティ！キャラ情報やニュースが見れるよ🌟</span>
+                    </li>
+                    <li>
+                        <a href="https://forum.square-enix.com/ffxiv/" target="_blank">FFXIV公式フォーラム</a> 
+                        <span class="memo"> - 公式の話題や議論をチェック📝</span>
+                    </li>
+                    <!-- ミラプリサイト -->
+                    <li>
+                        <a href="https://mirapri.com/" target="_blank">MIRAPRI SNAP</a> 
+                        <span class="memo"> - みんなのミラプリSSが見れる！おしゃれの参考に💃</span>
+                    </li>
+                    <li>
+                        <a href="https://www.ffxivcollection.com/" target="_blank">FFXIV Armoury Collection</a> 
+                        <span class="memo"> - 装備の見た目や入手方法をチェック👗</span>
+                    </li>
+                    <li>
+                        <a href="https://ffxiv.eorzeacollection.com/" target="_blank">Eorzea Collection</a> 
+                        <span class="memo"> - 海外のミラプリサイト！インスピレーションに✨</span>
+                    </li>
+                    <!-- 役に立つサイト -->
+                    <li>
+                        <a href="https://ffxiv.gamerescape.com/" target="_blank">FFXIV Wiki</a> 
+                        <span class="memo"> - 攻略情報が超豊富！困ったら覗いてみて</span>
+                    </li>
+                    <li>
+                        <a href="https://www.fflogs.com/" target="_blank">FFLogs</a> 
+                        <span class="memo"> - バトルログ解析！上達したい人におすすめ</span>
+                    </li>
+                    <li>
+                        <a href="https://ffxivteamcraft.com/" target="_blank">Teamcraft</a> 
+                        <span class="memo"> - クラフトやギャザリングの計画に便利✂️</span>
+                    </li>
+                    <li>
+                        <a href="https://xivapi.com/" target="_blank">XIVAPI</a> 
+                        <span class="memo"> - FF14のデータベース！マニアックな情報も</span>
+                    </li>
+                    <li>
+                        <a href="https://jp.ff14angler.com/" target="_blank">猫はお腹がすいた</a> 
+                        <span class="memo"> - 釣り情報が充実！釣り好きは必見🎣</span>
+                    </li>
+                    <li>
+                        <a href="http://ff14housing.com/" target="_blank">FF14ハウジング</a> 
+                        <span class="memo"> - ハウジング家具の実物が見れるよ🏡</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="links-card">
+                <h2>🎵 おすすめBGM</h2>
+                <ul class="external-links">
+                    <!-- 新生 -->
+                    <li><span class="track">Answers</span> <span class="memo"> - 新生の魂を揺さぶる名曲✨</span></li>
+                    <li><span class="track">ビッグブリッヂの死闘 ～新生～</span> <span class="memo"> - ギルガメッシュ戦の熱さが蘇る！⚔️</span></li>
+                    <li><span class="track">不吉なる前兆</span> <span class="memo"> - 不穏な雰囲気がたまらないね🌑</span></li>
+                    <li><span class="track">原始の審判</span> <span class="memo"> - イフリートの迫力がすごい🔥</span></li>
+                    <li><span class="track">堕天せし者</span> <span class="memo"> - ガルーダ戦の緊張感が好き！🌀</span></li>
+                    <li><span class="track">天より降りし力</span> <span class="memo"> - バハムートの壮大さが響く✨</span></li>
+                    <li><span class="track">灰より生まれし者</span> <span class="memo"> - フェニックスの再生が美しい🔴</span></li>
+                    <li><span class="track">究極幻想</span> <span class="memo"> - 新生のクライマックスにふさわしい！🌟</span></li>
+                    <li><span class="track">過重圧殺! ～蛮神タイタン討滅戦～</span> <span class="memo"> - タイタンの重さが感じられるね⛰️</span></li>
+                    <li><span class="track">雷光雷鳴 ～蛮神ラムウ討滅戦～</span> <span class="memo"> - 雷の迫力がカッコいい⚡</span></li>
+                    <!-- 蒼天 -->
+                    <li><span class="track">Dragonsong</span> <span class="memo"> - 蒼天の感動が蘇る名曲🎶涙なしには聴けない！</span></li>
+                    <li><span class="track">Heavensward</span> <span class="memo"> - 蒼天の冒険の幕開けにピッタリ✨</span></li>
+                    <li><span class="track">アンブレーカブル ～博物戦艦 フラクタル･コンティニアム～</span> <span class="memo"> - ダンジョンのワクワク感がいいね🚢</span></li>
+                    <li><span class="track">ライズ ～機工城アレキサンダー天動編～</span> <span class="memo"> - アレキの壮大さが最高！🏰</span></li>
+                    <li><span class="track">ローカス ～機工城アレキサンダー起動編～</span> <span class="memo"> - リズムがクセになるよ🔧</span></li>
+                    <li><span class="track">彩られし山麓 ～高地ドラヴァニア昼～</span> <span class="memo"> - ドラヴァニアの景色が浮かぶ🌄</span></li>
+                    <li><span class="track">忘却の彼方 ～蛮神シヴァ討滅戦～</span> <span class="memo"> - シヴァの冷たさが美しい❄️</span></li>
+                    <li><span class="track">英傑 ～ナイツ･オブ･ラウンド討滅戦～</span> <span class="memo"> - 騎士団との戦いが熱い！⚔️</span></li>
+                    <li><span class="track">逆襲の咆哮</span> <span class="memo"> - 蒼天の盛り上がりがすごいね🐉</span></li>
+                    <li><span class="track">魔神 ～魔神セフィロト討滅戦～</span> <span class="memo"> - セフィロトの威圧感がたまらない！🌳</span></li>
+                    <!-- 紅蓮 -->
+                    <li><span class="track">Revolutions</span> <span class="memo"> - 紅蓮の革命の熱さが響く✨</span></li>
+                    <li><span class="track">エスケープ ～次元の狭間オメガアルファ編～</span> <span class="memo"> - オメガのスピード感が好き！🚀</span></li>
+                    <li><span class="track">バトル2 ～次元の狭間オメガデルタ編～</span> <span class="memo"> - 戦闘の緊張感が最高だよ⚔️</span></li>
+                    <li><span class="track">千年の暁 ～朱雀征魂戦～</span> <span class="memo"> - 朱雀の優雅さが美しいね🦅</span></li>
+                    <li><span class="track">天つ風 ～白虎征魂戦～</span> <span class="memo"> - 白虎の力強さがかっこいい！🐯</span></li>
+                    <li><span class="track">月下彼岸花 ～蛮神ツクヨミ討滅戦～</span> <span class="memo"> - ツクヨミの儚さが心に残る🌙</span></li>
+                    <li><span class="track">紅の夜明け ～クガネ昼～</span> <span class="memo"> - クガネの雰囲気が大好き🌅</span></li>
+                    <li><span class="track">血の嵐</span> <span class="memo"> - 紅蓮の戦いの激しさがいいね🩸</span></li>
+                    <li><span class="track">鬨の声</span> <span class="memo"> - 戦いの気合いが入るよ！📣</span></li>
+                    <li><span class="track">龍の尾 ～神龍討滅戦～</span> <span class="memo"> - 神龍との戦いが壮大すぎる🐉</span></li>
+                    <!-- 漆黒 -->
+                    <li><span class="track">Shadowbringers</span> <span class="memo"> - 漆黒のテーマに震える✨</span></li>
+                    <li><span class="track">To the Edge</span> <span class="memo"> - ウォーリア戦の熱さがすごい！⚔️</span></li>
+                    <li><span class="track">Weight of the World／Prelude Version</span> <span class="memo"> - NieRコラボの切なさがたまらない🌌</span></li>
+                    <li><span class="track">ランドスライド ～希望の園エデン覚醒編～</span> <span class="memo"> - エデンの戦闘が楽しいね⛰️</span></li>
+                    <li><span class="track">ロングフォール ～異界遺構 シルクス･ツイニング～</span> <span class="memo"> - ダンジョンの疾走感が好き！🏃</span></li>
+                    <li><span class="track">冥き水底 ～テンペスト深部～</span> <span class="memo"> - テンペストの静けさが美しい🌊</span></li>
+                    <li><span class="track">忘却の此方</span> <span class="memo"> - 漆黒の物語が感じられるね🌑</span></li>
+                    <li><span class="track">目覚めの御使い ～ティターニア討滅戦～</span> <span class="memo"> - ティターニアの幻想的な雰囲気が最高🧚</span></li>
+                    <li><span class="track">砕けぬ思い ～ハーデス討滅戦～</span> <span class="memo"> - ハーデス戦がエモすぎる💔</span></li>
+                    <li><span class="track">貪欲</span> <span class="memo"> - 漆黒のダークな魅力が詰まってる！🖤</span></li>
+                    <!-- 暁月 -->
+                    <li><span class="track">Athena the Tireless One</span> <span class="memo"> - アテナ戦の緊張感がすごいね⚙️</span></li>
+                    <li><span class="track">Close in the Distance</span> <span class="memo"> - 暁月の終末が切ないよ🌠</span></li>
+                    <li><span class="track">Endwalker - Footfalls</span> <span class="memo"> - 旅を締めくくる壮大な一曲✨</span></li>
+                    <li><span class="track">Flow</span> <span class="memo"> - ヴェーネスの優しさに涙が…💧</span></li>
+                    <li><span class="track">Scream ～万魔殿パンデモニウム：煉獄編～</span> <span class="memo"> - パンデモの熱さがたまらない！🔥</span></li>
+                    <li><span class="track">White Stone Black ～万魔殿パンデモニウム：煉獄編～</span> <span class="memo"> - 神秘的な雰囲気が好きだよ🪨</span></li>
+                    <li><span class="track">Your Answer ～ハイデリン討滅戦～</span> <span class="memo"> - ハイデリンとの戦いがエモい🌍</span></li>
+                    <li><span class="track">想いが動かす力</span> <span class="memo"> - 暁月のテーマが心に響くね✨</span></li>
+                    <li><span class="track">終焉の戦い</span> <span class="memo"> - ゾディアーク戦の迫力がすごい！⚔️</span></li>
+                    <li><span class="track">迷夢 ～ラヴィリンソス：夜～</span> <span class="memo"> - ラヴィリンソスの夜が幻想的🌙</span></li>
+                    <!-- 黄金 -->
+                    <li><span class="track">Bee My Honey ～至天の座アルカディア：ライトヘビー級～</span> <span class="memo"> - アルカディアの軽快さが楽しい！🐝</span></li>
+                    <li><span class="track">Dawntrail</span> <span class="memo"> - 黄金の冒険を彩るワクワク感満載の曲🌞</span></li>
+                    <li><span class="track">Give It All ～至天の座アルカディア：ライトヘビー級～</span> <span class="memo"> - 全力で戦う感じが最高！💪</span></li>
+                    <li><span class="track">一つの路</span> <span class="memo"> - 黄金の旅路が感じられるね🛤️</span></li>
+                    <li><span class="track">二人の路</span> <span class="memo"> - 仲間との絆が温かいよ👥</span></li>
+                    <li><span class="track">山峡の涼風 ～オルコ・パチャ：昼～</span> <span class="memo"> - オルコ・パチャの爽やかさが好き🌬️</span></li>
+                    <li><span class="track">星なき摩天楼 ～ソリューション・ナイン～</span> <span class="memo"> - 未来都市の雰囲気がカッコいい！🏙️</span></li>
+                    <li><span class="track">火花と閃光 ～外征前哨ヴァンガード～</span> <span class="memo"> - ヴァンガードの戦闘が熱いね⚡</span></li>
+                    <li><span class="track">終わりなき軌跡</span> <span class="memo"> - 黄金の物語が続く感じが素敵✨</span></li>
+                    <li><span class="track">金煌なる民 ～トライヨラ：昼～</span> <span class="memo"> - トライヨラの明るさが癒される🌟</span></li>
+                </ul>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        // クリップボードにコピーする関数
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('「' + text + '」をクリップボードにコピーしました！');
+            }).catch(err => {
+                console.error('コピーに失敗しました: ', err);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/目覚めの御使い ～ティターニア討滅戦～.mp3", name: "目覚めの御使い" },
+                { src: "assets/忘却の彼方 ～蛮神シヴァ討滅戦～.mp3", name: "忘却の彼方" }
+            ];
+            setupBGM(tracks);
+        });
+    </script>
+</body>
+</html>

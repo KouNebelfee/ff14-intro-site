@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>レイド履歴 - FF14 冒険者の記録</title>
+    <title>FF14 冒険者の記録 - 装備</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-raid">
+<body class="bg-gear">
     <div class="music-player">
         <audio id="bgm">
             <source id="bgm-source" src="" type="audio/mpeg">
-            お使いのブラウザは音楽に対応していません。
         </audio>
         <button onclick="startBGM()">再生開始</button>
         <button onclick="toggleBGM()">再生/停止</button>
@@ -33,16 +32,35 @@
         <a href="spots.html">スクショスポット</a>
     </nav>
     <div class="content-wrapper">
-        <h1>レイド履歴</h1>
-        <section class="raid shockwave">
-            <h2>Nebelfee</h2>
-            <p>万魔殿パンデモニウム：天獄編 - 2024/03/01 忍者でクリア</p>
-            <p>絶アルテマ - 2024/06/01 忍者でクリア</p>
-            <p>アルカディア：ライトヘビー級 - 2024/08/25 ヴァイパーでクリア</p>
-            <p>滅暗黒の雲 - 2024/12/29 ヴァイパーでクリア</p>
-            <p>絶踏破をいつかしたいのでっす♪</p>
-            <h2>Schattenfee</h2>
-            <p>まだまだ見習い中★</p>
+        <section class="battle-section">
+            <h2>装備情報</h2>
+            <div class="job-info">
+                <h3>ヴァイパー</h3>
+                <p>装備：ILv730</p>
+                <p>メインアーム：ダークホースチャンピオン・ツインファング (ILv735)</p>
+                <p>マテリア: 戦技のハイアルテマリジャ（SS+54） / 戦技のハイアルテマリジャ（SS+54）</p>
+                <p>サブアーム：装備なし</p>
+                <p>頭装備：ダークホースチャンピオン・スカウトフード (ILv730)</p>
+                <p>マテリア: 雄略のハイアルテマテリジャ（意思力+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
+                <p>胴装備：ダークホースチャンピオン・スカウトコート (ILv730)</p>
+                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
+                <p>手装備：ケーツハリー・スカウトヴァンブレイスRE(ILv730)</p>
+                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
+                <p>脚装備：ケーツハリー・スカウトブリーチRE (ILv730)</p>
+                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
+                <p>足装備：ダークホースチャンピオン・スカウトブーツ (ILv730)</p>
+                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
+                <p>耳装備：ケーツハリー・レンジャーイヤーカフRE (ILv730)</p>
+                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
+                <p>首装備：ダークホースチャンピオン・レンジャーチョーカー (ILv730)</p>
+                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
+                <p>腕装備：ケーツハリー・レンジャーブレスレットRE(ILv730)</p>
+                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
+                <p>指装備1:ケーツハリー・レンジャーリングRE (ILv730)</p>
+                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
+                <p>指装備2:ダークホースチャンピオン・レンジャーリング (ILv730)</p>
+                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
+            </div>
         </section>
     </div>
     <footer>
@@ -52,9 +70,8 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
-                { src: "assets/Bee My Honey ～至天の座アルカディア：ライトヘビー級～.mp3", name: "Bee My Honey" },
-                { src: "assets/Give It All～至天の座アルカディア：ライトヘビー級～.mp3", name: "Give It All" },
-                { src: "assets/Scream ～万魔殿パンデモニウム：煉獄編～.mp3", name: "Scream" }
+                { src: "assets/The Maker's Ruin.mp3", name: "The Maker's Ruin" },
+                { src: "assets/究極幻想.mp3", name: "究極幻想" }
             ];
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");

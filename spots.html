@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>お気に入りの撮影スポット | FF14 冒険者の記録</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* spots.html用の追加CSS */
+        .spot-list {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .screenshot-spot {
+            background: linear-gradient(135deg, rgba(22, 33, 62, 0.9), rgba(0, 0, 0, 0.9));
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+            display: block;
+        }
+
+        .screenshot-spot h2.spot-title {
+            color: #ff6f61;
+            font-size: 26px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            margin-bottom: 10px;
+        }
+
+        .screenshot-spot p {
+            color: #ffffff;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .screenshot-spot .tips {
+            color: #ccc;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            margin-top: 10px;
+        }
+
+        .screenshot-spot .spot-image {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ffd700;
+            border-radius: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screenshot-spot .spot-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
+        }
+
+        #pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #pagination button {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #pagination button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #pagination button:hover:not(:disabled) {
+            background-color: #e65a50;
+        }
+
+        #page-number {
+            font-size: 16px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            color: #ff6f61;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #ff6f61;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+            background-color: #ff6f61;
+        }
+
+        .modal-content {
+            background: rgba(22, 33, 62, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+
+        .modal-content h2 {
+            color: #ff6f61;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            margin-bottom: 15px;
+        }
+
+        .modal-content label {
+            color: #ff6f61;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        body.bg-spots::after {
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* ヘッダーのサイズ統一 */
+        nav {
+            height: 60px; /* index.htmlやgallery.htmlと統一 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        /* music-playerの位置調整 - ヘッダーから少し離す */
+        .music-player {
+            position: fixed;
+            top: 80px; /* ヘッダー(60px) + 隙間(10px) */
+            left: 10px;
+            right: 10px;
+            z-index: 1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-spots">
+    <div class="music-player">
+        <audio id="bgm">
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1>お気に入りの撮影スポット</h1>
+        <p>光の戦士が愛してやまない、エオルゼアの特別な場所たち。</p>
+        <div class="spot-list" id="spot-list"></div>
+        <a href="index.html" class="back-link">ホームへ戻る</a>
+        <div id="pagination">
+            <button id="prev-btn" onclick="changePage(-1)">前の思い出</button>
+            <span id="page-number">1</span>
+            <button id="next-btn" onclick="changePage(1)">次の思い出</button>
+        </div>
+    </div>
+
+    <!-- 管理者モードモーダル -->
+    <div id="admin-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAdminModal()">×</span>
+            <h2>管理者モード</h2>
+            <form id="spot-form" onsubmit="addSpot(event)">
+                <label for="spot-title">タイトル:</label>
+                <input type="text" id="spot-title" required>
+                <label for="spot-desc">説明:</label>
+                <textarea id="spot-desc" required></textarea>
+                <label for="spot-image-file">スクショ:</label>
+                <input type="file" id="spot-image-file" accept="image/*" required>
+                <img id="image-preview" style="display: none; max-width: 100%; margin-top: 10px;">
+                <label for="spot-tips">お気に入りポイント:</label>
+                <textarea id="spot-tips" required></textarea>
+                <button type="submit">スポットを追加</button>
+                <button type="button" onclick="exportSpots()">エクスポート</button>
+                <label for="import-file">インポート:</label>
+                <input type="file" id="import-file" accept=".json" onchange="importSpots(event)">
+            </form>
+            <div id="admin-spot-list"></div>
+        </div>
+    </div>
+
+    <!-- 編集モーダル -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">×</span>
+            <h2>スポットの編集</h2>
+            <form id="edit-spot-form" onsubmit="saveEditedSpot(event)">
+                <input type="hidden" id="edit-spot-id">
+                <label for="edit-spot-title">タイトル:</label>
+                <input type="text" id="edit-spot-title" required>
+                <label for="edit-spot-desc">説明:</label>
+                <textarea id="edit-spot-desc" required></textarea>
+                <label for="edit-spot-image-file">スクショ（変更する場合）:</label>
+                <input type="file" id="edit-spot-image-file" accept="image/*">
+                <img id="edit-image-preview" style="max-width: 100%; margin-top: 10px;">
+                <label for="edit-spot-tips">お気に入りポイント:</label>
+                <textarea id="edit-spot-tips" required></textarea>
+                <button type="submit">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-nav">
+            <a href="#" id="footer-prev" class="disabled" onclick="changePage(-1)">前の思い出</a>
+            <a href="#" id="footer-next" onclick="changePage(1)">次の思い出</a>
+        </div>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dbRequest = indexedDB.open("SpotsDB", 1);
+            let db;
+
+            dbRequest.onupgradeneeded = (event) => {
+                db = event.target.result;
+                db.createObjectStore("spots", { keyPath: "id", autoIncrement: true });
+            };
+
+            dbRequest.onsuccess = (event) => {
+                db = event.target.result;
+                loadSpots();
+            };
+
+            dbRequest.onerror = (event) => {
+                console.error("IndexedDBエラー:", event.target.error);
+            };
+
+            const tracks = [
+                { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
+                { src: "assets/二人の路.mp3", name: "二つの路" },
+                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
+            };
+
+            function compressImage(file, callback) {
+                const img = new Image();
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxWidth = 800;
+                        const maxHeight = 600;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height *= maxWidth / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width *= maxHeight / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+                        callback(compressedData);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+
+            const spotsPerPage = 5;
+            let currentPage = 1;
+            let spotsData = [];
+
+            function loadSpots() {
+                const transaction = db.transaction(["spots"], "readonly");
+                const store = transaction.objectStore("spots");
+                const request = store.getAll();
+
+                request.onsuccess = () => {
+                    spotsData = request.result;
+                    renderSpots();
+                };
+
+                request.onerror = () => {
+                    console.error("スポットの読み込みエラー:", request.error);
+                };
+            }
+
+            function renderSpots() {
+                const spotList = document.getElementById('spot-list');
+                spotList.innerHTML = '';
+                if (spotsData.length === 0) {
+                    spotList.innerHTML = '<p>まだスポットがありません。管理者モードで追加してください。</p>';
+                } else {
+                    spotsData.forEach(spot => {
+                        const spotElement = document.createElement('section');
+                        spotElement.className = 'screenshot-spot';
+                        spotElement.setAttribute('data-page', spot.page);
+                        spotElement.setAttribute('data-id', spot.id);
+                        spotElement.innerHTML = `
+                            <h2 class="spot-title">${spot.title}</h2>
+                            <p>${spot.desc}</p>
+                            ${spot.image ? `<img src="${spot.image}" alt="${spot.title}" class="spot-image">` : ''}
+                            <div class="tips"><strong>お気に入りポイント:</strong> ${spot.tips}</div>
+                        `;
+                        spotList.appendChild(spotElement);
+
+                        if (spot.image) {
+                            const img = spotElement.querySelector('.spot-image');
+                            img.onload = () => {
+                                if (img.naturalWidth > window.innerWidth || img.naturalHeight > window.innerHeight * 0.6) {
+                                    img.style.maxWidth = '100%';
+                                    img.style.maxHeight = '60vh';
+                                    img.style.objectFit = 'cover';
+                                }
+                            };
+                        }
+                    });
+                }
+                updateSpots();
+            }
+
+            function updateSpots() {
+                const spots = document.querySelectorAll('.screenshot-spot');
+                const totalPages = Math.max(1, Math.ceil(spotsData.length / spotsPerPage));
+                spots.forEach(spot => {
+                    const page = parseInt(spot.getAttribute('data-page'));
+                    spot.style.display = (page === currentPage) ? 'block' : 'none';
+                });
+
+                document.getElementById('page-number').textContent = currentPage;
+                document.getElementById('prev-btn').disabled = currentPage === 1;
+                document.getElementById('next-btn').disabled = currentPage === totalPages || spotsData.length === 0;
+                document.getElementById('footer-prev').classList.toggle('disabled', currentPage === 1);
+                document.getElementById('footer-next').classList.toggle('disabled', currentPage === totalPages || spotsData.length === 0);
+            }
+
+            window.changePage = function(delta) {
+                const totalPages = Math.max(1, Math.ceil(spotsData.length / spotsPerPage));
+                currentPage += delta;
+                if (currentPage < 1) currentPage = 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                updateSpots();
+            };
+
+            window.closeAdminModal = function() {
+                document.getElementById('admin-modal').style.display = 'none';
+                document.getElementById('image-preview').style.display = 'none';
+            };
+
+            document.getElementById('spot-image-file').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    compressImage(file, (compressedData) => {
+                        document.getElementById('image-preview').src = compressedData;
+                        document.getElementById('image-preview').style.display = 'block';
+                    });
+                }
+            });
+
+            window.addSpot = function(event) {
+                event.preventDefault();
+                const title = document.getElementById('spot-title').value;
+                const desc = document.getElementById('spot-desc').value;
+                const fileInput = document.getElementById('spot-image-file');
+                const tips = document.getElementById('spot-tips').value;
+
+                if (!fileInput.files[0]) {
+                    alert("スクショを選択してください！");
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                compressImage(file, (compressedData) => {
+                    const newPage = Math.floor(spotsData.length / spotsPerPage) + 1;
+                    const newSpot = {
+                        page: newPage,
+                        title: title,
+                        desc: desc,
+                        image: compressedData,
+                        tips: tips
+                    };
+
+                    const transaction = db.transaction(["spots"], "readwrite");
+                    const store = transaction.objectStore("spots");
+                    const request = store.add(newSpot);
+
+                    request.onsuccess = () => {
+                        newSpot.id = request.result;
+                        spotsData.push(newSpot);
+                        document.getElementById('spot-form').reset();
+                        document.getElementById('image-preview').style.display = 'none';
+                        renderSpots();
+                        updateAdminSpotList();
+                        console.log("スポットが追加されました:", newSpot);
+                    };
+
+                    request.onerror = () => {
+                        console.error("スポット追加エラー:", request.error);
+                    };
+                });
+            };
+
+            function updateAdminSpotList() {
+                const adminList = document.getElementById('admin-spot-list');
+                adminList.innerHTML = '';
+                if (spotsData.length === 0) {
+                    adminList.innerHTML = '<p>まだスポットがありません。</p>';
+                } else {
+                    spotsData.forEach(spot => {
+                        const li = document.createElement('div');
+                        li.className = 'admin-spot-item';
+                        li.innerHTML = `
+                            <span>${spot.title}</span>
+                            <button class="edit-btn" onclick="openEditModal(${spot.id})">編集</button>
+                            <button class="delete-btn" onclick="deleteSpot(${spot.id})">削除</button>
+                        `;
+                        adminList.appendChild(li);
+                    });
+                }
+            }
+
+            window.openEditModal = function(id) {
+                const spot = spotsData.find(s => s.id === id);
+                if (!spot) {
+                    console.error("スポットが見つかりません: ID", id);
+                    return;
+                }
+
+                document.getElementById('edit-spot-id').value = spot.id;
+                document.getElementById('edit-spot-title').value = spot.title;
+                document.getElementById('edit-spot-desc').value = spot.desc;
+                document.getElementById('edit-spot-tips').value = spot.tips;
+                document.getElementById('edit-image-preview').src = spot.image || '';
+                document.getElementById('edit-image-preview').style.display = spot.image ? 'block' : 'none';
+                document.getElementById('edit-modal').style.display = 'block';
+
+                document.getElementById('edit-spot-image-file').addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        compressImage(file, (compressedData) => {
+                            document.getElementById('edit-image-preview').src = compressedData;
+                            document.getElementById('edit-image-preview').style.display = 'block';
+                        });
+                    }
+                }, { once: true });
+            };
+
+            window.closeEditModal = function() {
+                document.getElementById('edit-modal').style.display = 'none';
+                document.getElementById('edit-image-preview').style.display = 'none';
+            };
+
+            window.saveEditedSpot = function(event) {
+                event.preventDefault();
+                const id = parseInt(document.getElementById('edit-spot-id').value);
+                const spotIndex = spotsData.findIndex(s => s.id === id);
+                if (spotIndex === -1) {
+                    console.error("スポットが見つかりません: ID", id);
+                    return;
+                }
+
+                const updatedSpot = {
+                    id: id,
+                    page: spotsData[spotIndex].page,
+                    title: document.getElementById('edit-spot-title').value,
+                    desc: document.getElementById('edit-spot-desc').value,
+                    tips: document.getElementById('edit-spot-tips').value,
+                    image: spotsData[spotIndex].image
+                };
+
+                const fileInput = document.getElementById('edit-spot-image-file');
+                if (fileInput.files[0]) {
+                    compressImage(fileInput.files[0], (compressedData) => {
+                        updatedSpot.image = compressedData;
+                        updateSpotInDB(updatedSpot, spotIndex);
+                    });
+                } else {
+                    updateSpotInDB(updatedSpot, spotIndex);
+                }
+            };
+
+            function updateSpotInDB(updatedSpot, spotIndex) {
+                const transaction = db.transaction(["spots"], "readwrite");
+                const store = transaction.objectStore("spots");
+                const request = store.put(updatedSpot);
+
+                request.onsuccess = () => {
+                    spotsData[spotIndex] = updatedSpot;
+                    renderSpots();
+                    updateAdminSpotList();
+                    closeEditModal();
+                    console.log("スポットが編集されました:", updatedSpot);
+                };
+
+                request.onerror = () => {
+                    console.error("スポット編集エラー:", request.error);
+                };
+            }
+
+            window.deleteSpot = function(id) {
+                if (confirm("このスポットを削除しますか？")) {
+                    const transaction = db.transaction(["spots"], "readwrite");
+                    const store = transaction.objectStore("spots");
+                    const request = store.delete(id);
+
+                    request.onsuccess = () => {
+                        spotsData = spotsData.filter(s => s.id !== id);
+                        spotsData.forEach((spot, index) => {
+                            spot.page = Math.floor(index / spotsPerPage) + 1;
+                        });
+                        renderSpots();
+                        updateAdminSpotList();
+                        console.log("スポットが削除されました: ID", id);
+                    };
+
+                    request.onerror = () => {
+                        console.error("スポット削除エラー:", request.error);
+                    };
+                }
+            };
+
+            window.exportSpots = function() {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spotsData));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", "spots_data.json");
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                document.body.removeChild(downloadAnchor);
+            };
+
+            window.importSpots = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        const transaction = db.transaction(["spots"], "readwrite");
+                        const store = transaction.objectStore("spots");
+                        store.clear().onsuccess = () => {
+                            importedData.forEach(spot => {
+                                store.add(spot);
+                            });
+                            transaction.oncomplete = () => {
+                                spotsData = importedData;
+                                renderSpots();
+                                updateAdminSpotList();
+                                alert("スポットがインポートされました。");
+                            };
+                        };
+                    } catch (error) {
+                        alert("無効なファイルです。JSON形式のスポットデータを選択してください。");
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+            let keyBuffer = '';
+            document.addEventListener('keydown', (e) => {
+                keyBuffer += e.key;
+                if (keyBuffer.toLowerCase().includes('admin')) {
+                    document.getElementById('admin-modal').style.display = 'block';
+                    updateAdminSpotList();
+                    keyBuffer = '';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('spot-image')) {
+                    e.target.classList.toggle('enlarged');
+                    if (e.target.classList.contains('enlarged')) {
+                        e.target.style.transform = 'scale(1.5)';
+                        e.target.style.boxShadow = '0 0 20px rgba(52, 152, 219, 1)';
+                        e.target.style.zIndex = '1000';
+                    } else {
+                        e.target.style.transform = 'scale(1)';
+                        e.target.style.boxShadow = '0 0 15px rgba(52, 152, 219, 0.8)';
+                        e.target.style.zIndex = 'auto';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

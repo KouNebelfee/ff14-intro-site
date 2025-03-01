@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>プレイ日記 - FF14 冒険者の記録</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-diary">
+    <div class="music-player">
+        <audio id="bgm">
+            <source id="bgm-source" src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track"></span></p>
+    </div>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="profile-nebelfee.html">Nebelfee</a>
+        <a href="profile-schattenfee.html">Schattenfee</a>
+        <a href="story.html">ストーリー</a>
+        <a href="gallery.html">ギャラリー</a>
+        <a href="raid.html">レイド</a>
+        <a href="gear.html">装備</a>
+        <a href="diary.html">プレイ日記</a>
+        <a href="recruit.html">仲間募集</a>
+        <a href="links.html">リンク集</a>
+        <a href="spots.html">スクショスポット</a>
+    </nav>
+    <div class="content-wrapper">
+        <h1 id="diary-title" style="cursor: pointer;">プレイ日記</h1>
+        <section class="story-section">
+            <div id="admin-controls" style="display: none;">
+                <a href="create-diary.html" id="create-btn" class="create-btn">新しい日記を作成</a>
+            </div>
+            <div id="diary-list"></div>
+            <div id="pagination">
+                <button id="prev-page" onclick="prevPage()">前へ</button>
+                <span id="page-number"></span>
+                <button id="next-page" onclick="nextPage()">次へ</button>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+        let isAdmin = false;
+        let tapCount = 0;
+        const TAP_THRESHOLD = 5;
+        let db;
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+
+        document.addEventListener("keydown", (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === "A") {
+                activateAdminMode();
+            }
+        });
+
+        document.getElementById("diary-title").addEventListener("click", () => {
+            tapCount++;
+            console.log("タップ回数:", tapCount);
+            if (tapCount >= TAP_THRESHOLD) {
+                activateAdminMode();
+                tapCount = 0;
+            }
+            setTimeout(() => { tapCount = 0; }, 2000);
+        });
+
+        function activateAdminMode() {
+            const password = prompt("管理者パスワードを入力してください:");
+            console.log("入力されたパスワード:", password);
+            if (password === "1225@Yuuto") {
+                isAdmin = true;
+                document.getElementById("admin-controls").style.display = "block";
+                localStorage.setItem("isAdmin", "true");
+                loadDiaries();
+                console.log("管理者モード: ON");
+            } else {
+                alert("パスワードが間違っています。");
+                console.log("パスワード不一致:", password, "!= 1225@Yuuto");
+            }
+        }
+
+        function loadDiaries() {
+            const transaction = db.transaction(["diaries"], "readonly");
+            const store = transaction.objectStore("diaries");
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const diaries = request.result;
+                renderDiaries(diaries);
+            };
+
+            request.onerror = () => {
+                console.error("日記取得エラー:", request.error);
+            };
+        }
+
+        function renderDiaries(diaries) {
+            const diaryList = document.getElementById("diary-list");
+            diaryList.innerHTML = "";
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const paginatedDiaries = diaries.slice(startIndex, endIndex);
+
+            paginatedDiaries.forEach(diary => {
+                console.log("日記データ:", diary);
+                const entry = document.createElement("article");
+                entry.className = "diary-entry";
+                if (!diary.token) {
+                    console.error("トークンが欠落しています。ID:", diary.id);
+                    diary.token = generateToken();
+                    updateDiaryToken(diary);
+                }
+                entry.innerHTML = `
+                    <h2><a href="diary-view.html?id=${diary.id}&token=${encodeURIComponent(diary.token)}&fromList=true">${diary.date} - ${diary.summary}</a></h2>
+                    ${isAdmin ? `
+                        <button class="edit-btn" data-id="${diary.id}" onclick="editDiary(${diary.id})">編集</button>
+                        <button class="delete-btn" data-id="${diary.id}" onclick="deleteDiary(${diary.id})">削除</button>
+                        <button class="share-btn" data-id="${diary.id}" onclick="generateShareLink(${diary.id}, '${encodeURIComponent(diary.token)}')">共有リンク発行</button>
+                    ` : ""}
+                `;
+                diaryList.appendChild(entry);
+            });
+
+            updatePagination(diaries.length);
+        }
+
+        function editDiary(id) {
+            window.location.href = `edit-diary.html?id=${id}`;
+        }
+
+        function updatePagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+            document.getElementById("page-number").textContent = `ページ ${currentPage}/${totalPages}`;
+            document.getElementById("prev-page").disabled = currentPage === 1;
+            document.getElementById("next-page").disabled = currentPage === totalPages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                loadDiaries();
+            }
+        }
+
+        function nextPage() {
+            const transaction = db.transaction(["diaries"], "readonly");
+            const store = transaction.objectStore("diaries");
+            const request = store.count();
+
+            request.onsuccess = () => {
+                const totalItems = request.result;
+                const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadDiaries();
+                }
+            };
+        }
+
+        function deleteDiary(id) {
+            if (confirm("この日記を削除しますか？")) {
+                const transaction = db.transaction(["diaries"], "readwrite");
+                const store = transaction.objectStore("diaries");
+                store.delete(Number(id));
+
+                transaction.oncomplete = () => {
+                    loadDiaries();
+                    console.log(`日記 ID: ${id} を削除しました`);
+                };
+            }
+        }
+
+        function updateDiaryToken(diary) {
+            const request = indexedDB.open("FF14DiaryDB", 1);
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+                const transaction = db.transaction(["diaries"], "readwrite");
+                const store = transaction.objectStore("diaries");
+                store.put(diary);
+                transaction.oncomplete = () => {
+                    console.log("トークンを更新しました。ID:", diary.id, "Token:", diary.token);
+                };
+            };
+        }
+
+        function generateShareLink(id, token) {
+            const shareUrl = `${window.location.origin}/diary-view.html?id=${id}&token=${token}`;
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert(`共有リンクをクリップボードにコピーしました:\n${shareUrl}`);
+            }).catch(err => {
+                alert(`共有リンク: ${shareUrl}\nクリップボードへのコピーに失敗しました。手動でコピーしてください。`);
+                console.error("クリップボードエラー:", err);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Flow.mp3", name: "Flow" },
+                { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
+            ];
+            setupBGM(tracks);
+
+            const dbName = "FF14DiaryDB";
+            const request = indexedDB.open(dbName, 1);
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                db.createObjectStore("diaries", { keyPath: "id", autoIncrement: true });
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                loadDiaries();
+                console.log("IndexedDB 接続成功");
+            };
+
+            request.onerror = (event) => {
+                console.error("IndexedDBエラー:", event.target.error);
+            };
+        });
+    </script>
+</body>
+</html>
