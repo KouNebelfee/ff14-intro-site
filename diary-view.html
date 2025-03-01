@@ -46,6 +46,57 @@
     <div class="content-wrapper" id="diary-content">
         <p>読み込み中...</p>
     </div>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const diaryId = urlParams.get("id");
+            const token = urlParams.get("token");
+
+            const dbName = "FF14DiaryDB";
+            const storeName = "diaries";
+            let db;
+
+            const request = indexedDB.open(dbName, 1);
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                loadDiary(diaryId, token);
+            };
+
+            request.onerror = (event) => {
+                console.error("IndexedDBエラー:", event.target.error);
+            };
+
+            function loadDiary(id, token) {
+                const transaction = db.transaction([storeName], "readonly");
+                const store = transaction.objectStore(storeName);
+                const request = store.get(Number(id));
+
+                request.onsuccess = () => {
+                    const diary = request.result;
+                    if (diary && diary.token === token) {
+                        const contentDiv = document.getElementById("diary-content");
+                        contentDiv.innerHTML = `
+                            <h2>${diary.date} - ${diary.summary}</h2>
+                            <div class="diary-content">${diary.content}</div>
+                            ${diary.image ? `<img src="${diary.image}" alt="日記の画像" class="diary-image">` : ""}
+                            <a href="diary.html" class="back-link">戻る</a>
+                        `;
+                    } else {
+                        document.getElementById("diary-content").innerHTML = "<p>日記が見つからないか、トークンが一致しません。</p>";
+                    }
+                };
+
+                request.onerror = () => {
+                    console.error("日記取得エラー:", request.error);
+                };
+            }
+        });
+    </script>
 </body>
 </html>
