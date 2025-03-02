@@ -14,6 +14,31 @@
         nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
         nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
         .content-wrapper { padding-top: 120px; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #1a1a1a; color: #fff; }
+        .battle-section { max-width: 800px; margin: 0 auto; }
+        h2 { color: #ffd700; text-align: center; }
+        h3 { color: #ffd700; margin-top: 20px; }
+        .gear-item { display: flex; align-items: center; margin: 10px 0; }
+        .gear-item img { width: 40px; height: 40px; margin-right: 10px; }
+        .gear-category { margin-top: 20px; font-weight: bold; font-size: 18px; color: #ffd700; }
+        footer { text-align: center; padding: 10px; background: #333; position: relative; }
+        .auth-panel, .admin-panel { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 8px; 
+            z-index: 1300; display: none; flex-direction: column; gap: 10px; 
+            width: 90%; max-width: 500px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+        }
+        .admin-panel select, .admin-panel textarea { 
+            width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ffd700; 
+            border-radius: 4px; background: #333; color: #fff; 
+        }
+        .admin-panel .item-preview { display: flex; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+        .admin-panel .item-preview img { width: 32px; height: 32px; margin-right: 10px; }
+        .admin-panel-buttons { display: flex; gap: 10px; justify-content: center; }
+        .auth-panel-buttons { display: flex; gap: 10px; justify-content: center; }
+        button { padding: 8px 16px; background: #ffd700; color: #333; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #ff6f61; color: #fff; }
+        #weapon-category { display: none; margin-top: 10px; }
 
         @media (min-width: 768px) {
             .hamburger { display: none; }
@@ -65,39 +90,178 @@
     <div class="content-wrapper">
         <section class="battle-section">
             <h2>装備情報</h2>
-            <div class="job-info">
-                <h3>ヴァイパー</h3>
-                <p>装備：ILv730</p>
-                <p>メインアーム：ダークホースチャンピオン・ツインファング (ILv735)</p>
-                <p>マテリア: 戦技のハイアルテマリジャ（SS+54） / 戦技のハイアルテマリジャ（SS+54）</p>
-                <p>サブアーム：装備なし</p>
-                <p>頭装備：ダークホースチャンピオン・スカウトフード (ILv730)</p>
-                <p>マテリア: 雄略のハイアルテマテリジャ（意思力+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
-                <p>胴装備：ダークホースチャンピオン・スカウトコート (ILv730)</p>
-                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
-                <p>手装備：ケーツハリー・スカウトヴァンブレイスRE(ILv730)</p>
-                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
-                <p>脚装備：ケーツハリー・スカウトブリーチRE (ILv730)</p>
-                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
-                <p>足装備：ダークホースチャンピオン・スカウトブーツ (ILv730)</p>
-                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
-                <p>耳装備：ケーツハリー・レンジャーイヤーカフRE (ILv730)</p>
-                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
-                <p>首装備：ダークホースチャンピオン・レンジャーチョーカー (ILv730)</p>
-                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
-                <p>腕装備：ケーツハリー・レンジャーブレスレットRE(ILv730)</p>
-                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 雄略のハイアルテマテリジャ（意思力+54）</p>
-                <p>指装備1:ケーツハリー・レンジャーリングRE (ILv730)</p>
-                <p>マテリア: 天眼のハイアルテマテリジャ（意思力+54） / 天眼のハイアルテマテリジャ（意思力+54）</p>
-                <p>指装備2:ダークホースチャンピオン・レンジャーリング (ILv730)</p>
-                <p>マテリア: 武略のハイアルテマテリジャ（クリティカル+54） / 武略のハイアルテマテリジャ（クリティカル+54）</p>
+            <div class="job-info" id="gear-content">
+                <h3 id="job-name">ジョブ未選択</h3>
+                <p id="gear-ilvl">全体ILv: 未計算</p>
+
+                <h3>武器</h3>
+                <div class="gear-category">メインアーム</div>
+                <div id="gear-weapon" class="gear-item"></div>
+                <div id="gear-weapon-materia"></div>
+                <div class="gear-category">サブアーム</div>
+                <div id="gear-shield" class="gear-item"></div>
+
+                <h3>防具</h3>
+                <div class="gear-category">頭装備</div>
+                <div id="gear-head" class="gear-item"></div>
+                <div id="gear-head-materia"></div>
+                <div class="gear-category">胴装備</div>
+                <div id="gear-body" class="gear-item"></div>
+                <div id="gear-body-materia"></div>
+                <div class="gear-category">手装備</div>
+                <div id="gear-hands" class="gear-item"></div>
+                <div id="gear-hands-materia"></div>
+                <div class="gear-category">脚装備</div>
+                <div id="gear-legs" class="gear-item"></div>
+                <div id="gear-legs-materia"></div>
+                <div class="gear-category">足装備</div>
+                <div id="gear-feet" class="gear-item"></div>
+                <div id="gear-feet-materia"></div>
+
+                <h3>アクセサリー</h3>
+                <div class="gear-category">耳装備</div>
+                <div id="gear-ears" class="gear-item"></div>
+                <div id="gear-ears-materia"></div>
+                <div class="gear-category">首装備</div>
+                <div id="gear-neck" class="gear-item"></div>
+                <div id="gear-neck-materia"></div>
+                <div class="gear-category">腕装備</div>
+                <div id="gear-wrists" class="gear-item"></div>
+                <div id="gear-wrists-materia"></div>
+                <div class="gear-category">指装備1</div>
+                <div id="gear-finger1" class="gear-item"></div>
+                <div id="gear-finger1-materia"></div>
+                <div class="gear-category">指装備2</div>
+                <div id="gear-finger2" class="gear-item"></div>
+                <div id="gear-finger2-materia"></div>
             </div>
         </section>
     </div>
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
+            <button id="admin-toggle">管理者モード</button>
+        </p>
+        <button id="exit-admin" class="admin-only" style="display: none;">管理者モード終了</button>
     </footer>
+
+    <div id="auth-panel" class="auth-panel">
+        <input type="password" id="admin-password" placeholder="パスワード入力">
+        <div class="auth-panel-buttons">
+            <button onclick="verifyAdmin()">認証</button>
+            <button onclick="closeAuthPanel()">キャンセル</button>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="admin-panel">
+        <select id="job-select" onchange="updateJob()">
+            <option value="">ジョブを選択</option>
+            <option value="paladin">ナイト (剣+盾)</option>
+            <option value="warrior">戦士 (斧)</option>
+            <option value="darkknight">暗黒騎士 (大剣)</option>
+            <option value="gunbreaker">ガンブレイカー (銃剣)</option>
+            <option value="monk">モンク (拳)</option>
+            <option value="dragoon">竜騎士 (槍)</option>
+            <option value="ninja">忍者 (双剣)</option>
+            <option value="samurai">侍 (刀)</option>
+            <option value="reaper">リーパー (鎌)</option>
+            <option value="viper">ヴァイパー (双剣)</option>
+            <option value="bard">吟遊詩人 (弓)</option>
+            <option value="machinist">機工士 (銃)</option>
+            <option value="dancer">踊り子 (投擲)</option>
+            <option value="blackmage">黒魔道士 (杖)</option>
+            <option value="summoner">召喚士 (本)</option>
+            <option value="redmage">赤魔道士 (細剣)</option>
+            <option value="bluemage">青魔道士 (魔杖)</option>
+            <option value="whitemage">白魔道士 (幻具)</option>
+            <option value="scholar">学者 (魔道書)</option>
+            <option value="astrologian">占星術師 (天球儀)</option>
+            <option value="sage">賢者 (飛翔剣)</option>
+            <option value="pictomancer">ピクトマンサー (筆)</option>
+        </select>
+        <select id="edit-target" onchange="loadContent()">
+            <option value="">編集対象を選択</option>
+            <option value="gear-weapon">メインアーム</option>
+            <option value="gear-weapon-materia">マテリア</option>
+            <option value="gear-shield">サブアーム</option>
+            <option value="gear-head">頭装備</option>
+            <option value="gear-head-materia">マテリア</option>
+            <option value="gear-body">胴装備</option>
+            <option value="gear-body-materia">マテリア</option>
+            <option value="gear-hands">手装備</option>
+            <option value="gear-hands-materia">マテリア</option>
+            <option value="gear-legs">脚装備</option>
+            <option value="gear-legs-materia">マテリア</option>
+            <option value="gear-feet">足装備</option>
+            <option value="gear-feet-materia">マテリア</option>
+            <option value="gear-ears">耳装備</option>
+            <option value="gear-ears-materia">マテリア</option>
+            <option value="gear-neck">首装備</option>
+            <option value="gear-neck-materia">マテリア</option>
+            <option value="gear-wrists">腕装備</option>
+            <option value="gear-wrists-materia">マテリア</option>
+            <option value="gear-finger1">指装備1</option>
+            <option value="gear-finger1-materia">マテリア</option>
+            <option value="gear-finger2">指装備2</option>
+            <option value="gear-finger2-materia">マテリア</option>
+        </select>
+        <select id="xivapi-items" onchange="selectXIVAPIItem()">
+            <option value="">候補を選択（任意）</option>
+        </select>
+        <div id="item-preview" class="item-preview"></div>
+        <textarea id="edit-content" rows="5" placeholder="名前を入力（改行で複数可）"></textarea>
+        <div class="admin-panel-buttons">
+            <button onclick="loadXIVAPIItems()">検索</button>
+            <button onclick="saveEdit()">保存</button>
+            <button onclick="closeAdminPanel()">閉じる</button>
+        </div>
+    </div>
+
     <script>
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+        const ADMIN_PASSWORD = "1225@Yuuto";
+        let gearData = JSON.parse(localStorage.getItem("gearData")) || {};
+        let selectedItem = null;
+        let selectedJob = localStorage.getItem("selectedJob") || "";
+
+        const categoryMap = {
+            "gear-shield": 2,
+            "gear-head": 3,
+            "gear-body": 4,
+            "gear-hands": 5,
+            "gear-legs": 7,
+            "gear-feet": 8,
+            "gear-ears": 10,
+            "gear-neck": 11,
+            "gear-wrists": 12,
+            "gear-finger1": 13,
+            "gear-finger2": 13
+        };
+
+        const jobWeaponCategories = {
+            "paladin": { main: 1, sub: 2 },
+            "warrior": { main: 3 },
+            "darkknight": { main: 84 },
+            "gunbreaker": { main: 93 },
+            "monk": { main: 4 },
+            "dragoon": { main: 5 },
+            "ninja": { main: 87 },
+            "samurai": { main: 88 },
+            "reaper": { main: 95 },
+            "viper": { main: 87 },
+            "bard": { main: 7 },
+            "machinist": { main: 89 },
+            "dancer": { main: 91 },
+            "blackmage": { main: 9 },
+            "summoner": { main: 11 },
+            "redmage": { main: 85 },
+            "bluemage": { main: 90 },
+            "whitemage": { main: 6 },
+            "scholar": { main: 11 },
+            "astrologian": { main: 92 },
+            "sage": { main: 94 },
+            "pictomancer": { main: 96 }
+        };
+
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
                 { src: "assets/エスケープ ～次元の狭間オメガアルファ編～.mp3", name: "エスケープ" },
@@ -152,7 +316,378 @@
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('open');
             });
+
+            initializeAdminMode();
+            loadGearItems();
+            if (selectedJob) {
+                document.getElementById("job-select").value = selectedJob;
+                updateJob();
+            }
         });
+
+        function initializeAdminMode() {
+            const adminToggle = document.getElementById("admin-toggle");
+            const exitAdmin = document.getElementById("exit-admin");
+            const adminPanel = document.getElementById("admin-panel");
+
+            if (isAdmin) {
+                adminToggle.textContent = "管理者パネルを開く";
+                adminToggle.style.display = "inline";
+                exitAdmin.style.display = "block";
+            } else {
+                adminToggle.style.display = "inline"; // 常に表示して認証を促す
+                exitAdmin.style.display = "none";
+                adminPanel.style.display = "none";
+            }
+
+            adminToggle.addEventListener("click", toggleAdminPanel);
+            exitAdmin.addEventListener("click", () => toggleAdminMode(false));
+        }
+
+        function toggleAdminMode(enable) {
+            isAdmin = enable;
+            localStorage.setItem("isAdmin", enable);
+            initializeAdminMode();
+        }
+
+        function toggleAdminPanel() {
+            const adminPanel = document.getElementById("admin-panel");
+            if (!isAdmin) {
+                document.getElementById("auth-panel").style.display = "flex";
+            } else {
+                adminPanel.style.display = adminPanel.style.display === "block" ? "none" : "block";
+                if (adminPanel.style.display === "block") loadXIVAPIItems();
+            }
+        }
+
+        function closeAdminPanel() {
+            document.getElementById("admin-panel").style.display = "none";
+        }
+
+        window.verifyAdmin = function() {
+            const password = document.getElementById("admin-password").value;
+            if (password === ADMIN_PASSWORD) {
+                toggleAdminMode(true);
+                document.getElementById("auth-panel").style.display = "none";
+                toggleAdminPanel();
+            } else {
+                alert("パスワードが間違っています！");
+            }
+        };
+
+        window.closeAuthPanel = function() {
+            document.getElementById("auth-panel").style.display = "none";
+            document.getElementById("admin-password").value = "";
+        };
+
+        window.updateJob = function() {
+            selectedJob = document.getElementById("job-select").value;
+            localStorage.setItem("selectedJob", selectedJob);
+            document.getElementById("job-name").textContent = selectedJob ? selectedJob.toUpperCase() : "ジョブ未選択";
+            updateSubArmDisplay();
+            loadContent();
+        };
+
+        function updateSubArmDisplay() {
+            const shieldElement = document.getElementById("gear-shield");
+            const shieldData = gearData["gear-shield"];
+            if (selectedJob === "paladin") {
+                shieldElement.style.display = "flex";
+                shieldElement.innerHTML = shieldData?.icon 
+                    ? `<img src="${shieldData.icon}" alt="${shieldData.content}"><p>${shieldData.content}</p>` 
+                    : (shieldData?.content ? `<p>${shieldData.content}</p>` : "");
+            } else {
+                shieldElement.style.display = "block";
+                shieldElement.innerHTML = "<p>装備なし</p>";
+                delete gearData["gear-shield"];
+                localStorage.setItem("gearData", JSON.stringify(gearData));
+            }
+        }
+
+        async function loadXIVAPIItems() {
+            const target = document.getElementById("edit-target").value;
+            const select = document.getElementById("xivapi-items");
+            const textarea = document.getElementById("edit-content");
+            const preview = document.getElementById("item-preview");
+
+            select.innerHTML = '<option value="">候補を選択（任意）</option>';
+
+            if (target.includes("materia")) {
+                select.setAttribute("multiple", "multiple");
+                select.setAttribute("size", "5");
+            } else {
+                select.removeAttribute("multiple");
+                select.removeAttribute("size");
+            }
+
+            if (!target) {
+                select.disabled = true;
+                return;
+            }
+
+            select.disabled = false;
+
+            const inputNames = textarea.value.trim().split("\n").filter(name => name);
+            if (inputNames.length > 0) {
+                preview.innerHTML = "";
+                selectedItem = [];
+
+                try {
+                    if (target.includes("materia")) {
+                        const response = await fetch(`https://xivapi.com/search?indexes=Materia&string=${encodeURIComponent(inputNames.join("|"))}&language=ja&columns=ID,Name,Icon,Value,BaseParam`);
+                        const data = await response.json();
+                        console.log("マテリア検索レスポンス:", data);
+                        const results = data.Results || [];
+                        results.forEach(result => {
+                            if (result.Name && result.BaseParam) {
+                                const paramName = result.BaseParam.Name_ja || "不明";
+                                const value = result.Value || 0;
+                                const optionData = {
+                                    id: result.ID,
+                                    name: result.Name,
+                                    icon: `https://xivapi.com${result.Icon}`,
+                                    value: `${paramName}+${value}`
+                                };
+                                selectedItem.push(optionData);
+                                preview.innerHTML += `<div><img src="${optionData.icon}" alt="${optionData.name}"><span>${optionData.name} (${optionData.value})</span></div>`;
+                            }
+                        });
+                        if (results.length === 0) {
+                            preview.innerHTML = "<p>一致するマテリアが見つかりませんでした</p>";
+                        }
+                    } else {
+                        const categoryId = target === "gear-weapon" || target === "gear-shield" ? jobWeaponCategories[selectedJob]?.main || categoryMap[target] : categoryMap[target];
+                        const response = await fetch(`https://xivapi.com/search?indexes=Item&string=${encodeURIComponent(inputNames.join("|"))}&language=ja&columns=ID,Name,Icon,LevelItem,ItemKind&filters=ItemUICategory=${categoryId}`);
+                        const data = await response.json();
+                        console.log("アイテム検索レスポンス:", data);
+                        const results = data.Results || [];
+                        results.forEach(result => {
+                            if (result.LevelItem > 0 && result.ItemKind && result.ItemKind.ID === 5) {
+                                const optionData = {
+                                    id: result.ID,
+                                    name: result.Name,
+                                    icon: `https://xivapi.com${result.Icon}`,
+                                    il: result.LevelItem
+                                };
+                                selectedItem.push(optionData);
+                                preview.innerHTML += `<div><img src="${optionData.icon}" alt="${optionData.name}"><span>${optionData.name} (ILv${optionData.il})</span></div>`;
+                            }
+                        });
+                        if (results.length === 0) {
+                            preview.innerHTML = "<p>一致するアイテムが見つかりませんでした</p>";
+                        }
+                    }
+                } catch (error) {
+                    console.error("XIVAPI検索エラー:", error);
+                    preview.innerHTML = "<p>検索中にエラーが発生しました</p>";
+                }
+            }
+
+            try {
+                if (target.includes("materia")) {
+                    const response = await fetch(`https://xivapi.com/Materia?limit=500&language=ja&columns=ID,Name,Icon,Value,BaseParam`);
+                    const data = await response.json();
+                    console.log("マテリア候補レスポンス:", data);
+                    data.Results.forEach(materia => {
+                        if (materia.Name && materia.BaseParam && materia.Icon) {
+                            const paramName = materia.BaseParam.Name_ja || "不明";
+                            const value = materia.Value || 0;
+                            const option = document.createElement("option");
+                            option.value = JSON.stringify({
+                                id: materia.ID,
+                                name: materia.Name,
+                                icon: `https://xivapi.com${materia.Icon}`,
+                                value: `${paramName}+${value}`
+                            });
+                            option.textContent = `${materia.Name} (${paramName}+${value})`;
+                            select.appendChild(option);
+                        }
+                    });
+                } else {
+                    const categoryId = target === "gear-weapon" || target === "gear-shield" ? jobWeaponCategories[selectedJob]?.main || categoryMap[target] : categoryMap[target];
+                    if (!categoryId) return;
+                    const url = `https://xivapi.com/Item?limit=500&language=ja&columns=ID,Name,Icon,LevelItem,ItemKind&ItemUICategory=${categoryId}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    console.log("アイテム候補レスポンス:", data);
+                    data.Results.forEach(item => {
+                        if (item.LevelItem > 0 && item.ItemKind && item.ItemKind.ID === 5 && item.Name && item.Icon) {
+                            const option = document.createElement("option");
+                            option.value = JSON.stringify({
+                                id: item.ID,
+                                name: item.Name,
+                                icon: `https://xivapi.com${item.Icon}`,
+                                il: item.LevelItem
+                            });
+                            option.textContent = `${item.Name} (ILv${item.LevelItem})`;
+                            select.appendChild(option);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("XIVAPI候補取得エラー:", error);
+                select.innerHTML = '<option value="">候補の取得に失敗しました</option>';
+            }
+        }
+
+        window.selectXIVAPIItem = function() {
+            const select = document.getElementById("xivapi-items");
+            const selectedOptions = Array.from(select.selectedOptions);
+            const preview = document.getElementById("item-preview");
+            const textarea = document.getElementById("edit-content");
+            const target = document.getElementById("edit-target").value;
+
+            if (!selectedOptions.length || selectedOptions[0].value === "") {
+                return;
+            }
+
+            if (target.includes("materia")) {
+                if (selectedOptions.length > 5) {
+                    alert("マテリアは最大5個まで選択可能です。");
+                    select.selectedOptions[5].selected = false;
+                    return;
+                }
+                selectedItem = selectedOptions
+                    .filter(option => option.value)
+                    .map(option => {
+                        try {
+                            return JSON.parse(option.value);
+                        } catch (e) {
+                            console.error("JSONパースエラー:", e, "value:", option.value);
+                            return null;
+                        }
+                    })
+                    .filter(item => item !== null);
+                textarea.value = selectedItem.map(item => item.name).join("\n");
+            } else {
+                if (selectedOptions.length > 1) {
+                    alert("装備は1つだけ選択可能です。");
+                    for (let i = 1; i < selectedOptions.length; i++) {
+                        selectedOptions[i].selected = false;
+                    }
+                }
+                selectedItem = selectedOptions.length > 0 && selectedOptions[0].value ? [JSON.parse(selectedOptions[0].value)] : null;
+                textarea.value = selectedItem ? selectedItem[0].name : "";
+            }
+
+            preview.innerHTML = "";
+            if (selectedItem && selectedItem.length > 0) {
+                selectedItem.forEach(item => {
+                    if (item.value) {
+                        preview.innerHTML += `<div><img src="${item.icon}" alt="${item.name}"><span>${item.name} (${item.value})</span></div>`;
+                    } else {
+                        preview.innerHTML += `<div><img src="${item.icon}" alt="${item.name}"><span>${item.name} (ILv${item.il})</span></div>`;
+                    }
+                });
+            }
+        };
+
+        function loadGearItems() {
+            const gearIds = [
+                "gear-weapon", "gear-weapon-materia", "gear-shield",
+                "gear-head", "gear-head-materia", "gear-body", "gear-body-materia",
+                "gear-hands", "gear-hands-materia", "gear-legs", "gear-legs-materia",
+                "gear-feet", "gear-feet-materia", "gear-ears", "gear-ears-materia",
+                "gear-neck", "gear-neck-materia", "gear-wrists", "gear-wrists-materia",
+                "gear-finger1", "gear-finger1-materia", "gear-finger2", "gear-finger2-materia"
+            ];
+
+            gearIds.forEach(id => {
+                const element = document.getElementById(id);
+                const data = gearData[id];
+                if (id.includes("materia")) {
+                    if (Array.isArray(data) && data.length > 0) {
+                        element.innerHTML = "<p>マテリア:</p><ul>" + data.map(item => `<li><img src="${item.icon}" alt="${item.name}" style="width: 20px; height: 20px;">${item.name} (${item.value})</li>`).join("") + "</ul>";
+                    } else {
+                        element.innerHTML = "";
+                    }
+                } else {
+                    element.innerHTML = data?.icon 
+                        ? `<img src="${data.icon}" alt="${data.content}"><p>${data.content}</p>` 
+                        : (data?.content ? `<p>${data.content}</p>` : "");
+                }
+            });
+
+            updateSubArmDisplay();
+            calculateOverallIL();
+        }
+
+        function calculateOverallIL() {
+            const gearIds = [
+                "gear-weapon", "gear-shield",
+                "gear-head", "gear-body", "gear-hands", "gear-legs", "gear-feet",
+                "gear-ears", "gear-neck", "gear-wrists", "gear-finger1", "gear-finger2"
+            ];
+            let totalIL = 0;
+            let count = 0;
+
+            gearIds.forEach(id => {
+                const data = gearData[id];
+                if (data && data.content) {
+                    const ilMatch = data.content.match(/ILv(\d+)/);
+                    if (ilMatch) {
+                        totalIL += parseInt(ilMatch[1], 10);
+                        count++;
+                    }
+                }
+            });
+
+            const overallIL = count > 0 ? Math.floor(totalIL / count) : "未計算";
+            document.getElementById("gear-ilvl").textContent = `全体ILv: ${overallIL}`;
+            if (count > 0) gearData["gear-ilvl"] = { content: overallIL.toString(), icon: "" };
+            localStorage.setItem("gearData", JSON.stringify(gearData));
+        }
+
+        window.loadContent = function() {
+            const target = document.getElementById("edit-target").value;
+            const textarea = document.getElementById("edit-content");
+            const preview = document.getElementById("item-preview");
+            const select = document.getElementById("xivapi-items");
+
+            if (target) {
+                const data = gearData[target];
+                if (target.includes("materia") && Array.isArray(data)) {
+                    textarea.value = data.map(item => item.name).join("\n");
+                    preview.innerHTML = data.map(item => `<div><img src="${item.icon}" alt="${item.name}"><span>${item.name} (${item.value})</span></div>`).join("");
+                    selectedItem = data;
+                } else {
+                    textarea.value = data?.content || "";
+                    preview.innerHTML = data?.icon ? `<img src="${data.icon}" alt="${data.content}"><span>${data.content}</span>` : "";
+                    selectedItem = data ? [{ name: data.content, icon: data.icon }] : null;
+                }
+                select.value = "";
+                loadXIVAPIItems();
+            } else {
+                textarea.value = "";
+                preview.innerHTML = "";
+                select.value = "";
+                select.innerHTML = '<option value="">候補を選択（任意）</option>';
+                select.disabled = true;
+                selectedItem = null;
+            }
+        };
+
+        window.saveEdit = function() {
+            const target = document.getElementById("edit-target").value;
+            const content = document.getElementById("edit-content").value;
+
+            if (!target) {
+                alert("編集対象を選択してください。");
+                return;
+            }
+
+            if (target.includes("materia") && selectedItem) {
+                gearData[target] = selectedItem;
+            } else if (selectedItem && selectedItem.length === 1) {
+                gearData[target] = { content: content, icon: selectedItem[0].icon };
+            } else {
+                gearData[target] = { content: content, icon: "" };
+            }
+
+            localStorage.setItem("gearData", JSON.stringify(gearData));
+            loadGearItems();
+            alert("装備情報が保存されました！");
+        };
     </script>
 </body>
 </html>

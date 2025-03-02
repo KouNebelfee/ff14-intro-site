@@ -3,41 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Schattenfee - FF14</title>
+    <title> - FF14</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .content-wrapper { max-width: 800px; margin: 0 auto; padding-top: 120px; padding-bottom: 80px; }
-        .profile-img { display: block; margin: 20px auto; }
-        p { margin: 10px 0; text-align: center; }
-        
-        /* レイアウト調整 */
-        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; }
-        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
-        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
-        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
-        nav li { margin: 0 15px; }
-        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
-        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
-
-        @media (min-width: 768px) {
-            .hamburger { display: none; }
-            nav { top: 60px; }
+        /* 全体のデフォルト設定 */
+        body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #fff;
         }
-
+    
+        /* コンテンツラッパー */
+        .content-wrapper { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding-top: 120px; 
+            padding-bottom: 80px; 
+            padding-left: 15px;
+            padding-right: 15px; 
+        }
+    
+        /* プロフィール画像コンテナ */
+        .profile-img-container { 
+            position: relative; 
+            text-align: center; 
+            margin: 20px auto; 
+            max-width: 400px; 
+        }
+    
+        /* プロフィール画像 */
+        .profile-img { 
+            display: block; 
+            max-width: 400px; 
+            min-height: 400px; 
+            width: 100%; 
+            object-fit: cover; 
+            background: #ddd url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="gray"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+            border: 2px solid #ffd700; 
+            border-radius: 10px; 
+        }
+    
+        /* プロフィール画像キャプション（背景追加） */
+        .profile-img-caption { 
+            color: #fff;
+            font-size: 18px;
+            margin-top: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+            display: inline-block; /* テキスト幅に合わせる */
+        }
+    
+        /* プロフィール内容（背景追加） */
+        #profile-content p { 
+            margin: 20px 0;
+            text-align: center; 
+            line-height: 1.8;
+            font-size: 16px;
+            background: rgba(51, 51, 51, 0.8); /* 暗い灰色の半透明背景 */
+            padding: 10px; /* テキスト周囲に余白 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        /* マルチセレクト表示（背景追加） */
+        .multi-select-display span { 
+            display: block; 
+            margin-left: 20px; 
+            font-size: 16px;
+            color: #fff;
+            background: rgba(51, 51, 51, 0.8); /* プロフィール内容と統一 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        /* ミュージックプレーヤー（ヘッダー部分：変更なし） */
+        .music-player { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 1200; 
+            background: #333; 
+            padding: 10px; 
+        }
+    
+        /* ハンバーガーメニュー（ヘッダー部分：変更なし） */
+        .hamburger { 
+            font-size: 24px; 
+            background: none; 
+            border: none; 
+            color: #ffd700; 
+            cursor: pointer; 
+            padding: 10px; 
+        }
+    
+        /* ナビゲーション（ヘッダー部分：変更なし） */
+        nav { 
+            position: fixed; 
+            left: 0; 
+            width: 100%; 
+            background-color: #333; 
+            z-index: 1000; 
+        }
+    
+        nav ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+        }
+    
+        nav li { 
+            margin: 0 15px; 
+        }
+    
+        nav a { 
+            color: #ffd700; 
+            text-decoration: none; 
+            transition: all 0.3s ease; 
+        }
+    
+        nav a:hover { 
+            color: #ff6f61; 
+            background-color: rgba(255, 255, 255, 0.2); 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+        }
+    
+        /* 管理者パネル */
+        .admin-panel { 
+            display: none; 
+            position: fixed; 
+            top: 60px; 
+            width: 90%; 
+            max-width: 1000px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            background: rgba(0, 0, 0, 0.95); 
+            padding: 25px;
+            border-radius: 8px; 
+            z-index: 1300; 
+            color: #fff; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+            left: 50%; 
+            transform: translateX(-50%); 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+    
+        .admin-panel h2 { 
+            margin: 0 0 25px;
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #ffd700; 
+            font-size: 26px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* 見出しに背景追加 */
+            padding: 5px 10px; /* 余白調整 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .admin-section { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 15px; 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+        }
+    
+        .admin-section h3 { 
+            color: #ffd700; 
+            margin: 0 0 15px;
+            font-size: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* サブ見出しに背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            width: 100%; 
+        }
+    
+        .input-group label { 
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 8px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6); /* ラベルに背景追加 */
+            padding: 3px 8px; /* 余白 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        .input-group input, 
+        .input-group select { 
+            width: 100%; 
+            max-width: 300px; 
+            padding: 12px;
+            border: 1px solid #ffd700; 
+            border-radius: 4px; 
+            background: #333;
+            color: #fff; 
+            font-size: 16px;
+            text-align: center; 
+        }
+    
+        .checkbox-group { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 10px; 
+        }
+    
+        .checkbox-group.horizontal {
+            flex-direction: row;
+        }
+    
+        .checkbox-group label { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            font-size: 16px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6); /* チェックボックスのラベルに背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        .role-group { 
+            margin: 10px 0; 
+            padding: 10px; 
+            border: 1px solid rgba(255, 215, 0, 0.3); 
+            border-radius: 5px; 
+            width: 100%; 
+        }
+    
+        .role-group h4 { 
+            color: #ffd700; 
+            margin: 0 0 10px; 
+            font-size: 18px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* ロールグループの見出しに背景 */
+            padding: 5px 10px; /* 余白 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .add-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-top: 10px; 
+            justify-content: center; 
+        }
+    
+        .add-item input { 
+            width: 60%; 
+            max-width: 200px; 
+            padding: 10px;
+            font-size: 16px;
+        }
+    
+        .add-item button { 
+            padding: 8px 15px; 
+            font-size: 16px;
+            background: #ffd700; /* ボタン背景はそのまま */
+            color: #333;
+            border-radius: 4px;
+        }
+    
+        .checkbox-group-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+    
+        .admin-panel-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+    
+        .admin-panel button { 
+            padding: 10px 20px; 
+            background: #ffd700; 
+            color: #333; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background 0.3s ease; 
+        }
+    
+        .admin-panel button:hover { 
+            background: #ff6f61; 
+            color: #fff; 
+        }
+    
+        #admin-image-preview { 
+            max-width: 100%; 
+            max-height: 150px; 
+            margin: 10px 0; 
+            object-fit: contain; 
+            display: block; 
+        }
+    
+        #admin-toggle { 
+            background: rgba(0, 0, 0, 0.7); /* 管理者トグルに背景追加 */
+            border: none; 
+            color: #ffd700; 
+            cursor: pointer; 
+            font-size: 16px;
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        /* デスクトップ向け調整（ヘッダー部分は変更なし） */
+        @media (min-width: 768px) {
+            .hamburger { 
+                display: none; 
+            }
+            nav { 
+                top: 60px; 
+            }
+        }
+    
+        /* モバイル向け調整（ヘッダー部分は変更なし） */
         @media (max-width: 767px) {
-            .content-wrapper { padding-top: 120px; }
-            .profile-img { max-width: 150px; }
-            p { font-size: 14px; }
-            .music-player { flex-wrap: wrap; gap: 5px; }
-            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
-            .music-player input[type="range"] { width: 80px; }
-            .music-player p { font-size: 12px; margin: 5px 0; }
-            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
-            nav { display: none; top: 100px; }
-            nav.open { display: block; }
-            nav ul { flex-direction: column; align-items: center; }
-            nav li { margin: 10px 0; }
-            nav a { font-size: 14px; padding: 10px; display: block; }
+            body {
+                font-size: 14px;
+            }
+            .content-wrapper { 
+                padding-top: 120px; /* 元の値を使用 */
+            }
+            .profile-img { 
+                max-width: 150px; 
+                min-height: 150px; 
+            }
+            .profile-img-caption { 
+                font-size: 16px;
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            #profile-content p { 
+                font-size: 14px; 
+                margin: 15px 0; 
+                padding: 8px; /* モバイル向けに少し小さく */
+            }
+            .multi-select-display span { 
+                font-size: 14px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .music-player { 
+                flex-wrap: wrap; 
+                gap: 5px; 
+            }
+            .music-player button, 
+            .nav-btn { 
+                padding: 3px 8px; 
+                font-size: 12px; 
+            }
+            .music-player input[type="range"] { 
+                width: 80px; 
+            }
+            .music-player p { 
+                font-size: 12px; 
+                margin: 5px 0; 
+            }
+            .hamburger { 
+                display: block; 
+                position: fixed; 
+                top: 60px; 
+                left: 10px; 
+                z-index: 1100; 
+            }
+            nav { 
+                display: none; 
+                top: 100px; 
+            }
+            nav.open { 
+                display: block; 
+            }
+            nav ul { 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            nav li { 
+                margin: 10px 0; 
+            }
+            nav a { 
+                font-size: 14px; 
+                padding: 10px; 
+                display: block; 
+            }
+            .admin-panel { 
+                width: 95%; 
+                max-height: 80vh; 
+                padding: 20px; 
+            }
+            .admin-section { 
+                padding: 10px; 
+            }
+            .admin-section h3 { 
+                font-size: 18px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .input-group input, 
+            .input-group select { 
+                max-width: 100%; 
+                font-size: 14px; 
+            }
+            .checkbox-group.horizontal { 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            .checkbox-group label { 
+                font-size: 14px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .admin-panel-buttons { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .add-item { 
+                flex-direction: column; 
+                gap: 5px; 
+            }
+            .add-item input { 
+                width: 100%; 
+                max-width: none; 
+            }
         }
     </style>
 </head>
@@ -72,37 +473,700 @@
     </nav>
     <div class="content-wrapper">
         <h1>Schattenfee</h1>
-        <img src="assets/schattenfee.jpg" alt="Schattenfee" class="profile-img">
-        <p>種族: ララフェル</p>
-        <p>性別: オス</p>
-        <p>関係: 弟</p>
-        <p>ジョブ: 忍者</p>
-        <p>誕生日: 影の月13日</p>
-        <p>影の中を駆ける忍者。討伐戦で敵を瞬時に仕留める。</p>
-        <p>好きなエリア: クガネ - 夜の街並みが落ち着く</p>
-        <p>得意なコンテンツ: 討伐戦 - 素早い動きで敵を翻弄</p>
-        <p>愛用の装備: 忍者用の「影隠しの装束」をミラプリで愛用</p>
-        <p>一言コメント: 「影から見守ってるよ、姉ちゃん！」</p>
+        <div class="profile-img-container">
+            <img id="profile-img" src="" alt="Schattenfee" class="profile-img">
+            <div class="profile-img-caption" id="profile-caption">Schattenfee (画像未設定)</div>
+        </div>
+        <div id="profile-content">
+            <p>種族: <span id="race"></span></p>
+            <p>性別: <span id="gender"></span></p>
+            <p>関係: <span id="relation"></span></p>
+            <p>メインジョブ: <span id="mainjob"></span></p>
+            <p>誕生日: <span id="birthday"></span></p>
+            <p><span id="description"></span></p>
+            <p class="multi-select-display">好きなエリア:<br><span id="area"></span></p>
+            <p class="multi-select-display">得意なコンテンツ:<br><span id="content"></span></p>
+            <p>愛用の装備: <span id="gear"></span></p>
+            <p>サーバー: <span id="server"></span></p>
+            <p>フリーカンパニー: <span id="freecompany"></span></p>
+            <p class="multi-select-display">プレイスタイル:<br><span id="playstyle"></span></p>
+            <p class="multi-select-display">好きなジョブ:<br><span id="favoritejobs"></span></p>
+            <p>好きなエモート: <span id="favoriteemote"></span></p>
+            <p>メインクエストの進捗: <span id="mainquest"></span></p>
+            <p>好きなマウント: <span id="favoritemount"></span></p>
+            <p>プレイ時間: <span id="playtime"></span></p>
+            <p class="multi-select-display">クラフター:<br><span id="crafter"></span></p>
+            <p class="multi-select-display">ギャザラー:<br><span id="gatherer"></span></p>
+            <p>一言コメント: <span id="comment"></span></p>
+            <p>好きなID: <span id="favoriteid"></span></p>
+            <p class="multi-select-display">好きなレイドコンテンツ:<br><span id="favoriteraid"></span></p>
+            <p class="multi-select-display">好きなアライアンス:<br><span id="favoritealliance"></span></p>
+            <p>好きな討滅戦ボス: <span id="favoriteextremetrial"></span></p>
+            <p>好きなFFナンバリング: <span id="favoriteffnumbering"></span></p>
+        </div>
+    </div>
+    <div class="admin-panel admin-only">
+        <h2>プロフィール更新</h2>
+        
+        <!-- 基本情報 -->
+        <section class="admin-section">
+            <h3>基本情報</h3>
+            <div class="input-group">
+                <label for="admin-race">種族:</label>
+                <select id="admin-race">
+                    <option value="">選択してください</option>
+                    <option value="ヒューラン">ヒューラン</option>
+                    <option value="エレゼン">エレゼン</option>
+                    <option value="ミコッテ">ミコッテ</option>
+                    <option value="ララフェル">ララフェル</option>
+                    <option value="ルガディン">ルガディン</option>
+                    <option value="アウラ">アウラ</option>
+                    <option value="ヴィエラ">ヴィエラ</option>
+                    <option value="ロスガル">ロスガル</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="admin-gender">性別:</label>
+                <select id="admin-gender">
+                    <option value="">選択してください</option>
+                    <option value="オス">オス</option>
+                    <option value="メス">メス</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="admin-relation">関係:</label>
+                <input type="text" id="admin-relation" placeholder="例: 冒険仲間">
+            </div>
+            <div class="input-group">
+                <label for="admin-mainjob">メインジョブ:</label>
+                <select id="admin-mainjob">
+                    <option value="">選択してください</option>
+                    <option value="🛡️ ナイト">🛡️ ナイト</option>
+                    <option value="⚔️ 戦士">⚔️ 戦士</option>
+                    <option value="🌑 暗黒騎士">🌑 暗黒騎士</option>
+                    <option value="🔫 ガンブレイカー">🔫 ガンブレイカー</option>
+                    <option value="🌟 白魔道士">🌟 白魔道士</option>
+                    <option value="📘 学者">📘 学者</option>
+                    <option value="🌠 占星術師">🌠 占星術師</option>
+                    <option value="🌿 賢者">🌿 賢者</option>
+                    <option value="👊 モンク">👊 モンク</option>
+                    <option value="🐉 竜騎士">🐉 竜騎士</option>
+                    <option value="🗡️ 忍者">🗡️ 忍者</option>
+                    <option value="⛩️ 侍">⛩️ 侍</option>
+                    <option value="💀 リーパー">💀 リーパー</option>
+                    <option value="🐍 ヴァイパー">🐍 ヴァイパー</option>
+                    <option value="🎶 吟遊詩人">🎶 吟遊詩人</option>
+                    <option value="⚙️ 機工士">⚙️ 機工士</option>
+                    <option value="💃 踊り子">💃 踊り子</option>
+                    <option value="🔥 黒魔道士">🔥 黒魔道士</option>
+                    <option value="📖 召喚士">📖 召喚士</option>
+                    <option value="⚔️✨ 赤魔道士">⚔️✨ 赤魔道士</option>
+                    <option value="🎨 ピクトマンサー">🎨 ピクトマンサー</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- 誕生日 -->
+        <section class="admin-section">
+            <h3>誕生日 (エオルゼアカレンダー)</h3>
+            <div class="input-group">
+                <label for="admin-birthday-moon">月:</label>
+                <select id="admin-birthday-moon">
+                    <option value="">選択してください</option>
+                    <option value="星1月">星1月</option>
+                    <option value="霊1月">霊1月</option>
+                    <option value="星2月">星2月</option>
+                    <option value="霊2月">霊2月</option>
+                    <option value="星3月">星3月</option>
+                    <option value="霊3月">霊3月</option>
+                    <option value="星4月">星4月</option>
+                    <option value="霊4月">霊4月</option>
+                    <option value="星5月">星5月</option>
+                    <option value="霊5月">霊5月</option>
+                    <option value="星6月">星6月</option>
+                    <option value="霊6月">霊6月</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="admin-birthday-day">日:</label>
+                <select id="admin-birthday-day">
+                    <option value="">選択してください</option>
+                    <option value="1日">1日</option>
+                    <option value="2日">2日</option>
+                    <option value="3日">3日</option>
+                    <option value="4日">4日</option>
+                    <option value="5日">5日</option>
+                    <option value="6日">6日</option>
+                    <option value="7日">7日</option>
+                    <option value="8日">8日</option>
+                    <option value="9日">9日</option>
+                    <option value="10日">10日</option>
+                    <option value="11日">11日</option>
+                    <option value="12日">12日</option>
+                    <option value="13日">13日</option>
+                    <option value="14日">14日</option>
+                    <option value="15日">15日</option>
+                    <option value="16日">16日</option>
+                    <option value="17日">17日</option>
+                    <option value="18日">18日</option>
+                    <option value="19日">19日</option>
+                    <option value="20日">20日</option>
+                    <option value="21日">21日</option>
+                    <option value="22日">22日</option>
+                    <option value="23日">23日</option>
+                    <option value="24日">24日</option>
+                    <option value="25日">25日</option>
+                    <option value="26日">26日</option>
+                    <option value="27日">27日</option>
+                    <option value="28日">28日</option>
+                    <option value="29日">29日</option>
+                    <option value="30日">30日</option>
+                    <option value="31日">31日</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- プレイ詳細 -->
+        <section class="admin-section">
+            <h3>プレイ詳細</h3>
+            <div class="input-group">
+                <label for="admin-description">説明:</label>
+                <input type="text" id="admin-description" placeholder="キャラクターの紹介文">
+            </div>
+            <div class="input-group">
+                <label>好きなエリア (最大3つ):</label>
+                <div class="checkbox-group" id="area-checkboxes">
+                    <div class="role-group" data-patch="新生エオルゼア">
+                        <h4>新生エオルゼア</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-新生エオルゼア">
+                            <label><input type="checkbox" class="area-checkbox" value="グリダニア"> グリダニア</label>
+                            <label><input type="checkbox" class="area-checkbox" value="黒衣森"> 黒衣森</label>
+                            <label><input type="checkbox" class="area-checkbox" value="リムサ・ロミンサ"> リムサ・ロミンサ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ラノシア"> ラノシア</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ウルダハ"> ウルダハ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ザナラーン"> ザナラーン</label>
+                            <label><input type="checkbox" class="area-checkbox" value="モードゥナ"> モードゥナ</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="新生エオルゼア" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('新生エオルゼア')">追加</button>
+                        </div>
+                    </div>
+                    <div class="role-group" data-patch="蒼天のイシュガルド">
+                        <h4>蒼天のイシュガルド</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-蒼天のイシュガルド">
+                            <label><input type="checkbox" class="area-checkbox" value="イシュガルド"> イシュガルド</label>
+                            <label><input type="checkbox" class="area-checkbox" value="クルザス"> クルザス</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ドラヴァニア"> ドラヴァニア</label>
+                            <label><input type="checkbox" class="area-checkbox" value="アバラシア"> アバラシア</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="蒼天のイシュガルド" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('蒼天のイシュガルド')">追加</button>
+                        </div>
+                    </div>
+                    <div class="role-group" data-patch="紅蓮のリベレーター">
+                        <h4>紅蓮のリベレーター</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-紅蓮のリベレーター">
+                            <label><input type="checkbox" class="area-checkbox" value="クガネ"> クガネ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ドマ"> ドマ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ギラバニア"> ギラバニア</label>
+                            <label><input type="checkbox" class="area-checkbox" value="オサード"> オサード</label>
+                            <label><input type="checkbox" class="area-checkbox" value="アジムステップ"> アジムステップ</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="紅蓮のリベレーター" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('紅蓮のリベレーター')">追加</button>
+                        </div>
+                    </div>
+                    <div class="role-group" data-patch="漆黒のヴィランズ">
+                        <h4>漆黒のヴィランズ</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-漆黒のヴィランズ">
+                            <label><input type="checkbox" class="area-checkbox" value="クリスタリウム"> クリスタリウム</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ユールモア"> ユールモア</label>
+                            <label><input type="checkbox" class="area-checkbox" value="レイクランド"> レイクランド</label>
+                            <label><input type="checkbox" class="area-checkbox" value="コルシア島"> コルシア島</label>
+                            <label><input type="checkbox" class="area-checkbox" value="アム・アレーン"> アム・アレーン</label>
+                            <label><input type="checkbox" class="area-checkbox" value="イル・メグ"> イル・メグ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ラケティカ大森林"> ラケティカ大森林</label>
+                            <label><input type="checkbox" class="area-checkbox" value="テンペスト"> テンペスト</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="漆黒のヴィランズ" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('漆黒のヴィランズ')">追加</button>
+                        </div>
+                    </div>
+                    <div class="role-group" data-patch="暁月のフィナーレ">
+                        <h4>暁月のフィナーレ</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-暁月のフィナーレ">
+                            <label><input type="checkbox" class="area-checkbox" value="オールド・シャーレアン"> オールド・シャーレアン</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ラザハン"> ラザハン</label>
+                            <label><input type="checkbox" class="area-checkbox" value="サベネア島"> サベネア島</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ガレマルド"> ガレマルド</label>
+                            <label><input type="checkbox" class="area-checkbox" value="嘆きの海"> 嘆きの海</label>
+                            <label><input type="checkbox" class="area-checkbox" value="エルピス"> エルピス</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ウルティマ・トゥーレ"> ウルティマ・トゥーレ</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="暁月のフィナーレ" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('暁月のフィナーレ')">追加</button>
+                        </div>
+                    </div>
+                    <div class="role-group" data-patch="黄金のレガシー">
+                        <h4>黄金のレガシー</h4>
+                        <div class="checkbox-group horizontal" id="area-checkboxes-黄金のレガシー">
+                            <label><input type="checkbox" class="area-checkbox" value="トライヨラ"> トライヨラ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ウラクウカ"> ウラクウカ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ヤクテル樹海"> ヤクテル樹海</label>
+                            <label><input type="checkbox" class="area-checkbox" value="コザマルカ"> コザマルカ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="シャーローニ"> シャーローニ</label>
+                            <label><input type="checkbox" class="area-checkbox" value="ヘリテージファウンド"> ヘリテージファウンド</label>
+                            <label><input type="checkbox" class="area-checkbox" value="リビングメモリー"> リビングメモリー</label>
+                        </div>
+                        <div class="add-item">
+                            <input type="text" class="admin-area-input" data-patch="黄金のレガシー" placeholder="エリアを追加">
+                            <button onclick="addAreaCheckbox('黄金のレガシー')">追加</button>
+                        </div>
+                    </div>
+                    <div class="add-item">
+                        <input type="text" id="admin-new-patch-input" placeholder="新しいパッチ名を入力">
+                        <button onclick="addNewPatch()">パッチ追加</button>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>得意なコンテンツ:</label>
+                <div class="checkbox-group horizontal">
+                    <label><input type="checkbox" id="admin-content-raid" value="レイド"> レイド</label>
+                    <label><input type="checkbox" id="admin-content-extreme" value="極コンテンツ"> 極コンテンツ</label>
+                    <label><input type="checkbox" id="admin-content-dungeon" value="ダンジョン"> ダンジョン</label>
+                    <label><input type="checkbox" id="admin-content-pvp" value="PvP"> PvP</label>
+                    <label><input type="checkbox" id="admin-content-crafting" value="クラフター"> クラフター</label>
+                    <label><input type="checkbox" id="admin-content-gathering" value="ギャザラー"> ギャザラー</label>
+                    <label><input type="checkbox" id="admin-content-treasure" value="トレジャーハント"> トレジャーハント</label>
+                    <label><input type="checkbox" id="admin-content-rp" value="RP"> RP</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- 装備とサーバー -->
+        <section class="admin-section">
+            <h3>装備とサーバー</h3>
+            <div class="input-group">
+                <label for="admin-gear">愛用の装備:</label>
+                <select id="admin-gear">
+                    <option value="">選択してください</option>
+                </select>
+                <div class="add-item">
+                    <input type="text" id="admin-gear-input" placeholder="装備を追加">
+                    <button onclick="addGear()">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="admin-server">サーバー:</label>
+                <select id="admin-server">
+                    <option value="">選択してください</option>
+                    <option value="Aegis (Elemental)">Aegis (Elemental)</option>
+                    <option value="Atomos (Elemental)">Atomos (Elemental)</option>
+                    <option value="Carbuncle (Elemental)">Carbuncle (Elemental)</option>
+                    <option value="Garuda (Elemental)">Garuda (Elemental)</option>
+                    <option value="Gungnir (Elemental)">Gungnir (Elemental)</option>
+                    <option value="Kujata (Elemental)">Kujata (Elemental)</option>
+                    <option value="Tonberry (Elemental)">Tonberry (Elemental)</option>
+                    <option value="Typhon (Elemental)">Typhon (Elemental)</option>
+                    <option value="Alexander (Gaia)">Alexander (Gaia)</option>
+                    <option value="Bahamut (Gaia)">Bahamut (Gaia)</option>
+                    <option value="Durandal (Gaia)">Durandal (Gaia)</option>
+                    <option value="Fenrir (Gaia)">Fenrir (Gaia)</option>
+                    <option value="Ifrit (Gaia)">Ifrit (Gaia)</option>
+                    <option value="Ridill (Gaia)">Ridill (Gaia)</option>
+                    <option value="Tiamat (Gaia)">Tiamat (Gaia)</option>
+                    <option value="Ultima (Gaia)">Ultima (Gaia)</option>
+                    <option value="Anima (Mana)">Anima (Mana)</option>
+                    <option value="Asura (Mana)">Asura (Mana)</option>
+                    <option value="Chocobo (Mana)">Chocobo (Mana)</option>
+                    <option value="Hades (Mana)">Hades (Mana)</option>
+                    <option value="Ixion (Mana)">Ixion (Mana)</option>
+                    <option value="Masamune (Mana)">Masamune (Mana)</option>
+                    <option value="Pandaemonium (Mana)">Pandaemonium (Mana)</option>
+                    <option value="Titan (Mana)">Titan (Mana)</option>
+                    <option value="Belias (Meteor)">Belias (Meteor)</option>
+                    <option value="Mandragora (Meteor)">Mandragora (Meteor)</option>
+                    <option value="Ramuh (Meteor)">Ramuh (Meteor)</option>
+                    <option value="Shinryu (Meteor)">Shinryu (Meteor)</option>
+                    <option value="Unicorn (Meteor)">Unicorn (Meteor)</option>
+                    <option value="Valefor (Meteor)">Valefor (Meteor)</option>
+                    <option value="Yojimbo (Meteor)">Yojimbo (Meteor)</option>
+                    <option value="Zeromus (Meteor)">Zeromus (Meteor)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="admin-freecompany">フリーカンパニー:</label>
+                <input type="text" id="admin-freecompany" placeholder="例: Light Party">
+            </div>
+        </section>
+
+        <!-- プレイスタイル -->
+        <section class="admin-section">
+            <h3>プレイスタイル</h3>
+            <div class="input-group">
+                <label>プレイスタイル:</label>
+                <div class="checkbox-group horizontal">
+                    <label><input type="checkbox" id="admin-playstyle-casual" value="カジュアル"> カジュアル</label>
+                    <label><input type="checkbox" id="admin-playstyle-hardcore" value="ハードコア"> ハードコア</label>
+                    <label><input type="checkbox" id="admin-playstyle-rp" value="RP"> RP</label>
+                    <label><input type="checkbox" id="admin-playstyle-pvp" value="PvP"> PvP</label>
+                    <label><input type="checkbox" id="admin-playstyle-crafting" value="クラフティング"> クラフティング</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- 好きなジョブ -->
+        <section class="admin-section">
+            <h3>好きなジョブ</h3>
+            <div class="input-group">
+                <label>タンク:</label>
+                <div class="checkbox-group horizontal" id="job-checkboxes-tank">
+                    <label><input type="checkbox" class="job-checkbox" data-role="tank" value="🛡️ ナイト"> 🛡️ ナイト</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="tank" value="⚔️ 戦士"> ⚔️ 戦士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="tank" value="🌑 暗黒騎士"> 🌑 暗黒騎士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="tank" value="🔫 ガンブレイカー"> 🔫 ガンブレイカー</label>
+                </div>
+                <div class="add-item">
+                    <input type="text" id="admin-job-input-tank" placeholder="タンクジョブを追加">
+                    <button onclick="addJobCheckbox('tank')">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>ヒーラー:</label>
+                <div class="checkbox-group horizontal" id="job-checkboxes-healer">
+                    <label><input type="checkbox" class="job-checkbox" data-role="healer" value="🌟 白魔道士"> 🌟 白魔道士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="healer" value="📘 学者"> 📘 学者</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="healer" value="🌠 占星術師"> 🌠 占星術師</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="healer" value="🌿 賢者"> 🌿 賢者</label>
+                </div>
+                <div class="add-item">
+                    <input type="text" id="admin-job-input-healer" placeholder="ヒーラージョブを追加">
+                    <button onclick="addJobCheckbox('healer')">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>メレーDPS:</label>
+                <div class="checkbox-group horizontal" id="job-checkboxes-melee">
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="👊 モンク"> 👊 モンク</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="🐉 竜騎士"> 🐉 竜騎士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="🗡️ 忍者"> 🗡️ 忍者</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="⛩️ 侍"> ⛩️ 侍</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="💀 リーパー"> 💀 リーパー</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="melee" value="🐍 ヴァイパー"> 🐍 ヴァイパー</label>
+                </div>
+                <div class="add-item">
+                    <input type="text" id="admin-job-input-melee" placeholder="メレーDPSジョブを追加">
+                    <button onclick="addJobCheckbox('melee')">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>レンジDPS:</label>
+                <div class="checkbox-group horizontal" id="job-checkboxes-ranged">
+                    <label><input type="checkbox" class="job-checkbox" data-role="ranged" value="🎶 吟遊詩人"> 🎶 吟遊詩人</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="ranged" value="⚙️ 機工士"> ⚙️ 機工士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="ranged" value="💃 踊り子"> 💃 踊り子</label>
+                </div>
+                <div class="add-item">
+                    <input type="text" id="admin-job-input-ranged" placeholder="レンジDPSジョブを追加">
+                    <button onclick="addJobCheckbox('ranged')">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>キャスターDPS:</label>
+                <div class="checkbox-group horizontal" id="job-checkboxes-caster">
+                    <label><input type="checkbox" class="job-checkbox" data-role="caster" value="🔥 黒魔道士"> 🔥 黒魔道士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="caster" value="📖 召喚士"> 📖 召喚士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="caster" value="⚔️✨ 赤魔道士"> ⚔️✨ 赤魔道士</label>
+                    <label><input type="checkbox" class="job-checkbox" data-role="caster" value="🎨 ピクトマンサー"> 🎨 ピクトマンサー</label>
+                </div>
+                <div class="add-item">
+                    <input type="text" id="admin-job-input-caster" placeholder="キャスターDPSジョブを追加">
+                    <button onclick="addJobCheckbox('caster')">追加</button>
+                </div>
+            </div>
+        </section>
+        <!-- その他の設定 -->
+        <section class="admin-section">
+            <h3>その他の設定</h3>
+            <div class="input-group">
+                <label for="admin-favoriteemote">好きなエモート:</label>
+                <select id="admin-favoriteemote">
+                    <option value="">選択してください</option>
+                </select>
+                <div class="add-item">
+                    <input type="text" id="admin-emote-input" placeholder="エモートを追加">
+                    <button onclick="addEmote()">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="admin-mainquest">メインクエストの進捗:</label>
+                <select id="admin-mainquest">
+                    <option value="">選択してください</option>
+                    <option value="新生エオルゼア">新生エオルゼア</option>
+                    <option value="蒼天のイシュガルド">蒼天のイシュガルド</option>
+                    <option value="紅蓮のリベレーター">紅蓮のリベレーター</option>
+                    <option value="漆黒のヴィランズ">漆黒のヴィランズ</option>
+                    <option value="暁月のフィナーレ">暁月のフィナーレ</option>
+                    <option value="黄金のレガシー">黄金のレガシー</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="admin-favoritemount">好きなマウント:</label>
+                <select id="admin-favoritemount">
+                    <option value="">選択してください</option>
+                </select>
+                <div class="add-item">
+                    <input type="text" id="admin-mount-input" placeholder="マウントを追加">
+                    <button onclick="addMount()">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="admin-playtime">プレイ時間:</label>
+                <input type="text" id="admin-playtime" placeholder="例: 500時間">
+            </div>
+        </section>
+
+        <!-- ギャザクラ -->
+        <section class="admin-section">
+            <h3>ギャザクラ</h3>
+            <div class="input-group">
+                <label>クラフター:</label>
+                <div class="checkbox-group horizontal">
+                    <label><input type="checkbox" id="admin-crafter-carpenter" value="🪚 木工師"> 🪚 木工師</label>
+                    <label><input type="checkbox" id="admin-crafter-blacksmith" value="🔨 鍛冶師"> 🔨 鍛冶師</label>
+                    <label><input type="checkbox" id="admin-crafter-armorer" value="🛠️ 甲冑師"> 🛠️ 甲冑師</label>
+                    <label><input type="checkbox" id="admin-crafter-goldsmith" value="💎 彫金師"> 💎 彫金師</label>
+                    <label><input type="checkbox" id="admin-crafter-leatherworker" value="🧵 革細工師"> 🧵 革細工師</label>
+                    <label><input type="checkbox" id="admin-crafter-weaver" value="✂️ 裁縫師"> ✂️ 裁縫師</label>
+                    <label><input type="checkbox" id="admin-crafter-alchemist" value="⚗️ 錬金術師"> ⚗️ 錬金術師</label>
+                    <label><input type="checkbox" id="admin-crafter-culinarian" value="🍳 調理師"> 🍳 調理師</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>ギャザラー:</label>
+                <div class="checkbox-group horizontal">
+                    <label><input type="checkbox" id="admin-gatherer-miner" value="⛏️ 採掘師"> ⛏️ 採掘師</label>
+                    <label><input type="checkbox" id="admin-gatherer-botanist" value="🌱 園芸師"> 🌱 園芸師</label>
+                    <label><input type="checkbox" id="admin-gatherer-fisher" value="🎣 漁師"> 🎣 漁師</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- コメントと画像 -->
+        <section class="admin-section">
+            <h3>コメントと画像</h3>
+            <div class="input-group">
+                <label for="admin-comment">一言コメント:</label>
+                <input type="text" id="admin-comment" placeholder="例: エオルゼアを駆け巡る！">
+            </div>
+            <div class="input-group">
+                <label for="admin-image">プロフィール画像:</label>
+                <input type="file" id="admin-image" accept="image/*">
+                <img id="admin-image-preview" style="display: none;">
+            </div>
+        </section>
+
+        <!-- その他の好きな項目 -->
+        <section class="admin-section">
+            <h3>その他の好きな項目</h3>
+            <div class="input-group">
+                <label for="admin-favoriteid">好きなID:</label>
+                <select id="admin-favoriteid">
+                    <option value="">選択してください</option>
+                </select>
+                <div class="add-item">
+                    <input type="text" id="admin-id-input" placeholder="IDを追加">
+                    <button onclick="addFavoriteID()">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="admin-favoriteextremetrial">好きな討滅戦ボス:</label>
+                <select id="admin-favoriteextremetrial">
+                    <option value="">選択してください</option>
+                </select>
+                <div class="add-item">
+                    <input type="text" id="admin-extremetrial-input" placeholder="討滅戦ボスを追加">
+                    <button onclick="addExtremeTrial()">追加</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>好きなレイドコンテンツ:</label>
+                <div class="checkbox-group-container">
+                    <div class="checkbox-group horizontal" id="raid-checkboxes">
+                        <label><input type="checkbox" class="raid-checkbox" value="機工城アレキサンダー"> 機工城アレキサンダー</label>
+                        <label><input type="checkbox" class="raid-checkbox" value="次元の狭間オメガ"> 次元の狭間オメガ</label>
+                        <label><input type="checkbox" class="raid-checkbox" value="希望の園エデン"> 希望の園エデン</label>
+                        <label><input type="checkbox" class="raid-checkbox" value="万魔殿パンデモニウム"> 万魔殿パンデモニウム</label>
+                    </div>
+                    <div class="add-item">
+                        <input type="text" id="admin-raid-input" placeholder="レイドを追加">
+                        <button onclick="addRaidCheckbox()">追加</button>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>好きなアライアンス:</label>
+                <div class="checkbox-group-container">
+                    <div class="checkbox-group horizontal" id="alliance-checkboxes">
+                        <label><input type="checkbox" class="alliance-checkbox" value="クリスタルタワー"> クリスタルタワー</label>
+                        <label><input type="checkbox" class="alliance-checkbox" value="シャドウ・オブ・マハ"> シャドウ・オブ・マハ</label>
+                        <label><input type="checkbox" class="alliance-checkbox" value="イヴァリース"> イヴァリース</label>
+                        <label><input type="checkbox" class="alliance-checkbox" value="ニーア"> ニーア</label>
+                        <label><input type="checkbox" class="alliance-checkbox" value="ミソロジー・オブ・エオルゼア"> ミソロジー・オブ・エオルゼア</label>
+                    </div>
+                    <div class="add-item">
+                        <input type="text" id="admin-alliance-input" placeholder="アライアンスを追加">
+                        <button onclick="addAllianceCheckbox()">追加</button>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="admin-favoriteffnumbering">好きなFFナンバリング:</label>
+                <select id="admin-favoriteffnumbering">
+                    <option value="">選択してください</option>
+                    <option value="FFI">FFI</option>
+                    <option value="FFII">FFII</option>
+                    <option value="FFIII">FFIII</option>
+                    <option value="FFIV">FFIV</option>
+                    <option value="FFV">FFV</option>
+                    <option value="FFVI">FFVI</option>
+                    <option value="FFVII">FFVII</option>
+                    <option value="FFVIII">FFVIII</option>
+                    <option value="FFIX">FFIX</option>
+                    <option value="FFX">FFX</option>
+                    <option value="FFXI">FFXI</option>
+                    <option value="FFXII">FFXII</option>
+                    <option value="FFXIII">FFXIII</option>
+                    <option value="FFXIV">FFXIV</option>
+                    <option value="FFXV">FFXV</option>
+                    <option value="FFXVI">FFXVI</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- ボタン -->
+        <div class="admin-panel-buttons">
+            <button onclick="saveProfile()">保存</button>
+            <button onclick="closeAdminPanel()">閉じる</button>
+        </div>
     </div>
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
+            <button id="admin-toggle" style="display: none;">管理者モード</button>
+            <button id="reopen-admin" class="admin-only" style="display: none;" onclick="openAdminPanel()">管理者パネルを開く</button>
+        </p>
+        <button id="exit-admin" class="admin-only" style="display: none;">管理者モード終了</button>
     </footer>
+
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tracks = [
-                { src: "assets/月下彼岸花 ～蛮神ツクヨミ討滅戦～.mp3", name: "月華彼岸花" },
-                { src: "assets/天つ風 ～白虎征魂戦～.mp3", name: "天つ風" },
-                { src: "assets/Revolutions.mp3", name: "革命の唄" }
-            ];
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+        const ADMIN_PASSWORD = "1225@Yuuto";
+
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("FF14ProfileDB", 1);
+
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains("profiles")) {
+                        db.createObjectStore("profiles", { keyPath: "id" });
+                    }
+                    if (!db.objectStoreNames.contains("customLists")) {
+                        db.createObjectStore("customLists", { keyPath: "id" });
+                    }
+                };
+
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
+
+                request.onerror = function(event) {
+                    reject("IndexedDBオープンエラー: " + event.target.errorCode);
+                };
+            });
+        };
+
+        const readFileAsDataURL = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject("画像読み込みエラー");
+                reader.readAsDataURL(file);
+            });
+        };
+
+        function toggleBGM() {
+            const bgm = document.getElementById("bgm");
+            if (!bgm) {
+                console.error("BGM要素が見つかりません");
+                return;
+            }
+            if (bgm.src === "" || !bgm.src) {
+                console.warn("音源が設定されていません。再生開始ボタンを押してください。");
+                return;
+            }
+            if (bgm.paused) {
+                bgm.play().catch(error => {
+                    console.error("再生エラー:", error);
+                    alert("音楽の再生に失敗しました。ブラウザの自動再生ポリシーが原因の可能性があります。");
+                });
+            } else {
+                bgm.pause();
+            }
+        }
+
+        function startBGM() {
+            const bgm = document.getElementById("bgm");
+            if (!bgm) {
+                console.error("BGM要素が見つかりません");
+                return;
+            }
+            if (bgm.src === "" || !bgm.src) {
+                console.warn("音源が設定されていません。デフォルトトラックを試みます。");
+                setupBGM([{ src: "assets/Flow.mp3", name: "Flow" }]);
+            }
+            bgm.play().catch(error => {
+                console.error("再生エラー:", error);
+                alert("音楽の再生に失敗しました。ファイルパスを確認してください。");
+            });
+        }
+
+        function adjustVolume() {
+            const bgm = document.getElementById("bgm");
+            const volume = document.getElementById("volume");
+            if (bgm && volume) {
+                bgm.volume = volume.value;
+            } else {
+                console.error("BGMまたはボリュームコントロールが見つかりません");
+            }
+        }
+
+        function setupBGM(tracks) {
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
+            if (!bgm || !currentTrack) {
+                console.error("BGMまたは現在のトラック表示が見つかりません");
+                return;
+            }
+            if (!tracks || tracks.length === 0) {
+                console.warn("トラックリストが空です");
+                return;
+            }
+
             let currentIndex = Math.floor(Math.random() * tracks.length);
 
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
                 bgm.load();
-                bgm.play().catch(error => console.log("再生エラー:", error));
+                console.log("再生中のトラック:", tracks[currentIndex].src);
+                bgm.play().catch(error => console.error("トラック再生エラー:", error));
             }
 
             updateTrack();
@@ -121,30 +1185,870 @@
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
             };
+        }
 
-            window.startBGM = function() {
-                bgm.play().catch(error => console.log("再生エラー:", error));
-            };
-
-            window.toggleBGM = function() {
-                if (bgm.paused) {
-                    bgm.play().catch(error => console.log("再生エラー:", error));
-                } else {
-                    bgm.pause();
+        function adjustElementsForMobile() {
+            if (window.innerWidth <= 767) {
+                const musicPlayer = document.querySelector('.music-player');
+                if (musicPlayer) {
+                    musicPlayer.style.position = 'static';
+                    musicPlayer.style.width = '100%';
                 }
+            }
+        }
+
+        async function addAreaCheckbox(patch) {
+            const areaInput = document.querySelector(`.admin-area-input[data-patch="${patch}"]`);
+            const areaContainer = document.getElementById(`area-checkboxes-${patch}`);
+            const newArea = areaInput.value.trim();
+            if (newArea && !Array.from(areaContainer.querySelectorAll('.area-checkbox')).some(cb => cb.value === newArea)) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'area-checkbox';
+                checkbox.value = newArea;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${newArea}`));
+                areaContainer.appendChild(label);
+                areaInput.value = '';
+                limitCheckboxes('.area-checkbox', 3);
+                await saveCustomLists();
+            } else if (!newArea) {
+                alert('エリア名を入力してください。');
+            } else {
+                alert('このエリアは既に追加されています。');
+            }
+        }
+
+        async function addNewPatch() {
+            const patchInput = document.getElementById('admin-new-patch-input');
+            const patchName = patchInput.value.trim();
+            if (patchName && !document.querySelector(`.role-group[data-patch="${patchName}"]`)) {
+                const roleGroup = document.createElement('div');
+                roleGroup.className = 'role-group';
+                roleGroup.dataset.patch = patchName;
+                const h4 = document.createElement('h4');
+                h4.textContent = patchName;
+                roleGroup.appendChild(h4);
+                const checkboxGroup = document.createElement('div');
+                checkboxGroup.className = 'checkbox-group horizontal';
+                checkboxGroup.id = `area-checkboxes-${patchName}`;
+                roleGroup.appendChild(checkboxGroup);
+                const addItem = document.createElement('div');
+                addItem.className = 'add-item';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'admin-area-input';
+                input.dataset.patch = patchName;
+                input.placeholder = 'エリアを追加';
+                const button = document.createElement('button');
+                button.textContent = '追加';
+                button.onclick = () => addAreaCheckbox(patchName);
+                addItem.appendChild(input);
+                addItem.appendChild(button);
+                roleGroup.appendChild(addItem);
+                document.getElementById('area-checkboxes').appendChild(roleGroup);
+                patchInput.value = '';
+                await saveCustomLists();
+            } else if (!patchName) {
+                alert('パッチ名を入力してください。');
+            } else {
+                alert('このパッチは既に存在します。');
+            }
+        }
+
+        function toggleAdminMode(enable) {
+            isAdmin = enable;
+            localStorage.setItem("isAdmin", enable);
+            const adminElements = document.querySelectorAll(".admin-only");
+            adminElements.forEach(el => el.style.display = enable ? "block" : "none");
+            document.querySelector('.admin-panel').style.display = enable ? 'flex' : 'none';
+            const reopenButton = document.getElementById('reopen-admin');
+            if (enable && document.querySelector('.admin-panel').style.display === 'none') {
+                reopenButton.style.display = 'block';
+            } else {
+                reopenButton.style.display = 'none';
+            }
+            if (enable) {
+                loadProfile();
+                loadCustomLists();
+                updateAdminFields();
+            }
+        }
+
+        function closeAdminPanel() {
+            document.querySelector('.admin-panel').style.display = 'none';
+            if (isAdmin) {
+                document.getElementById('reopen-admin').style.display = 'block';
+            }
+        }
+
+        function openAdminPanel() {
+            document.querySelector('.admin-panel').style.display = 'flex';
+            document.getElementById('reopen-admin').style.display = 'none';
+            updateAdminFields();
+        }
+
+        async function addGear() {
+            const gearInput = document.getElementById('admin-gear-input');
+            const gearSelect = document.getElementById('admin-gear');
+            const newGear = gearInput.value.trim();
+            if (newGear) {
+                const option = document.createElement('option');
+                option.value = newGear;
+                option.textContent = newGear;
+                gearSelect.appendChild(option);
+                gearInput.value = '';
+                await saveCustomLists();
+            }
+        }
+
+        async function addMount() {
+            const mountInput = document.getElementById('admin-mount-input');
+            const mountSelect = document.getElementById('admin-favoritemount');
+            const newMount = mountInput.value.trim();
+            if (newMount) {
+                const option = document.createElement('option');
+                option.value = newMount;
+                option.textContent = newMount;
+                mountSelect.appendChild(option);
+                mountInput.value = '';
+                await saveCustomLists();
+            }
+        }
+
+        async function addEmote() {
+            const emoteInput = document.getElementById('admin-emote-input');
+            const emoteSelect = document.getElementById('admin-favoriteemote');
+            const newEmote = emoteInput.value.trim();
+            if (newEmote) {
+                const option = document.createElement('option');
+                option.value = newEmote;
+                option.textContent = newEmote;
+                emoteSelect.appendChild(option);
+                emoteInput.value = '';
+                await saveCustomLists();
+            }
+        }
+
+        async function addFavoriteID() {
+            const idInput = document.getElementById('admin-id-input');
+            const idSelect = document.getElementById('admin-favoriteid');
+            const newID = idInput.value.trim();
+            if (newID) {
+                const option = document.createElement('option');
+                option.value = newID;
+                option.textContent = newID;
+                idSelect.appendChild(option);
+                idInput.value = '';
+                await saveCustomLists();
+            }
+        }
+
+        async function addExtremeTrial() {
+            const trialInput = document.getElementById('admin-extremetrial-input');
+            const trialSelect = document.getElementById('admin-favoriteextremetrial');
+            const newTrial = trialInput.value.trim();
+            if (newTrial) {
+                const option = document.createElement('option');
+                option.value = newTrial;
+                option.textContent = newTrial;
+                trialSelect.appendChild(option);
+                trialInput.value = '';
+                await saveCustomLists();
+            }
+        }
+
+        async function addRaidCheckbox() {
+            const raidInput = document.getElementById('admin-raid-input');
+            const raidContainer = document.getElementById('raid-checkboxes');
+            const newRaid = raidInput.value.trim();
+            if (newRaid && !Array.from(raidContainer.querySelectorAll('.raid-checkbox')).some(cb => cb.value === newRaid)) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'raid-checkbox';
+                checkbox.value = newRaid;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${newRaid}`));
+                raidContainer.appendChild(label);
+                raidInput.value = '';
+                await saveCustomLists();
+            } else if (!newRaid) {
+                alert('レイド名を入力してください。');
+            } else {
+                alert('このレイドは既に追加されています。');
+            }
+        }
+
+        async function addAllianceCheckbox() {
+            const allianceInput = document.getElementById('admin-alliance-input');
+            const allianceContainer = document.getElementById('alliance-checkboxes');
+            const newAlliance = allianceInput.value.trim();
+            if (newAlliance && !Array.from(allianceContainer.querySelectorAll('.alliance-checkbox')).some(cb => cb.value === newAlliance)) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'alliance-checkbox';
+                checkbox.value = newAlliance;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${newAlliance}`));
+                allianceContainer.appendChild(label);
+                allianceInput.value = '';
+                await saveCustomLists();
+            } else if (!newAlliance) {
+                alert('アライアンス名を入力してください。');
+            } else {
+                alert('このアライアンスは既に追加されています。');
+            }
+        }
+
+        async function addJobCheckbox(role) {
+            const jobInput = document.getElementById(`admin-job-input-${role}`);
+            const jobContainer = document.getElementById(`job-checkboxes-${role}`);
+            const newJob = jobInput.value.trim();
+            if (newJob && !Array.from(jobContainer.querySelectorAll('.job-checkbox')).some(cb => cb.value === newJob)) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'job-checkbox';
+                checkbox.dataset.role = role;
+                checkbox.value = newJob;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(` ${newJob}`));
+                jobContainer.appendChild(label);
+                jobInput.value = '';
+                await saveCustomLists();
+            } else if (!newJob) {
+                alert('ジョブ名を入力してください。');
+            } else {
+                alert('このジョブは既に追加されています。');
+            }
+        }
+
+        async function saveCustomLists() {
+            const gearSelect = document.getElementById('admin-gear');
+            const mountSelect = document.getElementById('admin-favoritemount');
+            const emoteSelect = document.getElementById('admin-favoriteemote');
+            const idSelect = document.getElementById('admin-favoriteid');
+            const trialSelect = document.getElementById('admin-favoriteextremetrial');
+            const customLists = {
+                id: "SchattenfeeCustomLists",
+                gear: Array.from(gearSelect.options).slice(1).map(opt => opt.value),
+                mounts: Array.from(mountSelect.options).slice(1).map(opt => opt.value),
+                emotes: Array.from(emoteSelect.options).slice(1).map(opt => opt.value),
+                ids: Array.from(idSelect.options).slice(1).map(opt => opt.value),
+                trials: Array.from(trialSelect.options).slice(1).map(opt => opt.value),
+                raids: Array.from(document.querySelectorAll('.raid-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                alliances: Array.from(document.querySelectorAll('.alliance-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                jobs: {
+                    tank: Array.from(document.querySelectorAll('#job-checkboxes-tank .job-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                    healer: Array.from(document.querySelectorAll('#job-checkboxes-healer .job-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                    melee: Array.from(document.querySelectorAll('#job-checkboxes-melee .job-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                    ranged: Array.from(document.querySelectorAll('#job-checkboxes-ranged .job-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked })),
+                    caster: Array.from(document.querySelectorAll('#job-checkboxes-caster .job-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked }))
+                },
+                areas: Array.from(document.querySelectorAll('.role-group[data-patch]')).map(group => ({
+                    patch: group.dataset.patch,
+                    areas: Array.from(group.querySelectorAll('.area-checkbox')).map(cb => ({ value: cb.value, checked: cb.checked }))
+                }))
             };
 
-            window.adjustVolume = function() {
-                bgm.volume = document.getElementById("volume").value;
+            try {
+                const db = await openDB();
+                const tx = db.transaction("customLists", "readwrite");
+                const store = tx.objectStore("customLists");
+                const request = store.put(customLists);
+                await new Promise((resolve, reject) => {
+                    request.onsuccess = () => {
+                        console.log("カスタムリスト保存成功");
+                        resolve();
+                    };
+                    request.onerror = () => reject("カスタムリスト保存エラー: " + request.error);
+                });
+            } catch (error) {
+                console.error("saveCustomLists エラー:", error);
+            }
+        }
+
+        async function loadCustomLists() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("customLists", "readonly");
+                const store = tx.objectStore("customLists");
+                const request = store.get("SchattenfeeCustomLists");
+
+                const customLists = await new Promise((resolve, reject) => {
+                    request.onsuccess = () => {
+                        const defaultJobs = { tank: [], healer: [], melee: [], ranged: [], caster: [] };
+                        const result = request.result || {};
+                        resolve({
+                            gear: result.gear || [],
+                            mounts: result.mounts || [],
+                            emotes: result.emotes || [],
+                            ids: result.ids || [],
+                            trials: result.trials || [],
+                            raids: result.raids || [],
+                            alliances: result.alliances || [],
+                            jobs: result.jobs ? { ...defaultJobs, ...result.jobs } : defaultJobs,
+                            areas: result.areas || []
+                        });
+                    };
+                    request.onerror = () => reject("カスタムリスト読み込みエラー: " + request.error);
+                });
+
+                const gearSelect = document.getElementById('admin-gear');
+                customLists.gear.forEach(gear => {
+                    const option = document.createElement('option');
+                    option.value = gear;
+                    option.textContent = gear;
+                    gearSelect.appendChild(option);
+                });
+
+                const mountSelect = document.getElementById('admin-favoritemount');
+                customLists.mounts.forEach(mount => {
+                    const option = document.createElement('option');
+                    option.value = mount;
+                    option.textContent = mount;
+                    mountSelect.appendChild(option);
+                });
+
+                const emoteSelect = document.getElementById('admin-favoriteemote');
+                customLists.emotes.forEach(emote => {
+                    const option = document.createElement('option');
+                    option.value = emote;
+                    option.textContent = emote;
+                    emoteSelect.appendChild(option);
+                });
+
+                const idSelect = document.getElementById('admin-favoriteid');
+                customLists.ids.forEach(id => {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = id;
+                    idSelect.appendChild(option);
+                });
+
+                const trialSelect = document.getElementById('admin-favoriteextremetrial');
+                customLists.trials.forEach(trial => {
+                    const option = document.createElement('option');
+                    option.value = trial;
+                    option.textContent = trial;
+                    trialSelect.appendChild(option);
+                });
+
+                const raidContainer = document.getElementById('raid-checkboxes');
+                customLists.raids.forEach(raid => {
+                    if (!Array.from(raidContainer.querySelectorAll('.raid-checkbox')).some(cb => cb.value === raid.value)) {
+                        const label = document.createElement('label');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'raid-checkbox';
+                        checkbox.value = raid.value;
+                        checkbox.checked = raid.checked;
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(` ${raid.value}`));
+                        raidContainer.appendChild(label);
+                    }
+                });
+
+                const allianceContainer = document.getElementById('alliance-checkboxes');
+                customLists.alliances.forEach(alliance => {
+                    if (!Array.from(allianceContainer.querySelectorAll('.alliance-checkbox')).some(cb => cb.value === alliance.value)) {
+                        const label = document.createElement('label');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'alliance-checkbox';
+                        checkbox.value = alliance.value;
+                        checkbox.checked = alliance.checked;
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(` ${alliance.value}`));
+                        allianceContainer.appendChild(label);
+                    }
+                });
+
+                ['tank', 'healer', 'melee', 'ranged', 'caster'].forEach(role => {
+                    const jobContainer = document.getElementById(`job-checkboxes-${role}`);
+                    if (jobContainer) {
+                        customLists.jobs[role].forEach(job => {
+                            if (!Array.from(jobContainer.querySelectorAll('.job-checkbox')).some(cb => cb.value === job.value)) {
+                                const label = document.createElement('label');
+                                const checkbox = document.createElement('input');
+                                checkbox.type = 'checkbox';
+                                checkbox.className = 'job-checkbox';
+                                checkbox.dataset.role = role;
+                                checkbox.value = job.value;
+                                checkbox.checked = job.checked;
+                                label.appendChild(checkbox);
+                                label.appendChild(document.createTextNode(` ${job.value}`));
+                                jobContainer.appendChild(label);
+                            }
+                        });
+                    } else {
+                        console.warn(`ジョブコンテナ 'job-checkboxes-${role}' が見つかりません。`);
+                    }
+                });
+
+                customLists.areas.forEach(patchData => {
+                    let roleGroup = document.querySelector(`.role-group[data-patch="${patchData.patch}"]`);
+                    if (!roleGroup) {
+                        roleGroup = document.createElement('div');
+                        roleGroup.className = 'role-group';
+                        roleGroup.dataset.patch = patchData.patch;
+                        const h4 = document.createElement('h4');
+                        h4.textContent = patchData.patch;
+                        roleGroup.appendChild(h4);
+                        const checkboxGroup = document.createElement('div');
+                        checkboxGroup.className = 'checkbox-group horizontal';
+                        checkboxGroup.id = `area-checkboxes-${patchData.patch}`;
+                        roleGroup.appendChild(checkboxGroup);
+                        const addItem = document.createElement('div');
+                        addItem.className = 'add-item';
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.className = 'admin-area-input';
+                        input.dataset.patch = patchData.patch;
+                        input.placeholder = 'エリアを追加';
+                        const button = document.createElement('button');
+                        button.textContent = '追加';
+                        button.onclick = () => addAreaCheckbox(patchData.patch);
+                        addItem.appendChild(input);
+                        addItem.appendChild(button);
+                        roleGroup.appendChild(addItem);
+                        document.getElementById('area-checkboxes').appendChild(roleGroup);
+                    }
+                    const areaContainer = document.getElementById(`area-checkboxes-${patchData.patch}`);
+                    patchData.areas.forEach(area => {
+                        if (!Array.from(areaContainer.querySelectorAll('.area-checkbox')).some(cb => cb.value === area.value)) {
+                            const label = document.createElement('label');
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.className = 'area-checkbox';
+                            checkbox.value = area.value;
+                            checkbox.checked = area.checked;
+                            label.appendChild(checkbox);
+                            label.appendChild(document.createTextNode(` ${area.value}`));
+                            areaContainer.appendChild(label);
+                        }
+                    });
+                });
+
+                limitCheckboxes('.area-checkbox', 3);
+            } catch (error) {
+                console.error("loadCustomLists エラー:", error);
+            }
+        }
+
+        function limitCheckboxes(selector, max) {
+            const checkboxes = document.querySelectorAll(selector);
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                    if (checkedCount > max) {
+                        checkbox.checked = false;
+                        alert(`最大${max}つまで選択可能です。`);
+                    }
+                });
+            });
+        }
+
+        async function updateAdminFields() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("profiles", "readonly");
+                const store = tx.objectStore("profiles");
+                const request = store.get("SchattenfeeProfile");
+
+                const profileData = await new Promise((resolve, reject) => {
+                    request.onsuccess = () => resolve(request.result || {});
+                    request.onerror = () => reject("プロフィール読み込みエラー: " + request.error);
+                });
+
+                document.getElementById('admin-race').value = profileData.race || '';
+                document.getElementById('admin-gender').value = profileData.gender || '';
+                document.getElementById('admin-relation').value = profileData.relation || '';
+                document.getElementById('admin-mainjob').value = profileData.mainjob || '';
+
+                const birthdayMatch = (profileData.birthday || '').match(/^(星\d+月|霊\d+月)(\d+日)$/);
+                if (birthdayMatch) {
+                    document.getElementById('admin-birthday-moon').value = birthdayMatch[1];
+                    document.getElementById('admin-birthday-day').value = birthdayMatch[2];
+                } else {
+                    document.getElementById('admin-birthday-moon').value = '';
+                    document.getElementById('admin-birthday-day').value = '';
+                }
+
+                document.getElementById('admin-description').value = profileData.description || '';
+
+                const areas = (profileData.area || '').split(', ');
+                document.querySelectorAll('.area-checkbox').forEach(checkbox => {
+                    checkbox.checked = areas.includes(checkbox.value);
+                });
+
+                const contents = (profileData.content || '').split(', ');
+                document.getElementById('admin-content-raid').checked = contents.includes('レイド');
+                document.getElementById('admin-content-extreme').checked = contents.includes('極コンテンツ');
+                document.getElementById('admin-content-dungeon').checked = contents.includes('ダンジョン');
+                document.getElementById('admin-content-pvp').checked = contents.includes('PvP');
+                document.getElementById('admin-content-crafting').checked = contents.includes('クラフター');
+                document.getElementById('admin-content-gathering').checked = contents.includes('ギャザラー');
+                document.getElementById('admin-content-treasure').checked = contents.includes('トレジャーハント');
+                document.getElementById('admin-content-rp').checked = contents.includes('RP');
+
+                document.getElementById('admin-gear').value = profileData.gear || '';
+                document.getElementById('admin-server').value = profileData.server || '';
+                document.getElementById('admin-freecompany').value = profileData.freecompany || '';
+
+                const playstyles = (profileData.playstyle || '').split(', ');
+                document.getElementById('admin-playstyle-casual').checked = playstyles.includes('カジュアル');
+                document.getElementById('admin-playstyle-hardcore').checked = playstyles.includes('ハードコア');
+                document.getElementById('admin-playstyle-rp').checked = playstyles.includes('RP');
+                document.getElementById('admin-playstyle-pvp').checked = playstyles.includes('PvP');
+                document.getElementById('admin-playstyle-crafting').checked = playstyles.includes('クラフティング');
+
+                document.getElementById('admin-favoriteemote').value = profileData.favoriteemote || '';
+                document.getElementById('admin-mainquest').value = profileData.mainquest || '';
+                document.getElementById('admin-favoritemount').value = profileData.favoritemount || '';
+                document.getElementById('admin-playtime').value = profileData.playtime || '';
+
+                const crafters = (profileData.crafter || '').split(', ');
+                document.getElementById('admin-crafter-carpenter').checked = crafters.includes('🪚 木工師');
+                document.getElementById('admin-crafter-blacksmith').checked = crafters.includes('🔨 鍛冶師');
+                document.getElementById('admin-crafter-armorer').checked = crafters.includes('🛠️ 甲冑師');
+                document.getElementById('admin-crafter-goldsmith').checked = crafters.includes('💎 彫金師');
+                document.getElementById('admin-crafter-leatherworker').checked = crafters.includes('🧵 革細工師');
+                document.getElementById('admin-crafter-weaver').checked = crafters.includes('✂️ 裁縫師');
+                document.getElementById('admin-crafter-alchemist').checked = crafters.includes('⚗️ 錬金術師');
+                document.getElementById('admin-crafter-culinarian').checked = crafters.includes('🍳 調理師');
+
+                const gatherers = (profileData.gatherer || '').split(', ');
+                document.getElementById('admin-gatherer-miner').checked = gatherers.includes('⛏️ 採掘師');
+                document.getElementById('admin-gatherer-botanist').checked = gatherers.includes('🌱 園芸師');
+                document.getElementById('admin-gatherer-fisher').checked = gatherers.includes('🎣 漁師');
+
+                document.getElementById('admin-comment').value = profileData.comment || '';
+                if (profileData.image) {
+                    document.getElementById('admin-image-preview').src = profileData.image;
+                    document.getElementById('admin-image-preview').style.display = 'block';
+                } else {
+                    document.getElementById('admin-image-preview').style.display = 'none';
+                }
+
+                document.getElementById('admin-favoriteid').value = profileData.favoriteid || '';
+                document.getElementById('admin-favoriteextremetrial').value = profileData.favoriteextremetrial || '';
+                const favoriteRaids = (profileData.favoriteraid || '').split(', ');
+                document.querySelectorAll('.raid-checkbox').forEach(checkbox => {
+                    checkbox.checked = favoriteRaids.includes(checkbox.value);
+                });
+                const favoriteAlliances = (profileData.favoritealliance || '').split(', ');
+                document.querySelectorAll('.alliance-checkbox').forEach(checkbox => {
+                    checkbox.checked = favoriteAlliances.includes(checkbox.value);
+                });
+                const favoriteJobs = (profileData.favoritejobs || '').split(', ');
+                document.querySelectorAll('.job-checkbox').forEach(checkbox => {
+                    checkbox.checked = favoriteJobs.includes(checkbox.value);
+                });
+                document.getElementById('admin-favoriteffnumbering').value = profileData.favoriteffnumbering || '';
+            } catch (error) {
+                console.error("updateAdminFields エラー:", error);
+            }
+        }
+
+        async function saveProfile() {
+            console.log("saveProfile 開始");
+            const fields = [
+                'race', 'gender', 'relation', 'mainjob', 'description', 'gear', 'server', 
+                'freecompany', 'favoriteemote', 'mainquest', 'favoritemount', 'playtime', 
+                'comment', 'favoriteid', 'favoriteextremetrial', 'favoriteffnumbering'
+            ];
+            fields.forEach(field => {
+                const input = document.getElementById(`admin-${field}`);
+                if (input) {
+                    const value = input.value;
+                    if (value) {
+                        document.getElementById(field).textContent = value;
+                        console.log(`${field}: ${value}`);
+                    }
+                } else {
+                    console.warn(`入力要素 'admin-${field}' が見つかりません`);
+                }
+            });
+
+            const birthdayMoon = document.getElementById('admin-birthday-moon')?.value || '';
+            const birthdayDay = document.getElementById('admin-birthday-day')?.value || '';
+            if (birthdayMoon && birthdayDay) {
+                document.getElementById('birthday').textContent = `${birthdayMoon}${birthdayDay}`;
+                console.log("誕生日:", `${birthdayMoon}${birthdayDay}`);
+            }
+
+            const areas = [];
+            document.querySelectorAll('.area-checkbox:checked').forEach(checkbox => {
+                areas.push(checkbox.value);
+            });
+            document.getElementById('area').textContent = areas.join(', ');
+            console.log("好きなエリア:", areas);
+
+            const contents = [];
+            const contentIds = ['raid', 'extreme', 'dungeon', 'pvp', 'crafting', 'gathering', 'treasure', 'rp'];
+            contentIds.forEach(id => {
+                if (document.getElementById(`admin-content-${id}`)?.checked) {
+                    contents.push(document.getElementById(`admin-content-${id}`).value);
+                }
+            });
+            document.getElementById('content').textContent = contents.join(', ');
+            console.log("得意なコンテンツ:", contents);
+
+            const playstyles = [];
+            const playstyleIds = ['casual', 'hardcore', 'rp', 'pvp', 'crafting'];
+            playstyleIds.forEach(id => {
+                if (document.getElementById(`admin-playstyle-${id}`)?.checked) {
+                    playstyles.push(document.getElementById(`admin-playstyle-${id}`).value);
+                }
+            });
+            document.getElementById('playstyle').textContent = playstyles.join(', ');
+            console.log("プレイスタイル:", playstyles);
+
+            const crafters = [];
+            const crafterIds = ['carpenter', 'blacksmith', 'armorer', 'goldsmith', 'leatherworker', 'weaver', 'alchemist', 'culinarian'];
+            crafterIds.forEach(id => {
+                if (document.getElementById(`admin-crafter-${id}`)?.checked) {
+                    crafters.push(document.getElementById(`admin-crafter-${id}`).value);
+                }
+            });
+            document.getElementById('crafter').textContent = crafters.join(', ');
+            console.log("クラフター:", crafters);
+
+            const gatherers = [];
+            const gathererIds = ['miner', 'botanist', 'fisher'];
+            gathererIds.forEach(id => {
+                if (document.getElementById(`admin-gatherer-${id}`)?.checked) {
+                    gatherers.push(document.getElementById(`admin-gatherer-${id}`).value);
+                }
+            });
+            document.getElementById('gatherer').textContent = gatherers.join(', ');
+            console.log("ギャザラー:", gatherers);
+
+            const favoriteRaids = [];
+            document.querySelectorAll('.raid-checkbox:checked').forEach(checkbox => {
+                favoriteRaids.push(checkbox.value);
+            });
+            document.getElementById('favoriteraid').textContent = favoriteRaids.join(', ');
+            console.log("好きなレイドコンテンツ:", favoriteRaids);
+
+            const favoriteAlliances = [];
+            document.querySelectorAll('.alliance-checkbox:checked').forEach(checkbox => {
+                favoriteAlliances.push(checkbox.value);
+            });
+            document.getElementById('favoritealliance').textContent = favoriteAlliances.join(', ');
+            console.log("好きなアライアンス:", favoriteAlliances);
+
+            const favoriteJobs = [];
+            document.querySelectorAll('.job-checkbox:checked').forEach(checkbox => {
+                favoriteJobs.push(checkbox.value);
+            });
+            document.getElementById('favoritejobs').textContent = favoriteJobs.join(', ');
+            console.log("好きなジョブ:", favoriteJobs);
+
+            const profileData = {
+                id: "SchattenfeeProfile",
+                race: document.getElementById('race').textContent,
+                gender: document.getElementById('gender').textContent,
+                relation: document.getElementById('relation').textContent,
+                mainjob: document.getElementById('mainjob').textContent,
+                birthday: document.getElementById('birthday').textContent,
+                description: document.getElementById('description').textContent,
+                area: document.getElementById('area').textContent,
+                content: document.getElementById('content').textContent,
+                gear: document.getElementById('gear').textContent,
+                server: document.getElementById('server').textContent,
+                freecompany: document.getElementById('freecompany').textContent,
+                playstyle: document.getElementById('playstyle').textContent,
+                favoritejobs: document.getElementById('favoritejobs').textContent,
+                favoriteemote: document.getElementById('favoriteemote').textContent,
+                mainquest: document.getElementById('mainquest').textContent,
+                favoritemount: document.getElementById('favoritemount').textContent,
+                playtime: document.getElementById('playtime').textContent,
+                crafter: document.getElementById('crafter').textContent,
+                gatherer: document.getElementById('gatherer').textContent,
+                comment: document.getElementById('comment').textContent,
+                favoriteid: document.getElementById('favoriteid').textContent,
+                favoriteraid: document.getElementById('favoriteraid').textContent,
+                favoritealliance: document.getElementById('favoritealliance').textContent,
+                favoriteextremetrial: document.getElementById('favoriteextremetrial').textContent,
+                favoriteffnumbering: document.getElementById('favoriteffnumbering').textContent,
+                image: document.getElementById('profile-img').src || ''
             };
 
-            // ハンバーガーメニューの制御
+            console.log("保存するプロフィールデータ:", profileData);
+
+            const fileInput = document.getElementById('admin-image');
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                try {
+                    profileData.image = await readFileAsDataURL(fileInput.files[0]);
+                    document.getElementById('profile-img').src = profileData.image;
+                    document.getElementById('profile-caption').textContent = 'Schattenfee';
+                    fileInput.value = '';
+                    document.getElementById('admin-image-preview').style.display = 'none';
+                    console.log("画像保存成功");
+                } catch (error) {
+                    console.error("画像読み込みエラー:", error);
+                }
+            }
+
+            try {
+                const db = await openDB();
+                const tx = db.transaction("profiles", "readwrite");
+                const store = tx.objectStore("profiles");
+                const request = store.put(profileData);
+                await new Promise((resolve, reject) => {
+                    request.onsuccess = () => {
+                        console.log("プロフィール保存成功");
+                        resolve();
+                    };
+                    request.onerror = () => {
+                        console.error("プロフィール保存エラー:", request.error);
+                        reject("プロフィール保存エラー: " + request.error);
+                    };
+                });
+                alert("プロフィールが保存されました！");
+            } catch (error) {
+                console.error("saveProfile エラー:", error);
+                alert("保存に失敗しました。コンソールを確認してください。");
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("profiles", "readonly");
+                const store = tx.objectStore("profiles");
+                const request = store.get("SchattenfeeProfile");
+
+                const profileData = await new Promise((resolve, reject) => {
+                    request.onsuccess = () => resolve(request.result || {});
+                    request.onerror = () => reject("プロフィール読み込みエラー: " + request.error);
+                });
+
+                if (profileData) {
+                    document.getElementById('race').textContent = profileData.race || '';
+                    document.getElementById('gender').textContent = profileData.gender || '';
+                    document.getElementById('relation').textContent = profileData.relation || '';
+                    document.getElementById('mainjob').textContent = profileData.mainjob || '';
+                    document.getElementById('birthday').textContent = profileData.birthday || '';
+                    document.getElementById('description').textContent = profileData.description || '';
+                    document.getElementById('area').textContent = profileData.area || '';
+                    document.getElementById('content').textContent = profileData.content || '';
+                    document.getElementById('gear').textContent = profileData.gear || '';
+                    document.getElementById('server').textContent = profileData.server || '';
+                    document.getElementById('freecompany').textContent = profileData.freecompany || '';
+                    document.getElementById('playstyle').textContent = profileData.playstyle || '';
+                    document.getElementById('favoritejobs').textContent = profileData.favoritejobs || '';
+                    document.getElementById('favoriteemote').textContent = profileData.favoriteemote || '';
+                    document.getElementById('mainquest').textContent = profileData.mainquest || '';
+                    document.getElementById('favoritemount').textContent = profileData.favoritemount || '';
+                    document.getElementById('playtime').textContent = profileData.playtime || '';
+                    document.getElementById('crafter').textContent = profileData.crafter || '';
+                    document.getElementById('gatherer').textContent = profileData.gatherer || '';
+                    document.getElementById('comment').textContent = profileData.comment || '';
+                    document.getElementById('favoriteid').textContent = profileData.favoriteid || '';
+                    document.getElementById('favoriteraid').textContent = profileData.favoriteraid || '';
+                    document.getElementById('favoritealliance').textContent = profileData.favoritealliance || '';
+                    document.getElementById('favoriteextremetrial').textContent = profileData.favoriteextremetrial || '';
+                    document.getElementById('favoriteffnumbering').textContent = profileData.favoriteffnumbering || '';
+                    if (profileData.image) {
+                        document.getElementById('profile-img').src = profileData.image;
+                        document.getElementById('profile-caption').textContent = 'Schattenfee';
+                    }
+                    console.log("プロフィール読み込み成功:", profileData);
+                }
+            } catch (error) {
+                console.error("loadProfile エラー:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            adjustElementsForMobile();
+
+            const pageTracks = {
+                'profile-Schattenfee.html': [
+                { src: "assets/月下彼岸花 ～蛮神ツクヨミ討滅戦～.mp3", name: "月華彼岸花" },
+                { src: "assets/天つ風 ～白虎征魂戦～.mp3", name: "天つ風" },
+                { src: "assets/Revolutions.mp3", name: "革命の唄" }
+                ]
+            };
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const tracks = pageTracks[currentPage] || [{ src: "assets/Flow.mp3", name: "Flow" }];
+            console.log("設定されるトラック:", tracks);
+            setupBGM(tracks);
+
+            await loadProfile();
+            await loadCustomLists();
+            if (isAdmin) {
+                toggleAdminMode(true);
+            }
+
+            let tapCount = 0;
+            let tapTimeout;
+            const adminToggle = document.getElementById('admin-toggle');
+            adminToggle.addEventListener('click', () => {
+                if (!isAdmin) {
+                    const password = prompt("管理者パスワードを入力してください:");
+                    if (password === ADMIN_PASSWORD) {
+                        toggleAdminMode(true);
+                    } else {
+                        alert("パスワードが間違っています。");
+                        adminToggle.style.display = 'none';
+                    }
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    adminToggle.style.display = 'inline';
+                }
+            });
+            adminToggle.addEventListener('touchstart', (e) => {
+                tapCount++;
+                clearTimeout(tapTimeout);
+                tapTimeout = setTimeout(() => tapCount = 0, 1000);
+                if (tapCount >= 5 && !isAdmin) {
+                    const password = prompt("管理者パスワードを入力してください:");
+                    if (password === ADMIN_PASSWORD) {
+                        toggleAdminMode(true);
+                        tapCount = 0;
+                    } else {
+                        alert("パスワードが間違っています。");
+                        adminToggle.style.display = 'none';
+                    }
+                }
+            });
+
+            document.getElementById("exit-admin").addEventListener("click", () => {
+                toggleAdminMode(false);
+                adminToggle.style.display = 'none';
+            });
+
+            document.getElementById('admin-image').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('admin-image-preview').src = e.target.result;
+                        document.getElementById('admin-image-preview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
             const hamburger = document.querySelector('.hamburger');
             const nav = document.querySelector('nav');
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('open');
             });
+
+            limitCheckboxes('.area-checkbox', 3);
         });
+
+        window.addEventListener('resize', adjustElementsForMobile);
     </script>
 </body>
 </html>

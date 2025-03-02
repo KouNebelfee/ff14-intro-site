@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>新生エオルゼア - FF14</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .content-wrapper { max-width: 800px; margin: 0 auto; padding-top: 120px; padding-bottom: 80px; }
+        .story-content { padding-bottom: 100px; }
+        .story-nav { text-align: center; margin: 20px 0; }
+        
+        /* レイアウト調整 */
+        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; }
+        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
+        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
+        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+        nav li { margin: 0 15px; }
+        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
+        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
+
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            nav { top: 60px; }
+        }
+
+        @media (max-width: 767px) {
+            .content-wrapper { padding-top: 120px; }
+            .story-content h2 { font-size: 18px; }
+            .story-content p { font-size: 14px; }
+            .story-nav a { padding: 3px 10px; font-size: 14px; }
+            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
+            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
+            .music-player input[type="range"] { width: 80px; }
+            .music-player p { font-size: 12px; margin: 5px 0; }
+            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
+            nav { display: none; top: 100px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav li { margin: 10px 0; }
+            nav a { font-size: 14px; padding: 10px; display: block; }
+        }
+    </style>
+</head>
+<body class="bg-arr">
+    <div class="music-player">
+        <audio id="bgm">
+            <source src="" type="audio/mpeg">
+            お使いのブラウザは音楽に対応していません。
+        </audio>
+        <button onclick="startBGM()">再生開始</button>
+        <button onclick="toggleBGM()">再生/停止</button>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
+        <button class="nav-btn" onclick="prevTrack()"><</button>
+        <button class="nav-btn" onclick="nextTrack()">></button>
+        <p>再生中: <span id="current-track">未選択</span></p>
+    </div>
+    <button class="hamburger">☰</button>
+    <nav>
+        <ul>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="profile-nebelfee.html">Nebelfee</a></li>
+            <li><a href="profile-schattenfee.html">Schattenfee</a></li>
+            <li><a href="story.html">ストーリー</a></li>
+            <li><a href="gallery.html">ギャラリー</a></li>
+            <li><a href="raid.html">レイド</a></li>
+            <li><a href="gear.html">装備</a></li>
+            <li><a href="diary.html">プレイ日記</a></li>
+            <li><a href="recruit.html">仲間募集</a></li>
+            <li><a href="links.html">リンク集</a></li>
+            <li><a href="spots.html">スクショスポット</a></li>
+        </ul>
+    </nav>
+    <div class="content-wrapper">
+        <h1 class="theme-arr">新生エオルゼア</h1>
+        <p>あらすじ: 霧と影、二つの魂がエオルゼアの大地を駆け抜け、蛮神の咆哮とクリスタルタワーの封印に挑む。仲間と共に帝国の野望を砕き、アルテマウェポンの脅威に立ち向かう旅が、ここに始まる。</p>
+        <div class="story-content">
+            <h2>前日譚: 霊災の爪痕と新たな誓い</h2>
+            <p>第七霊災がエオルゼアを襲ってから数年、グリダニアの森は焼け焦げた木々が風に揺れ、崩れた家屋の間で冒険者たちがざわめいていた。遠くにはイクサル族の羽音が響き、霧隠れの谷から旅立ったNebelfee（10歳）とSchattenfee（7歳）が暁の血盟の拠点に足を踏み入れた。ミンフィリアが白いローブを纏い、穏やかな声で二人を迎え、「霊災で多くのものを失ったけれど、ここで新たな仲間と共にエオルゼアを守ろう」と語った。</p>
+            <p>Nebelfeeは母ミスティアの双剣を背に負い、指先に霧を漂わせてその流れを感じた。Schattenfeeは父カゲロウの手裏剣を腰に帯び、影に身を潜めて周囲を警戒した。拠点は活気に満ち、タタルが「やっと会えた！よろしくね！」と物資を抱えて駆け寄り、ウリエンジェが「エーテルの乱れが新たな試練を予感させておるな」と渋い顔で呟いた。</p>
+            <p>カヌ・エ・センナが杖を手に現れ、「イクサル族が森を荒らし、クリスタルタワーの封印が揺らいでいる」と警告した。吟遊詩人エリンが竪琴を奏で、「霧と影の姉弟か、歌の題材にぴったりだね」と微笑んだ。Nebelfeeが「歌ってくれる？」と尋ねると、エリンは「君たちの旅が終わる頃にね」と約束し、Schattenfeeが影から「優しい音」と呟いて場の空気を和ませた。</p>
+            <p>夜、ミンフィリアが姉弟を呼び、エオルゼアの現状を丁寧に説明した。「イクサル族がガルーダを呼び、シルフ族がラムウを目覚めさせようとしている。帝国もクリスタルタワーの力を狙い暗躍してる」。Nebelfeeは双剣の柄に触れ、母の「霧は仲間だよ」という声を思い出し、Schattenfeeは手裏剣の冷たさに父の「影はお前の目だ」という教えを感じた。</p>
+            <p>ミンフィリアが「君たちの旅が希望を灯すよ」と微笑むと、タタルが「私も応援するよ！」と元気に加わった。森の異変が近づき、イクサル族の羽音が不気味に響いた。姉弟は互いの手を握り、両親の意志を胸に刻み、旅立ちの決意を固めた。</p>
+    
+            <h2>第一章: グリダニアの風と蛮神の影</h2>
+            <p>グリダニアの森に朝霧が漂う中、イクサル族がガルーダを召喚し、風が鋭い刃となって木々を切り裂いた。Nebelfeeは霧を操り、双剣を手に木々の間を疾走して敵の動きを封じた。Schattenfeeは影から飛び出し、手裏剣を投げてイクサル族の飛行装置を次々と破壊した。</p>
+            <p>ミンフィリアが魔法で援護し、「蛮神の力を封じよう！」と叫びながら光の矢を放った。猟師ロランが弓を引き、「祭壇を壊せ！そこが鍵だ！」と的確な指示を飛ばした。戦いの最中、シルフ族が乱入し、「ラムウ様が我らを導く！」と雷を呼び寄せ、森が騒然となった。</p>
+            <p>カヌ・エ・センナが森の根を絡ませて雷を抑え、タタルが「慌てないでね！」と援護物資を配りながら走り回った。Nebelfeeが霧を渦に変えてガルーダの翼を縛り、Schattenfeeが祭壇に手裏剣を突き立てると、蛮神の咆哮が消え、風が静まり返った。</p>
+            <p>エリンが竪琴を奏で、「勝利の歌が響くよ」と笑いながら森に旋律を響かせた。戦後、鍛冶師のカイエンが「蛮族の武器を見てくれ」と近づき、Nebelfeeが双剣と比較すると、彼は「霧隠れの技が込められてるな」と感心した。Schattenfeeは影から手裏剣を見せ、「父の形見だ」と静かに呟いた。</p>
+            <p>その夜、拠点に戻った一行にウリエンジェが「クリスタルタワーの封印が関わっておる」と警告し、新たな試練が迫っていることを告げた。森の静寂が姉弟を包み、Nebelfeeは双剣を手に持つ重さに母の教えを感じ、Schattenfeeは手裏剣の冷たさに父の遺志を重ねた。</p>
+    
+            <h2>第二章: リムサ・ロミンサの炎と海の咆哮</h2>
+            <p>リムサ・ロミンサの港に到着した時、アマルジャ族がイフリートの炎を解き放ち、海面が赤く燃え上がった。Nebelfeeは霧を広げ、双剣を手に桟橋を駆けて炎の勢いを抑えた。Schattenfeeは影に潜み、手裏剣でアマルジャ族の動きを乱し、素早く背後を突いた。</p>
+            <p>メルウィブが両銃を構え、「港は我が領土だ！」と叫びながら正確な射撃で敵を蹴散らした。海賊カリナが短剣を手に「船は誰にも渡さねえ！」と叫び、船員たちと共に一斉に応戦した。帝国の魔導兵器が現れ、炎を増幅させると、戦場はさらに混乱に包まれた。</p>
+            <p>ウリエンジェが氷魔法で援護し、「アラグの遺産が使われておるな」と冷静に分析した。Nebelfeeが霧を嵐に変えて炎を抑え、Schattenfeeが魔導兵器の動力部を正確に撃ち抜くと、イフリートが膝をつき、轟音と共に崩れ落ちた。</p>
+            <p>戦後、カリナが「腕が立つな」とNebelfeeの肩を叩き、メルウィブが「海の誇りを守った」と銃を下ろしながら認めた。船乗り見習いのティモが「イフリートの炎を見ちまったよ」と震えながら近づき、Schattenfeeが影から「恐れるな」と囁くと、彼は目を丸くして安堵した。</p>
+            <p>その夜、タタルが「何か食べる？」と魚のスープを持ち込み、エリンが「海の旋律」を奏でて港に穏やかな空気を運んだ。港の灯りが水面に揺れ、Nebelfeeは双剣を手に海風を感じ、Schattenfeeは手裏剣を握りながら次の戦いへの覚悟を新たにした。</p>
+    
+            <h2>第三章: サゴリーの雷と砂漠の取引</h2>
+            <p>サゴリー砂漠でシルフ族がラムウを召喚し、雷が砂を焦がして空気を震わせた。Nebelfeeは霧を盾に双剣を構え、砂嵐の中を進んで敵の動きを見極めた。Schattenfeeは影から雷の源を探り、手裏剣でシルフ族の祭壇を狙った。</p>
+            <p>パパリモが氷魔法でシルフ族を足止めし、「帝国が裏で糸を引いてる！」と叫びながら戦場を駆けた。商人サリムが短剣を手に「雷を止めなきゃ商売ができない！」と参戦し、素早く敵の隙を突いた。帝国の魔導装置が雷を増幅させ、砂嵐が視界を奪う中、戦いは激しさを増した。</p>
+            <p>Nebelfeeが霧で装置を包み込み、Schattenfeeが手裏剣で回路を切断すると、ラムウの力が弱まり、雷鳴が遠ざかった。ラウバーンが大剣を手に駆けつけ、「ウルダハの名にかけて！」と咆哮を上げて蛮神に止めを刺した。</p>
+            <p>戦後、サリムが「助かったよ、金貨で返すぜ」と笑い、パパリモが「次も頼むよ」と頷いて疲れを隠した。砂漠の星空の下、Nebelfeeは双剣を手に砂の感触を感じ、Schattenfeeは影から静寂を見上げて力を確かめた。</p>
+            <p>その夜、旅商人のリナが「雷のおかげで荷が遅れたよ」と愚痴をこぼしつつ、姉弟に水差しを差し出した。タタルが「休憩しよう！」と乾パンを持ってきたが、砂まみれで苦笑いした。姉弟は小さな笑みを交わし、砂漠の試練を乗り越えた絆を感じた。</p>
+    
+            <h2>第四章: タナランの大地と鉱夫の叫び</h2>
+            <p>タナランでコボルド族がタイタンを呼び、大地が震えて岩が砕けた。Nebelfeeは霧を広げ、双剣で岩場を跳び回りながら敵に迫った。Schattenfeeは影に潜み、手裏剣でコボルド族の動きを乱し、祭壇へと近づいた。</p>
+            <p>イダが拳を構え、「一緒に倒そうね！」と陽気に叫びながらコボルド族に連続蹴りを叩き込んだ。鉱夫ダリウスが「タイタンの足を狙え！」と叫び、ナナモが祈りを捧げて味方の士気を高めた。帝国のクリスタル装置がタイタンを強化し、地面がさらに揺れ動いた。</p>
+            <p>Nebelfeeが霧で装置を隠し、Schattenfeeが核心部に手裏剣を突き刺すと、大地の振動が弱まった。イダが「やったね！」と拳でタイタンの足を砕き、ダリウスが鍛えた腕で援護すると、ついに蛮神が倒れた。</p>
+            <p>戦後、イダが「楽しかったよ！」と手を叩き、ダリウスが「鉱山が救われた」と汗を拭った。ナナモが「ウルダハの民が感謝してるよ」と優しく微笑み、姉弟に感謝を伝えた。荒野の夕陽が大地を染め、Nebelfeeは双剣を手に静寂を感じた。</p>
+            <p>その夜、鉱夫見習いのレオが「タイタンなんて怖かったよ」と震えながら語り、Schattenfeeが影から「もう大丈夫だ」と呟いた。タタルが「何か温かいもの持ってくるね！」とスープを配り、エリンが竪琴で穏やかな旋律を奏でた。姉弟は互いの成長を実感し、次の旅路を見据えた。</p>
+    
+            <h2>第五章: 霧隠れの谷と竜の咆哮</h2>
+            <p>霧隠れの谷で帝国が霧を喰らう竜を召喚し、クリスタルタワーの封印が揺らいだ。Nebelfeeは故郷の霧を操り、双剣で竜の咆哮に立ち向かった。Schattenfeeは影から核を狙い、手裏剣を正確に投げて敵の動きを封じた。</p>
+            <p>ノゾミが「竜の動きを封じろ！」と忍術を繰り出し、アリゼーが双剣を手に「私が決めるわ！」と斬り込んだ。賢者ミラが「封印を守らねば！」と祈りを捧げ、竜の力を抑える結界を張った。帝国兵が「竜で霧を支配する！」と叫び、戦場が混沌に包まれた。</p>
+            <p>Nebelfeeが霧で竜の視界を奪い、Schattenfeeが核に致命傷を与えると、アリゼーが鮮やかな剣技で止めを刺した。竜が崩れ落ち、谷に静寂が戻り、封印が安定した。ノゾミが「故郷は守られたよ」と安堵し、アリゼーが「当然の結果ね」と胸を張った。</p>
+            <p>戦後、谷の民であるハヤトが「霧が戻ったよ」と感謝し、姉弟に故郷の果実を差し出した。ミラが「クリスタルの均衡が保たれた」と祈りを終え、タタルが「すごい戦いだったね！」と興奮気味に語った。霧が月光に輝き、Nebelfeeは双剣を手に故郷の風を感じた。</p>
+            <p>その夜、Schattenfeeは影から谷を見下ろし、手裏剣を手に持つ感触に父の教えを重ねた。エリンが「谷の歌」を奏で、穏やかな旋律が響き渡った。姉弟は故郷への想いを胸に、次の試練に備えた。</p>
+    
+            <h2>第六章: ラノシアの野望とタイタンの復活</h2>
+            <p>低地ラノシアで帝国とコボルド族がタイタンを再召喚し、アルテマウェポンの影が迫った。Nebelfeeは霧を広げ、双剣で海岸を駆けて敵に立ち向かった。Schattenfeeは影に潜み、手裏剣でコボルド族の動きを翻弄した。</p>
+            <p>シドが「アルテマを止めねば！」と飛空艇で援護し、メルウィブが両銃を構えて「ラノシアは渡さん！」と正確な射撃で敵を仕留めた。漁師トールが「海を守るぞ！」と網を手に参戦し、素早く敵を引き寄せた。戦場は海風と共に混戦と化した。</p>
+            <p>コボルド族が「大地の神が我らを！」と叫び、帝国の魔導兵器が援護に現れた。Nebelfeeが霧で視界を奪い、Schattenfeeが手裏剣でタイタンの足を攻撃すると、シドの飛空艇が砲撃を浴びせて蛮神を弱らせた。</p>
+            <p>メルウィブが両銃でコボルド族の最後の一人を撃ち抜き、タイタンが崩れ、帝国兵が退却した。シドが「一歩前進だ」と笑い、トールが「魚が釣れるぜ」と安堵した。メルウィブが「ラノシアは君たちに感謝してる」と銃を仕舞い、厳かに認めた。</p>
+            <p>夜、海岸に月が映り、Nebelfeeは双剣を手に波の音に耳を澄ませた。Schattenfeeは影から海を見つめ、トールが「魚を焼こうぜ」と焚き火を囲んだ。タタルが「疲れたでしょ？」と毛布を配り、姉弟は海風の中で休息を取った。</p>
+    
+            <h2>第七章: 影哭の丘とアラグの幻影</h2>
+            <p>影哭の丘で帝国がアレクサンダーの幻影を呼び、クリスタルタワーの力が漏れ出した。Nebelfeeは霧を広げ、双剣で丘を駆けて幻影に挑んだ。Schattenfeeは影から核心を狙い、手裏剣で敵の動きを乱した。</p>
+            <p>アルフィノが「アラグの技術だ！」と魔法を放ち、アリゼーが双剣を手に「私が仕留めるわ！」と飛び込んだ。考古学者レナが「核を壊せ！」と叫び、24人の冒険者が集結してアライアンスレイドが始まった。帝国兵が「アレクサンダーの力を我が手に！」と叫び、戦場が混沌に包まれた。</p>
+            <p>Nebelfeeが霧で幻影を包み、Schattenfeeが手裏剣で核を攻撃すると、アルフィノの魔法が援護し、アリゼーが鮮やかな一撃で幻影を切り裂いた。アレクサンダーが消え、丘に静寂が戻った。レナが「遺跡の謎が解けた」と興奮した。</p>
+            <p>戦後、アルフィノが「君たちの力のおかげだ」と微笑み、アリゼーが「まあ、私も悪くないけどね」と冗談を飛ばした。丘の風が勝利を祝福し、Nebelfeeは双剣を手に風を感じ、Schattenfeeは影から静寂を見上げた。</p>
+            <p>その夜、レナが「クリスタルタワーの調査を進めなきゃ」と地図を広げ、タタルが「何か食べる？」と干し肉を配った。エリンが「丘の旋律」を奏で、姉弟は新たな目標を見つけて力を蓄えた。</p>
+    
+            <h2>第八章: カストルム・セントリと剣の試練</h2>
+            <p>カストルム・セントリでガイウスがアルテマとクリスタルタワーの力を起動した。Nebelfeeは霧を広げ、双剣で要塞に突入して敵を切り開いた。Schattenfeeは影から敵を監視し、手裏剣で背後を突いた。</p>
+            <p>サンクレッドが「ガイウスを止めろ！」と短剣を手に忍び寄り、ラウバーンが大剣を構えて「ウルダハは負けん！」と咆哮を上げた。脱走兵ユアンが「背中を狙え！」と叫び、帝国兵と交戦した。戦場は要塞の鉄臭い空気に包まれた。</p>
+            <p>Nebelfeeが霧で視界を奪い、Schattenfeeが手裏剣でガイウスの動きを乱すと、サンクレッドが忍術で援護し、ラウバーンが大剣でガイウスを打ち倒した。アルテマが停止し、要塞に静寂が訪れた。ユアンが「自由を手に入れた」と涙した。</p>
+            <p>戦後、サンクレッドが「忍びの技が光ってたよ」と笑い、ラウバーンが「これぞ戦士の勝利だ」と豪快に認めた。Nebelfeeは双剣を手に要塞の残響を感じ、Schattenfeeは影から瓦礫を見下ろした。</p>
+            <p>その夜、ユアンが「俺も旅に出るよ」と決意を語り、タタルが「頑張ってね！」と物資を渡した。エリンが「戦いの歌」を奏で、姉弟は次の戦いへの準備を整えた。</p>
+    
+            <h2>第九章: シルバーティアとクリスタルタワーの門</h2>
+            <p>シルバーティアで帝国がアモンを召喚し、クリスタルタワーの力を利用した。Nebelfeeは霧を広げ、双剣で森を駆けてアモンに挑んだ。Schattenfeeは影からアモンの動きを追跡し、手裏剣で攻撃を仕掛けた。</p>
+            <p>ヤ・シュトラが「アラグの魔導士だ！」と杖を手に魔法を放ち、パパリモが「止めねば！」と氷の結界を張った。隠者セリナが「アモンの核を狙え！」と祈りを捧げ、冒険者たちが集結した。帝国兵が「クリスタルの力が我らを！」と叫び、戦場が混戦となった。</p>
+            <p>Nebelfeeが霧で敵を混乱させ、Schattenfeeが手裏剣で核を攻撃すると、ヤ・シュトラの魔法が援護し、パパリモがアモンに止めを刺した。アモンが消え、森に静寂が戻った。セリナが「塔への道が開けた」と告げた。</p>
+            <p>戦後、ヤ・シュトラが「君たちの力が鍵だったよ」と褒め、パパリモが「これで一歩前進だ」と呟いた。Nebelfeeは双剣を手に森の息吹を感じ、Schattenfeeは影から静寂を見つめた。</p>
+            <p>その夜、セリナが「クリスタルタワーの封印が鍵だよ」と語り、タタルが「怖かったね」と震えながら寄り添った。エリンが「森の祈り」を奏で、姉弟は新たな使命に目を向けた。</p>
+    
+            <h2>第十章: プラエトリウムとアルテマの終焉</h2>
+            <p>プラエトリウムでガイウスがアルテマとクリスタルタワーの力を解放した。Nebelfeeは霧を広げ、双剣で要塞に突入して敵を切り開いた。Schattenfeeは影から敵を監視し、手裏剣で攻撃を仕掛けた。</p>
+            <p>ミンフィリアが「暁の力がここに！」と叫び魔法で援護し、シドが「アルテマを止めねば！」と飛空艇を操った。技師フィオナが「動力炉を壊せ！」と叫び、8人の冒険者がレイドを組んだ。ガイウスが「エオルゼアは我が手に！」と剣を構え、戦場が熱を帯びた。</p>
+            <p>Nebelfeeが霧で視界を奪い、Schattenfeeが手裏剣で動力炉を攻撃すると、シドの飛空艇が砲撃を浴びせ、ミンフィリアの魔法がアルテマを仕留めた。ガイウスが倒れ、夜明けが訪れた。フィオナが「機械は俺の相棒だ」と笑った。</p>
+            <p>戦後、ミンフィリアが「君たちがエオルゼアを救った」と微笑み、シドが「これで未来が開けた」と呟いた。朝日がプラエトリウムを照らし、Nebelfeeは双剣を手に未来を見据え、Schattenfeeは影から太陽を見上げた。</p>
+            <p>その朝、タタルが「やったね！」と跳ね、エリンが「夜明けの歌」を奏でた。姉弟は新たな旅への誓いを立て、エオルゼアの希望を胸に刻んだ。</p>
+    
+            <h2>後日譚: 新生の道とクリスタルの意志</h2>
+            <p>アルテマが倒れ、NebelfeeとSchattenfeeはグリダニアに戻った。ミンフィリアが「君たちがエオルゼアの光だよ」と涙を浮かべ、タタルが「最高だったよ！」と跳ねた。暁の拠点は勝利の喜びに満ちていた。</p>
+            <p>ウリエンジェが「クリスタルタワーの謎が新たな道を開く」と呟き、カヌ・エ・センナが「森が新たな旅を祝福してる」と祈った。Nebelfeeは双剣を手に霧を操り、Schattenfeeは影で手裏剣を手に持つ重さを感じた。</p>
+            <p>森の小川でエリンが「旅の歌」を奏で、穏やかな旋律が響いた。Nebelfeeは母の笑顔を思い出し、Schattenfeeは父の声を重ねた。姉弟は互いに頷き、次の冒険への決意を新たにした。</p>
+            <p>その夜、拠点に集まった冒険者たちが勝利を祝い、タタルが「もっと頑張るよ！」と笑った。ウリエンジェが「まだ終わっておらぬ」と呟き、クリスタルタワーの謎を暗示した。霧と影が交わり、新たな旅の予感が漂った。</p>
+            <p>翌朝、NebelfeeとSchattenfeeは森の縁に立ち、エオルゼアの未来を見つめた。カヌ・エ・センナが「光が君たちを導くよ」と祈り、エリンが竪琴で送り出した。姉弟の旅は、新生の風と共に続いていく。</p>
+        </div>
+        <div class="story-nav">
+            <a href="origin.html">前章: 第零章</a>
+            <a href="hs.html">次章: 蒼天のイシュガルド</a>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-nav">
+            <a href="origin.html">前章: 第零章</a>
+            <a href="hs.html">次章: 蒼天のイシュガルド</a>
+        </div>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tracks = [
+                { src: "assets/Answers.mp3", name: "Answers" },
+                { src: "assets/ビッグブリッヂの死闘 ～新生～.mp3", name: "ビッグブリッヂの死闘 ～新生～" },
+                { src: "assets/不吉なる前兆.mp3", name: "不吉なる前兆" },
+                { src: "assets/原始の審判.mp3", name: "原始の審判" },
+                { src: "assets/堕天せし者.mp3", name: "堕天せし者" },
+                { src: "assets/天より降りし力.mp3", name: "天より降りし力" },
+                { src: "assets/灰より生まれし者.mp3", name: "灰より生まれし者" },
+                { src: "assets/究極幻想.mp3", name: "究極幻想" },
+                { src: "assets/過重圧殺! ～蛮神タイタン討滅戦～.mp3", name: "過重圧殺!" },
+                { src: "assets/雷光雷鳴 ～蛮神ラムウ討滅戦～.mp3", name: "雷光雷鳴" }
+            ];
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
+            };
+
+            // ハンバーガーメニューの制御
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

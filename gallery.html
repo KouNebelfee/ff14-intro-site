@@ -18,8 +18,8 @@
         footer { height: 60px; display: flex; flex-direction: column; justify-content: center; padding: 0; text-align: center; font-size: 12px; }
         footer p { color: #ffffff; margin: 0; }
         .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 10px; background-color: rgba(0, 0, 0, 0.8); border-radius: 5px; color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
-        #admin-command { width: 50px; border: none; background: transparent; color: rgba(255, 255, 255, 0.3); font-size: 10px; outline: none; }
-        #admin-command::placeholder { color: rgba(255, 255, 255, 0.3); }
+        #admin-toggle { background: none; border: none; color: #ffd700; cursor: pointer; display: none; }
+        #exit-admin { background: none; border: none; color: #ffd700; cursor: pointer; display: none; }
         .admin-controls { display: none; margin-top: 10px; }
         .gallery-item[data-public="false"]:not(.admin-view), .slide[data-public="false"]:not(.admin-view) { display: none; }
         .admin-controls select, .admin-controls button { margin: 5px; }
@@ -36,7 +36,6 @@
             .hamburger { display: none; }
             nav { top: 60px; }
         }
-
         @media (max-width: 767px) {
             .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
             nav { display: none; top: 100px; }
@@ -95,11 +94,39 @@
         <div class="gallery" id="gallery"></div>
     </div>
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. | <input type="text" id="admin-command" placeholder="..."></p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
+            <button id="admin-toggle">管理者モード</button>
+            <button id="exit-admin" style="display: none;" onclick="toggleAdminMode(false)">管理者モード終了</button>
+        </p>
     </footer>
     <script>
-        let isAdmin = false;
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+        const ADMIN_PASSWORD = "1225@Yuuto";
         let nextId = 1;
+
+        // IndexedDB の初期化
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("GalleryDB", 1);
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains("galleryItems")) {
+                        db.createObjectStore("galleryItems", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = function(event) { resolve(event.target.result); };
+                request.onerror = function(event) { reject("IndexedDBエラー: " + event.target.errorCode); };
+            });
+        };
+
+        const readFileAsDataURL = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject("画像読み込みエラー");
+                reader.readAsDataURL(file);
+            });
+        };
 
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
@@ -163,111 +190,158 @@
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('open');
             });
+
+            let tapCount = 0;
+            let tapTimeout;
+            const adminToggle = document.getElementById('admin-toggle');
+            adminToggle.addEventListener('click', () => {
+                if (!isAdmin) {
+                    const password = prompt("管理者パスワードを入力してください:");
+                    if (password === ADMIN_PASSWORD) {
+                        toggleAdminMode(true);
+                    } else {
+                        alert("パスワードが間違っています。");
+                        adminToggle.style.display = 'none';
+                    }
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    adminToggle.style.display = 'inline';
+                }
+            });
+            adminToggle.addEventListener('touchstart', (e) => {
+                tapCount++;
+                clearTimeout(tapTimeout);
+                tapTimeout = setTimeout(() => tapCount = 0, 1000);
+                if (tapCount >= 5 && !isAdmin) {
+                    const password = prompt("管理者パスワードを入力してください:");
+                    if (password === ADMIN_PASSWORD) {
+                        toggleAdminMode(true);
+                        tapCount = 0;
+                    } else {
+                        alert("パスワードが間違っています。");
+                        adminToggle.style.display = 'none';
+                    }
+                }
+            });
+
+            if (isAdmin) toggleAdminMode(true);
         });
 
-        // 以下、既存のスクリプトはそのまま
-        function checkAdminCommand() {
-            const command = document.getElementById("admin-command").value.toLowerCase();
+        function toggleAdminMode(enable) {
+            isAdmin = enable;
+            localStorage.setItem("isAdmin", enable);
             const adminMode = document.getElementById("admin-mode");
             const controls = document.querySelectorAll(".admin-controls");
             const galleryItems = document.querySelectorAll(".gallery-item");
             const slides = document.querySelectorAll(".slide");
+            const adminToggle = document.getElementById('admin-toggle');
+            const exitAdmin = document.getElementById('exit-admin');
 
-            if (command === "admin") {
-                adminMode.style.display = "block";
-                controls.forEach(control => control.style.display = "block");
-                galleryItems.forEach(item => {
+            adminMode.style.display = enable ? "block" : "none";
+            controls.forEach(control => control.style.display = enable ? "block" : "none");
+            galleryItems.forEach(item => {
+                if (enable) {
                     item.classList.add("admin-view");
                     item.style.display = "block";
-                });
-                slides.forEach(slide => {
-                    slide.classList.add("admin-view");
-                    slide.style.display = "block";
-                });
-                isAdmin = true;
-            } else {
-                adminMode.style.display = "none";
-                controls.forEach(control => control.style.display = "none");
-                galleryItems.forEach(item => {
+                } else {
                     item.classList.remove("admin-view");
                     item.style.display = item.getAttribute("data-public") === "true" ? "block" : "none";
-                });
-                slides.forEach(slide => {
+                }
+            });
+            slides.forEach(slide => {
+                if (enable) {
+                    slide.classList.add("admin-view");
+                    slide.style.display = "block";
+                } else {
                     slide.classList.remove("admin-view");
                     slide.style.display = slide.getAttribute("data-public") === "true" ? "block" : "none";
-                });
-                isAdmin = false;
+                }
+            });
+            adminToggle.style.display = enable ? "none" : "inline";
+            exitAdmin.style.display = enable ? "inline" : "none";
+        }
+
+        async function loadSavedItems() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("galleryItems", "readonly");
+                const store = tx.objectStore("galleryItems");
+                const request = store.getAll();
+
+                request.onsuccess = function() {
+                    const savedItems = request.result || [];
+                    const gallery = document.getElementById("gallery");
+                    const slideshow = document.getElementById("slideshow");
+
+                    gallery.innerHTML = "";
+                    slideshow.innerHTML = "";
+
+                    savedItems.forEach(item => {
+                        const newItem = document.createElement("div");
+                        newItem.className = "gallery-item";
+                        newItem.setAttribute("data-id", item.id);
+                        newItem.setAttribute("data-public", item.isPublic.toString());
+                        if (isAdmin) {
+                            newItem.classList.add("admin-view");
+                            newItem.style.display = "block";
+                        } else {
+                            newItem.style.display = item.isPublic === "true" || item.isPublic === true ? "block" : "none";
+                        }
+                        newItem.innerHTML = `
+                            <img src="${item.src}" alt="${item.caption}">
+                            <p>${item.caption}</p>
+                            <div class="admin-controls" style="${isAdmin ? 'display: block;' : 'display: none;'}">
+                                <select onchange="togglePublic(this)">
+                                    <option value="true" ${item.isPublic === "true" || item.isPublic === true ? "selected" : ""}>公開</option>
+                                    <option value="false" ${item.isPublic === "false" || item.isPublic === false ? "selected" : ""}>非公開</option>
+                                </select>
+                                <button onclick="deleteGalleryItem(this)">削除</button>
+                                <button onclick="startEditCaption(this)">編集</button>
+                                <input type="text" class="edit-input" value="${item.caption}" onblur="saveCaption(this)">
+                            </div>
+                        `;
+                        gallery.appendChild(newItem);
+
+                        const newSlide = document.createElement("img");
+                        newSlide.src = item.src;
+                        newSlide.alt = item.caption;
+                        newSlide.className = "slide";
+                        newSlide.setAttribute("data-id", item.id);
+                        newSlide.setAttribute("data-public", item.isPublic.toString());
+                        if (isAdmin) {
+                            newSlide.classList.add("admin-view");
+                            newSlide.style.display = "block";
+                        } else {
+                            newSlide.style.display = item.isPublic === "true" || item.isPublic === true ? "block" : "none";
+                        }
+                        slideshow.appendChild(newSlide);
+
+                        const itemId = parseInt(item.id);
+                        if (itemId >= nextId) nextId = itemId + 1;
+                    });
+
+                    const slides = document.querySelectorAll('.slide');
+                    if (slides.length > 0) slides[0].classList.add("active");
+                };
+            } catch (error) {
+                console.error("読み込みエラー:", error);
             }
         }
 
-        function loadSavedItems() {
-            const savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
-            const gallery = document.getElementById("gallery");
-            const slideshow = document.getElementById("slideshow");
-
-            gallery.innerHTML = "";
-            slideshow.innerHTML = "";
-
-            savedItems.forEach(item => {
-                const newItem = document.createElement("div");
-                newItem.className = "gallery-item";
-                newItem.setAttribute("data-id", item.id);
-                newItem.setAttribute("data-public", item.isPublic);
-                if (isAdmin) {
-                    newItem.classList.add("admin-view");
-                    newItem.style.display = "block";
-                } else if (item.isPublic === "false") {
-                    newItem.style.display = "none";
-                }
-                newItem.innerHTML = `
-                    <img src="${item.src}" alt="${item.caption}">
-                    <p>${item.caption}</p>
-                    <div class="admin-controls" style="${isAdmin ? 'display: block;' : 'display: none;'}">
-                        <select onchange="togglePublic(this)">
-                            <option value="true" ${item.isPublic === "true" ? "selected" : ""}>公開</option>
-                            <option value="false" ${item.isPublic === "false" ? "selected" : ""}>非公開</option>
-                        </select>
-                        <button onclick="deleteGalleryItem(this)">削除</button>
-                        <button onclick="startEditCaption(this)">編集</button>
-                        <input type="text" class="edit-input" value="${item.caption}" onblur="saveCaption(this)">
-                    </div>
-                `;
-                gallery.appendChild(newItem);
-
-                const newSlide = document.createElement("img");
-                newSlide.src = item.src;
-                newSlide.alt = item.caption;
-                newSlide.className = "slide";
-                newSlide.setAttribute("data-id", item.id);
-                newSlide.setAttribute("data-public", item.isPublic);
-                if (isAdmin) {
-                    newSlide.classList.add("admin-view");
-                    newSlide.style.display = "block";
-                } else if (item.isPublic === "false") {
-                    newSlide.style.display = "none";
-                }
-                slideshow.appendChild(newSlide);
-
-                const itemId = parseInt(item.id);
-                if (itemId >= nextId) nextId = itemId + 1;
-            });
-
-            const slides = document.querySelectorAll('.slide');
-            if (slides.length > 0) slides[0].classList.add("active");
-        }
-
-        function addGalleryItem() {
+        async function addGalleryItem() {
             const fileInput = document.getElementById("image-upload");
             const captionInput = document.getElementById("caption-input");
-            const gallery = document.getElementById("gallery");
-            const slideshow = document.getElementById("slideshow");
 
             if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgSrc = e.target.result;
+                try {
+                    const imgSrc = await readFileAsDataURL(fileInput.files[0]);
                     const caption = captionInput.value || "新しい冒険";
                     const id = nextId++;
+
+                    const gallery = document.getElementById("gallery");
+                    const slideshow = document.getElementById("slideshow");
 
                     const newItem = document.createElement("div");
                     newItem.className = "gallery-item";
@@ -298,32 +372,41 @@
                     if (isAdmin) newSlide.classList.add("admin-view");
                     slideshow.appendChild(newSlide);
 
-                    const savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
-                    savedItems.push({ id: id.toString(), src: imgSrc, caption: caption, isPublic: "true" });
-                    localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+                    const db = await openDB();
+                    const tx = db.transaction("galleryItems", "readwrite");
+                    const store = tx.objectStore("galleryItems");
+                    await store.put({ id: id.toString(), src: imgSrc, caption: caption, isPublic: "true" });
 
                     fileInput.value = "";
                     captionInput.value = "";
                     document.getElementById("preview-image").style.display = "none";
-                };
-                reader.readAsDataURL(fileInput.files[0]);
+                } catch (error) {
+                    console.error("追加エラー:", error);
+                    alert("画像の追加に失敗しました。");
+                }
             } else {
                 alert("画像を選択してください");
             }
         }
 
-        function deleteGalleryItem(button) {
+        async function deleteGalleryItem(button) {
             const item = button.closest(".gallery-item");
             if (confirm("この画像を削除しますか？")) {
-                const id = item.getAttribute("data-id");
-                item.remove();
+                try {
+                    const id = item.getAttribute("data-id");
+                    item.remove();
 
-                const slide = document.querySelector(`.slide[data-id="${id}"]`);
-                if (slide) slide.remove();
+                    const slide = document.querySelector(`.slide[data-id="${id}"]`);
+                    if (slide) slide.remove();
 
-                let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
-                savedItems = savedItems.filter(saved => saved.id !== id);
-                localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+                    const db = await openDB();
+                    const tx = db.transaction("galleryItems", "readwrite");
+                    const store = tx.objectStore("galleryItems");
+                    await store.delete(id);
+                } catch (error) {
+                    console.error("削除エラー:", error);
+                    alert("削除に失敗しました。");
+                }
             }
         }
 
@@ -336,35 +419,47 @@
             editInput.focus();
         }
 
-        function saveCaption(input) {
+        async function saveCaption(input) {
             const item = input.closest(".gallery-item");
             const captionP = item.querySelector("p");
             const newCaption = input.value.trim();
             const id = item.getAttribute("data-id");
 
             if (newCaption) {
-                captionP.textContent = newCaption;
-                input.value = newCaption;
+                try {
+                    captionP.textContent = newCaption;
+                    input.value = newCaption;
 
-                const slide = document.querySelector(`.slide[data-id="${id}"]`);
-                if (slide) slide.alt = newCaption;
+                    const slide = document.querySelector(`.slide[data-id="${id}"]`);
+                    if (slide) slide.alt = newCaption;
 
-                let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
-                const index = savedItems.findIndex(saved => saved.id === id);
-                if (index !== -1) {
-                    savedItems[index].caption = newCaption;
-                    localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+                    const db = await openDB();
+                    const tx = db.transaction("galleryItems", "readwrite");
+                    const store = tx.objectStore("galleryItems");
+                    const request = store.get(id);
+
+                    request.onsuccess = function() {
+                        const itemData = request.result;
+                        if (itemData) {
+                            itemData.caption = newCaption;
+                            store.put(itemData);
+                        }
+                    };
+                } catch (error) {
+                    console.error("キャプション保存エラー:", error);
+                    alert("キャプションの保存に失敗しました。");
                 }
             }
             captionP.style.display = "block";
             input.style.display = "none";
         }
 
-        function togglePublic(select) {
+        async function togglePublic(select) {
             const item = select.closest(".gallery-item");
             const isPublic = select.value === "true";
             const id = item.getAttribute("data-id");
 
+            // DOM を更新
             item.setAttribute("data-public", isPublic);
             if (!isAdmin && !isPublic) {
                 item.style.display = "none";
@@ -382,11 +477,28 @@
                 }
             }
 
-            let savedItems = JSON.parse(localStorage.getItem("galleryItems")) || [];
-            const index = savedItems.findIndex(saved => saved.id === id);
-            if (index !== -1) {
-                savedItems[index].isPublic = isPublic;
-                localStorage.setItem("galleryItems", JSON.stringify(savedItems));
+            // IndexedDB に保存
+            try {
+                const db = await openDB();
+                const tx = db.transaction("galleryItems", "readwrite");
+                const store = tx.objectStore("galleryItems");
+                const request = store.get(id);
+
+                request.onsuccess = function() {
+                    const itemData = request.result;
+                    if (itemData) {
+                        itemData.isPublic = isPublic.toString(); // 文字列として保存
+                        store.put(itemData);
+                        // 設定完了時にダイアログを表示
+                        alert(`画像(ID: ${id})の公開設定を${isPublic ? "公開" : "非公開"}に変更しました。`);
+                    } else {
+                        console.error("アイテムが見つかりません:", id);
+                    }
+                };
+                await tx.complete; // トランザクションの完了を待つ
+            } catch (error) {
+                console.error("公開状態更新エラー:", error);
+                alert("公開状態の更新に失敗しました。");
             }
         }
     </script>

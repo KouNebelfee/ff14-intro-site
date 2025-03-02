@@ -6,47 +6,439 @@
     <title>FF14 冒険者の記録</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* index.html用の追加CSS */
-        h1 { color: #ff6f61; font-size: 36px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); }
-        p { color: #ffffff; font-size: 16px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
-        .characters { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 20px 0; gap: 15px; }
-        .circle-img { width: 100%; max-width: 350px; height: auto; border-radius: 50%; margin: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .circle-img:hover { transform: scale(1.2) rotate(5deg); box-shadow: 0 0 15px rgba(255, 111, 97, 0.8); }
-        .time p { margin: 10px 0; font-size: 18px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
-        body.bg-index::after { background: rgba(0, 0, 0, 0.3) !important; }
-        .content-wrapper { padding-top: 120px; padding-bottom: 80px; }
-
-        /* レイアウト調整 */
-        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; }
-        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
-        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
-        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
-        nav li { margin: 0 15px; }
-        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
-        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
-
-        @media (min-width: 768px) {
-            .hamburger { display: none; }
-            nav { top: 60px; }
+        /* 全体のデフォルト設定 */
+        body {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #fff;
         }
-
+    
+        /* コンテンツラッパー */
+        .content-wrapper { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding-top: 120px; 
+            padding-bottom: 80px; 
+            padding-left: 15px;
+            padding-right: 15px; 
+        }
+    
+        /* プロフィール画像コンテナ */
+        .profile-img-container { 
+            position: relative; 
+            text-align: center; 
+            margin: 20px auto; 
+            max-width: 400px; 
+        }
+    
+        /* プロフィール画像 */
+        .profile-img { 
+            display: block; 
+            max-width: 400px; 
+            min-height: 400px; 
+            width: 100%; 
+            object-fit: cover; 
+            background: #ddd url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="gray"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>') no-repeat center;
+            border: 2px solid #ffd700; 
+            border-radius: 10px; 
+        }
+    
+        /* プロフィール画像キャプション（背景追加） */
+        .profile-img-caption { 
+            color: #fff;
+            font-size: 18px;
+            margin-top: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7); /* 半透明の黒背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+            display: inline-block; /* テキスト幅に合わせる */
+        }
+    
+        /* プロフィール内容（背景追加） */
+        #profile-content p { 
+            margin: 20px 0;
+            text-align: center; 
+            line-height: 1.8;
+            font-size: 16px;
+            background: rgba(51, 51, 51, 0.8); /* 暗い灰色の半透明背景 */
+            padding: 10px; /* テキスト周囲に余白 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        /* マルチセレクト表示（背景追加） */
+        .multi-select-display span { 
+            display: block; 
+            margin-left: 20px; 
+            font-size: 16px;
+            color: #fff;
+            background: rgba(51, 51, 51, 0.8); /* プロフィール内容と統一 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        /* ミュージックプレーヤー（ヘッダー部分：変更なし） */
+        .music-player { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            z-index: 1200; 
+            background: #333; 
+            padding: 10px; 
+        }
+    
+        /* ハンバーガーメニュー（ヘッダー部分：変更なし） */
+        .hamburger { 
+            font-size: 24px; 
+            background: none; 
+            border: none; 
+            color: #ffd700; 
+            cursor: pointer; 
+            padding: 10px; 
+        }
+    
+        /* ナビゲーション（ヘッダー部分：変更なし） */
+        nav { 
+            position: fixed; 
+            left: 0; 
+            width: 100%; 
+            background-color: #333; 
+            z-index: 1000; 
+        }
+    
+        nav ul { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+        }
+    
+        nav li { 
+            margin: 0 15px; 
+        }
+    
+        nav a { 
+            color: #ffd700; 
+            text-decoration: none; 
+            transition: all 0.3s ease; 
+        }
+    
+        nav a:hover { 
+            color: #ff6f61; 
+            background-color: rgba(255, 255, 255, 0.2); 
+            padding: 5px 10px; 
+            border-radius: 5px; 
+        }
+    
+        /* 管理者パネル */
+        .admin-panel { 
+            display: none; 
+            position: fixed; 
+            top: 60px; 
+            width: 90%; 
+            max-width: 1000px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            background: rgba(0, 0, 0, 0.95); 
+            padding: 25px;
+            border-radius: 8px; 
+            z-index: 1300; 
+            color: #fff; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+            left: 50%; 
+            transform: translateX(-50%); 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+    
+        .admin-panel h2 { 
+            margin: 0 0 25px;
+            padding-bottom: 10px; 
+            border-bottom: 2px solid #ffd700; 
+            font-size: 26px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* 見出しに背景追加 */
+            padding: 5px 10px; /* 余白調整 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .admin-section { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 15px; 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+        }
+    
+        .admin-section h3 { 
+            color: #ffd700; 
+            margin: 0 0 15px;
+            font-size: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* サブ見出しに背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-bottom: 15px; 
+            width: 100%; 
+        }
+    
+        .input-group label { 
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 8px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6); /* ラベルに背景追加 */
+            padding: 3px 8px; /* 余白 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        .input-group input, 
+        .input-group select { 
+            width: 100%; 
+            max-width: 300px; 
+            padding: 12px;
+            border: 1px solid #ffd700; 
+            border-radius: 4px; 
+            background: #333;
+            color: #fff; 
+            font-size: 16px;
+            text-align: center; 
+        }
+    
+        .checkbox-group { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 10px; 
+            margin-top: 10px; 
+        }
+    
+        .checkbox-group.horizontal {
+            flex-direction: row;
+        }
+    
+        .checkbox-group label { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            font-size: 16px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6); /* チェックボックスのラベルに背景 */
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        .role-group { 
+            margin: 10px 0; 
+            padding: 10px; 
+            border: 1px solid rgba(255, 215, 0, 0.3); 
+            border-radius: 5px; 
+            width: 100%; 
+        }
+    
+        .role-group h4 { 
+            color: #ffd700; 
+            margin: 0 0 10px; 
+            font-size: 18px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7); /* ロールグループの見出しに背景 */
+            padding: 5px 10px; /* 余白 */
+            border-radius: 5px; /* 角丸 */
+        }
+    
+        .add-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            margin-top: 10px; 
+            justify-content: center; 
+        }
+    
+        .add-item input { 
+            width: 60%; 
+            max-width: 200px; 
+            padding: 10px;
+            font-size: 16px;
+        }
+    
+        .add-item button { 
+            padding: 8px 15px; 
+            font-size: 16px;
+            background: #ffd700; /* ボタン背景はそのまま */
+            color: #333;
+            border-radius: 4px;
+        }
+    
+        .checkbox-group-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+    
+        .admin-panel-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
+    
+        .admin-panel button { 
+            padding: 10px 20px; 
+            background: #ffd700; 
+            color: #333; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background 0.3s ease; 
+        }
+    
+        .admin-panel button:hover { 
+            background: #ff6f61; 
+            color: #fff; 
+        }
+    
+        #admin-image-preview { 
+            max-width: 100%; 
+            max-height: 150px; 
+            margin: 10px 0; 
+            object-fit: contain; 
+            display: block; 
+        }
+    
+        #admin-toggle { 
+            background: rgba(0, 0, 0, 0.7); /* 管理者トグルに背景追加 */
+            border: none; 
+            color: #ffd700; 
+            cursor: pointer; 
+            font-size: 16px;
+            padding: 5px 10px; /* 余白追加 */
+            border-radius: 4px; /* 角丸 */
+        }
+    
+        /* デスクトップ向け調整（ヘッダー部分は変更なし） */
+        @media (min-width: 768px) {
+            .hamburger { 
+                display: none; 
+            }
+            nav { 
+                top: 60px; 
+            }
+        }
+    
+        /* モバイル向け調整（ヘッダー部分は変更なし） */
         @media (max-width: 767px) {
-            h1 { font-size: 24px; }
-            p { font-size: 14px; }
-            .characters { gap: 10px; }
-            .circle-img { max-width: 150px; margin: 10px; }
-            .time p { font-size: 14px; }
-            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
-            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
-            .music-player input[type="range"] { width: 80px; }
-            .music-player p { font-size: 12px; margin: 5px 0; }
-            .content-wrapper { padding-top: 120px; }
-            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
-            nav { display: none; top: 100px; }
-            nav.open { display: block; }
-            nav ul { flex-direction: column; align-items: center; }
-            nav li { margin: 10px 0; }
-            nav a { font-size: 14px; padding: 10px; display: block; }
+            body {
+                font-size: 14px;
+            }
+            .content-wrapper { 
+                padding-top: 120px; /* 元の値を使用 */
+            }
+            .profile-img { 
+                max-width: 150px; 
+                min-height: 150px; 
+            }
+            .profile-img-caption { 
+                font-size: 16px;
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            #profile-content p { 
+                font-size: 14px; 
+                margin: 15px 0; 
+                padding: 8px; /* モバイル向けに少し小さく */
+            }
+            .multi-select-display span { 
+                font-size: 14px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .music-player { 
+                flex-wrap: wrap; 
+                gap: 5px; 
+            }
+            .music-player button, 
+            .nav-btn { 
+                padding: 3px 8px; 
+                font-size: 12px; 
+            }
+            .music-player input[type="range"] { 
+                width: 80px; 
+            }
+            .music-player p { 
+                font-size: 12px; 
+                margin: 5px 0; 
+            }
+            .hamburger { 
+                display: block; 
+                position: fixed; 
+                top: 60px; 
+                left: 10px; 
+                z-index: 1100; 
+            }
+            nav { 
+                display: none; 
+                top: 100px; 
+            }
+            nav.open { 
+                display: block; 
+            }
+            nav ul { 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            nav li { 
+                margin: 10px 0; 
+            }
+            nav a { 
+                font-size: 14px; 
+                padding: 10px; 
+                display: block; 
+            }
+            .admin-panel { 
+                width: 95%; 
+                max-height: 80vh; 
+                padding: 20px; 
+            }
+            .admin-section { 
+                padding: 10px; 
+            }
+            .admin-section h3 { 
+                font-size: 18px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .input-group input, 
+            .input-group select { 
+                max-width: 100%; 
+                font-size: 14px; 
+            }
+            .checkbox-group.horizontal { 
+                flex-direction: column; 
+                align-items: center; 
+            }
+            .checkbox-group label { 
+                font-size: 14px; 
+                padding: 4px 8px; /* モバイル向け調整 */
+            }
+            .admin-panel-buttons { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .add-item { 
+                flex-direction: column; 
+                gap: 5px; 
+            }
+            .add-item input { 
+                width: 100%; 
+                max-width: none; 
+            }
         }
     </style>
 </head>
@@ -83,34 +475,213 @@
         <h1>霧と影は交わるべからず</h1>
         <p>交われば、世界の均衡が崩れる</p>
         <div class="characters">
-            <a href="profile-nebelfee.html"><img src="assets/nebelfee.jpg" alt="Nebelfee" class="circle-img"></a>
-            <a href="profile-schattenfee.html"><img src="assets/schattenfee.jpg" alt="Schattenfee" class="circle-img"></a>
+            <div class="circle-img-container">
+                <a href="profile-nebelfee.html"><img id="nebelfee-img" src="" alt="Nebelfee" class="circle-img"></a>
+                <div class="circle-img-caption" id="nebelfee-caption">Nebelfee</div>
+            </div>
+            <div class="circle-img-container">
+                <a href="profile-schattenfee.html"><img id="schattenfee-img" src="" alt="Schattenfee" class="circle-img"></a>
+                <div class="circle-img-caption" id="schattenfee-caption">Schattenfee</div>
+            </div>
         </div>
         <div class="time">
             <p>リアルタイム: <span id="real-time"></span></p>
             <p>エオルゼアタイム: <span id="eorzea-time"></span></p>
         </div>
     </div>
+    <div class="admin-panel admin-only">
+        <h2>画像差し替え</h2>
+        <label>Nebelfee:</label>
+        <input type="file" id="admin-nebelfee-image" accept="image/*">
+        <img id="admin-nebelfee-preview" style="display: none;">
+        <label>Schattenfee:</label>
+        <input type="file" id="admin-schattenfee-image" accept="image/*">
+        <img id="admin-schattenfee-preview" style="display: none;">
+        <button onclick="saveImages()">保存</button>
+        <button onclick="closeAdminPanel()">閉じる</button>
+    </div>
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
+            <button id="admin-toggle">管理者モード</button>
+        </p>
+        <button id="exit-admin" class="admin-only" style="display: none;">管理者モード終了</button>
     </footer>
     <script>
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+        const ADMIN_PASSWORD = "1225@Yuuto";
+    
+        // IndexedDBの初期化
+        const openDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open("FF14AdventureDB", 1);
+    
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains("images")) {
+                        db.createObjectStore("images", { keyPath: "id" });
+                    }
+                };
+    
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
+    
+                request.onerror = function(event) {
+                    reject("IndexedDBオープンエラー: " + event.target.errorCode);
+                };
+            });
+        };
+    
+        // FileReaderをPromiseでラップ
+        const readFileAsDataURL = (file) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject("画像読み込みエラー");
+                reader.readAsDataURL(file);
+            });
+        };
+    
+        // 画像を保存
+        async function saveImages() {
+            const nebelfeeInput = document.getElementById('admin-nebelfee-image');
+            const schattenfeeInput = document.getElementById('admin-schattenfee-image');
+    
+            try {
+                let nebelfeeData = null;
+                let schattenfeeData = null;
+    
+                if (nebelfeeInput.files && nebelfeeInput.files[0]) {
+                    nebelfeeData = await readFileAsDataURL(nebelfeeInput.files[0]);
+                }
+                if (schattenfeeInput.files && schattenfeeInput.files[0]) {
+                    schattenfeeData = await readFileAsDataURL(schattenfeeInput.files[0]);
+                }
+    
+                const db = await openDB();
+                const tx = db.transaction("images", "readwrite");
+                const store = tx.objectStore("images");
+    
+                const promises = [];
+    
+                if (nebelfeeData) {
+                    const promise = new Promise((resolve, reject) => {
+                        const request = store.put({ id: "nebelfee", image: nebelfeeData });
+                        request.onsuccess = () => {
+                            document.getElementById('nebelfee-img').src = nebelfeeData;
+                            nebelfeeInput.value = '';
+                            document.getElementById('admin-nebelfee-preview').style.display = 'none';
+                            console.log("Nebelfee画像を保存しました");
+                            resolve();
+                        };
+                        request.onerror = () => reject("Nebelfee保存エラー: " + request.error);
+                    });
+                    promises.push(promise);
+                }
+    
+                if (schattenfeeData) {
+                    const promise = new Promise((resolve, reject) => {
+                        const request = store.put({ id: "schattenfee", image: schattenfeeData });
+                        request.onsuccess = () => {
+                            document.getElementById('schattenfee-img').src = schattenfeeData;
+                            schattenfeeInput.value = '';
+                            document.getElementById('admin-schattenfee-preview').style.display = 'none';
+                            console.log("Schattenfee画像を保存しました");
+                            resolve();
+                        };
+                        request.onerror = () => reject("Schattenfee保存エラー: " + request.error);
+                    });
+                    promises.push(promise);
+                }
+    
+                await Promise.all(promises);
+    
+                await new Promise((resolve, reject) => {
+                    tx.oncomplete = () => {
+                        console.log("トランザクション完了");
+                        resolve();
+                    };
+                    tx.onerror = () => reject("トランザクションエラー: " + tx.error);
+                });
+            } catch (error) {
+                console.error("画像保存エラー:", error);
+            }
+        }
+    
+        // 画像を読み込み
+        async function loadImages() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("images", "readonly");
+                const store = tx.objectStore("images");
+    
+                const nebelfeeRequest = store.get("nebelfee");
+                nebelfeeRequest.onsuccess = function(event) {
+                    const data = event.target.result;
+                    if (data && data.image) {
+                        document.getElementById('nebelfee-img').src = data.image;
+                        console.log("Nebelfee画像を読み込みました");
+                    }
+                };
+    
+                const schattenfeeRequest = store.get("schattenfee");
+                schattenfeeRequest.onsuccess = function(event) {
+                    const data = event.target.result;
+                    if (data && data.image) {
+                        document.getElementById('schattenfee-img').src = data.image;
+                        console.log("Schattenfee画像を読み込みました");
+                    }
+                };
+            } catch (error) {
+                console.error("画像読み込みエラー:", error);
+            }
+        }
+    
+        // 管理者パネルを開いた時に既存画像をプレビューに表示
+        async function loadPreviewImages() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction("images", "readonly");
+                const store = tx.objectStore("images");
+    
+                const nebelfeeRequest = store.get("nebelfee");
+                nebelfeeRequest.onsuccess = function(event) {
+                    const data = event.target.result;
+                    if (data && data.image) {
+                        document.getElementById('admin-nebelfee-preview').src = data.image;
+                        document.getElementById('admin-nebelfee-preview').style.display = 'block';
+                    }
+                };
+    
+                const schattenfeeRequest = store.get("schattenfee");
+                schattenfeeRequest.onsuccess = function(event) {
+                    const data = event.target.result;
+                    if (data && data.image) {
+                        document.getElementById('admin-schattenfee-preview').src = data.image;
+                        document.getElementById('admin-schattenfee-preview').style.display = 'block';
+                    }
+                };
+            } catch (error) {
+                console.error("プレビュー画像読み込みエラー:", error);
+            }
+        }
+    
         function toggleBGM() {
             const bgm = document.getElementById("bgm");
             if (bgm && bgm.paused) {
-                bgm.play().catch(error => { console.log("再生エラー:", error); alert("BGMの再生にはタップが必要です。"); });
+                bgm.play().catch(error => console.log("再生エラー:", error));
             } else if (bgm) {
                 bgm.pause();
             }
         }
-
+    
         function startBGM() {
             const bgm = document.getElementById("bgm");
             if (bgm) {
-                bgm.play().catch(error => { console.log("再生エラー:", error); alert("BGMの再生にはタップが必要です。"); });
+                bgm.play().catch(error => console.log("再生エラー:", error));
             }
         }
-
+    
         function adjustVolume() {
             const bgm = document.getElementById("bgm");
             const volume = document.getElementById("volume");
@@ -118,68 +689,188 @@
                 bgm.volume = volume.value;
             }
         }
-
+    
         function setupBGM(tracks) {
             const bgm = document.getElementById("bgm");
             const currentTrack = document.getElementById("current-track");
             if (!bgm || !currentTrack) return;
-
+    
             let currentIndex = Math.floor(Math.random() * tracks.length);
-
+    
             function updateTrack() {
                 bgm.src = tracks[currentIndex].src;
                 currentTrack.textContent = tracks[currentIndex].name;
                 bgm.load();
                 bgm.play().catch(error => console.log("再生エラー:", error));
             }
-
+    
             updateTrack();
-
+    
             bgm.addEventListener('ended', () => {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
             });
-
+    
             window.prevTrack = function() {
                 currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
                 updateTrack();
             };
-
+    
             window.nextTrack = function() {
                 currentIndex = (currentIndex + 1) % tracks.length;
                 updateTrack();
             };
         }
-
+    
         function updateTime() {
             const now = new Date();
             const realTime = now.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
             document.querySelectorAll("#real-time").forEach(el => el.textContent = realTime);
-
+    
             const eorzeaTimeMs = now.getTime() * (3600 / 175) / 1000;
             const eorzeaHours = Math.floor(eorzeaTimeMs / 3600) % 24;
             const eorzeaMinutes = Math.floor((eorzeaTimeMs % 3600) / 60);
             const eorzeaTime = `${String(eorzeaHours).padStart(2, "0")}:${String(eorzeaMinutes).padStart(2, "0")}`;
             document.querySelectorAll("#eorzea-time").forEach(el => el.textContent = eorzeaTime);
         }
-
+    
+        function adjustElementsForMobile() {
+            if (window.innerWidth <= 767) {
+                const musicPlayer = document.querySelector('.music-player');
+                if (musicPlayer) {
+                    musicPlayer.style.position = 'static';
+                    musicPlayer.style.width = '100%';
+                }
+            }
+        }
+    
+        function toggleAdminMode(enable) {
+            isAdmin = enable;
+            localStorage.setItem("isAdmin", enable);
+            const adminElements = document.querySelectorAll(".admin-only");
+            adminElements.forEach(el => el.style.display = enable ? "block" : "none");
+            document.getElementById('admin-toggle').textContent = enable ? "管理者パネルを開く" : "管理者モード";
+            // 管理者モードが有効なら常に表示、無効なら非表示
+            document.getElementById('admin-toggle').style.display = enable ? 'inline' : 'none';
+            if (!enable) {
+                document.querySelector('.admin-panel').style.display = 'none';
+            }
+        }
+    
+        function openAdminPanel() {
+            if (isAdmin) {
+                document.querySelector('.admin-panel').style.display = 'block';
+                loadPreviewImages();
+            }
+        }
+    
+        function closeAdminPanel() {
+            document.querySelector('.admin-panel').style.display = 'none';
+        }
+    
+        // パネルの開閉をトグルする関数（管理者モード時のみ）
+        function toggleAdminPanel() {
+            if (!isAdmin) return;
+            const adminPanel = document.querySelector('.admin-panel');
+            const isPanelOpen = adminPanel.style.display === 'block';
+            adminPanel.style.display = isPanelOpen ? 'none' : 'block';
+            if (!isPanelOpen) loadPreviewImages();
+        }
+    
         document.addEventListener("DOMContentLoaded", () => {
-            const tracks = [
-                { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
-                { src: "assets/二人の路.mp3", name: "二つの路" },
-                { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
-            ];
-            setupBGM(tracks);
+            setInterval(updateTime, 1000);
             updateTime();
-            setInterval(updateTime, 500);
-
-            // ハンバーガーメニューの制御
+            adjustElementsForMobile();
+    
+            const pageTracks = {
+                'index.html': [{ src: "assets/Flow.mp3", name: "Flow" }],
+            };
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            setupBGM(pageTracks[currentPage] || [{ src: "assets/Flow.mp3", name: "Flow" }]);
+    
+            // ページ読み込み時に管理者モードの状態を反映
+            const adminToggle = document.getElementById('admin-toggle');
+            if (isAdmin) {
+                toggleAdminMode(true); // 管理者モードが有効なら状態を反映
+            } else {
+                toggleAdminMode(false); // 管理者モードが無効なら非表示
+            }
+    
+            let tapCount = 0;
+            let tapTimeout;
+    
+            // Ctrl+Shift+Aでボタン表示
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+                    adminToggle.style.display = 'inline';
+                }
+            });
+    
+            // admin-toggle ボタンのクリック処理
+            adminToggle.addEventListener('click', () => {
+                if (!isAdmin) {
+                    const password = prompt("管理者パスワードを入力してください:");
+                    if (password === ADMIN_PASSWORD) {
+                        toggleAdminMode(true);
+                    } else {
+                        alert("パスワードが間違っています。");
+                        adminToggle.style.display = 'none'; // パスワード間違えたら非表示
+                    }
+                } else {
+                    toggleAdminPanel(); // 管理者モード中はパネルの開閉をトグル
+                }
+            });
+    
+            // スマホ用: フッターを5回タップでボタン表示
+            const footer = document.querySelector('footer');
+            footer.addEventListener('touchstart', (e) => {
+                tapCount++;
+                clearTimeout(tapTimeout);
+                tapTimeout = setTimeout(() => tapCount = 0, 1000);
+                if (tapCount >= 5 && !isAdmin) {
+                    adminToggle.style.display = 'inline';
+                    tapCount = 0;
+                }
+            });
+    
+            document.getElementById("exit-admin").addEventListener("click", () => {
+                toggleAdminMode(false);
+            });
+    
+            document.getElementById('admin-nebelfee-image').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('admin-nebelfee-preview').src = e.target.result;
+                        document.getElementById('admin-nebelfee-preview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+    
+            document.getElementById('admin-schattenfee-image').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('admin-schattenfee-preview').src = e.target.result;
+                        document.getElementById('admin-schattenfee-preview').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+    
             const hamburger = document.querySelector('.hamburger');
             const nav = document.querySelector('nav');
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('open');
             });
+    
+            loadImages();
         });
+    
+        window.addEventListener('resize', adjustElementsForMobile);
     </script>
 </body>
 </html>

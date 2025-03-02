@@ -32,6 +32,103 @@
             .music-player input[type="range"] { width: 80px; }
             .music-player p { font-size: 12px; margin: 5px 0; }
         }
+
+        .auth-panel { 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 90%; 
+            max-width: 400px; 
+            background: rgba(0, 0, 0, 0.95); 
+            padding: 20px; 
+            border-radius: 8px; 
+            z-index: 1400; 
+            color: #fff; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .admin-panel { 
+            display: none; 
+            position: fixed; 
+            top: 60px; 
+            width: 90%; 
+            max-width: 1000px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            background: rgba(0, 0, 0, 0.95); 
+            padding: 25px; 
+            border-radius: 8px; 
+            z-index: 1300; 
+            color: #fff; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); 
+            left: 50%; 
+            transform: translateX(-50%); 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .auth-panel input, 
+        .admin-panel input, 
+        .admin-panel select { 
+            width: 100%; 
+            max-width: 300px; 
+            padding: 12px; 
+            border: 1px solid #ffd700; 
+            border-radius: 4px; 
+            background: #333; 
+            color: #fff; 
+            font-size: 16px; 
+            text-align: center; 
+            margin: 10px 0; 
+        }
+
+        .admin-panel textarea { 
+            width: 100%; 
+            max-width: 600px; 
+            height: 300px; 
+            padding: 12px; 
+            border: 1px solid #ffd700; 
+            border-radius: 4px; 
+            background: #333; 
+            color: #fff; 
+            font-size: 16px; 
+            margin: 10px 0; 
+        }
+
+        .admin-panel-buttons, 
+        .auth-panel-buttons { 
+            display: flex; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-top: 20px; 
+            flex-wrap: wrap; 
+        }
+
+        .auth-panel button, 
+        .admin-panel button { 
+            padding: 10px 20px; 
+            background: #ffd700; 
+            color: #333; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background 0.3s ease; 
+        }
+
+        .auth-panel button:hover, 
+        .admin-panel button:hover { 
+            background: #ff6f61; 
+            color: #fff; 
+        }
+
+        #show-text-btn { display: none; }
     </style>
 </head>
 <body class="bg-raid">
@@ -67,19 +164,49 @@
         <h1>レイド履歴</h1>
         <section class="raid shockwave">
             <h2>Nebelfee</h2>
-            <p>万魔殿パンデモニウム：天獄編 - 2024/03/01 忍者でクリア</p>
-            <p>絶アルテマ - 2024/06/01 忍者でクリア</p>
-            <p>アルカディア：ライトヘビー級 - 2024/08/25 ヴァイパーでクリア</p>
-            <p>滅暗黒の雲 - 2024/12/29 ヴァイパーでクリア</p>
-            <p>絶踏破をいつかしたいのでっす♪</p>
+            <div id="nebelfee-content">
+                <p>万魔殿パンデモニウム：天獄編 - 2024/03/01 忍者でクリア</p>
+                <p>絶アルテマ - 2024/06/01 忍者でクリア</p>
+                <p>アルカディア：ライトヘビー級 - 2024/08/25 ヴァイパーでクリア</p>
+                <p>滅暗黒の雲 - 2024/12/29 ヴァイパーでクリア</p>
+                <p>絶踏破をいつかしたいのでっす♪</p>
+            </div>
             <h2>Schattenfee</h2>
-            <p>まだまだ見習い中★</p>
+            <div id="schattenfee-content">
+                <p>まだまだ見習い中★</p>
+            </div>
         </section>
     </div>
     <footer>
-        <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
+            <button id="admin-toggle">管理者モード</button>
+        </p>
+        <button id="exit-admin" class="admin-only" style="display: none;">管理者モード終了</button>
     </footer>
+    <div id="auth-panel" class="auth-panel">
+        <input type="password" id="admin-password" placeholder="パスワード入力">
+        <div class="auth-panel-buttons">
+            <button onclick="verifyAdmin()">認証</button>
+            <button onclick="closeAuthPanel()">キャンセル</button>
+        </div>
+    </div>
+    <div id="admin-panel" class="admin-panel">
+        <select id="edit-target" disabled onchange="loadContent()">
+            <option value="">編集対象を選択</option>
+            <option value="nebelfee">Nebelfee</option>
+            <option value="schattenfee">Schattenfee</option>
+        </select>
+        <textarea id="edit-content" rows="10" placeholder="編集内容を入力" disabled></textarea>
+        <div class="admin-panel-buttons">
+            <button onclick="saveEdit()" style="display: none;">保存</button>
+            <button onclick="hideTextArea()" style="display: none;">閉じる</button>
+            <button id="show-text-btn" onclick="showTextArea()">表示</button>
+        </div>
+    </div>
     <script>
+        let isAdmin = localStorage.getItem("isAdmin") === "true";
+        const ADMIN_PASSWORD = "1225@Yuuto";
+
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
                 { src: "assets/Bee My Honey ～至天の座アルカディア：ライトヘビー級～.mp3", name: "Bee My Honey" },
@@ -135,6 +262,204 @@
             hamburger.addEventListener('click', () => {
                 nav.classList.toggle('open');
             });
+
+            // IndexedDBの初期化
+            const dbRequest = indexedDB.open('RaidHistoryDB', 1);
+            let db;
+
+            dbRequest.onupgradeneeded = (event) => {
+                db = event.target.result;
+                const store = db.createObjectStore('raidHistory', { keyPath: 'id' });
+                store.createIndex('content', 'content', { unique: false });
+            };
+
+            dbRequest.onsuccess = (event) => {
+                db = event.target.result;
+                loadRaidHistory();
+            };
+
+            dbRequest.onerror = () => console.error('IndexedDBの初期化に失敗しました');
+
+            function loadRaidHistory() {
+                const transaction = db.transaction(['raidHistory'], 'readonly');
+                const store = transaction.objectStore('raidHistory');
+                const requestNebelfee = store.get('nebelfee');
+                const requestSchattenfee = store.get('schattenfee');
+
+                requestNebelfee.onsuccess = () => {
+                    if (requestNebelfee.result) {
+                        document.getElementById('nebelfee-content').innerHTML = requestNebelfee.result.content;
+                    }
+                };
+
+                requestSchattenfee.onsuccess = () => {
+                    if (requestSchattenfee.result) {
+                        document.getElementById('schattenfee-content').innerHTML = requestSchattenfee.result.content;
+                    }
+                };
+            }
+
+            const adminToggle = document.getElementById('admin-toggle');
+            const authPanel = document.getElementById('auth-panel');
+            const adminPanel = document.getElementById('admin-panel');
+            let tapCount = 0;
+            let tapTimer;
+
+            // 管理者モードの状態を反映
+            if (isAdmin) {
+                toggleAdminMode(true);
+            } else {
+                toggleAdminMode(false);
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    adminToggle.style.display = 'inline';
+                }
+            });
+
+            document.addEventListener('touchstart', () => {
+                tapCount++;
+                clearTimeout(tapTimer);
+                tapTimer = setTimeout(() => tapCount = 0, 500);
+                if (tapCount >= 5) {
+                    adminToggle.style.display = 'inline';
+                    tapCount = 0;
+                }
+            });
+
+            adminToggle.addEventListener('click', () => {
+                if (!isAdmin) {
+                    authPanel.style.display = 'block';
+                } else {
+                    toggleAdminPanel();
+                }
+            });
+
+            document.getElementById('exit-admin').addEventListener('click', () => {
+                toggleAdminMode(false);
+            });
+
+            window.verifyAdmin = function() {
+                const password = document.getElementById('admin-password').value;
+                if (password === ADMIN_PASSWORD) {
+                    toggleAdminMode(true);
+                    authPanel.style.display = 'none';
+                    adminPanel.style.display = 'block';
+                    document.getElementById('edit-target').disabled = false;
+                    document.getElementById('edit-content').disabled = false;
+                    document.querySelector('#admin-panel button[onclick="saveEdit()"]').style.display = 'block';
+                    document.querySelector('#admin-panel button[onclick="hideTextArea()"]').style.display = 'block';
+                } else {
+                    alert('パスワードが間違っています！');
+                    authPanel.style.display = 'none';
+                }
+            };
+
+            window.closeAuthPanel = function() {
+                authPanel.style.display = 'none';
+                document.getElementById('admin-password').value = '';
+            };
+
+            window.loadContent = function() {
+                const target = document.getElementById('edit-target').value;
+                if (target) {
+                    const transaction = db.transaction(['raidHistory'], 'readonly');
+                    const store = transaction.objectStore('raidHistory');
+                    const request = store.get(target);
+
+                    request.onsuccess = () => {
+                        if (request.result) {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = request.result.content;
+                            const paragraphs = tempDiv.getElementsByTagName('p');
+                            let textContent = '';
+                            for (let p of paragraphs) {
+                                textContent += p.textContent + '\n';
+                            }
+                            document.getElementById('edit-content').value = textContent.trim();
+                        } else {
+                            const contentDiv = document.getElementById(`${target}-content`);
+                            const paragraphs = contentDiv.getElementsByTagName('p');
+                            let textContent = '';
+                            for (let p of paragraphs) {
+                                textContent += p.textContent + '\n';
+                            }
+                            document.getElementById('edit-content').value = textContent.trim();
+                        }
+                    };
+                } else {
+                    document.getElementById('edit-content').value = '';
+                }
+            };
+
+            window.saveEdit = function() {
+                const target = document.getElementById('edit-target').value;
+                const content = document.getElementById('edit-content').value;
+                if (target) {
+                    const htmlContent = content.split('\n').map(line => `<p>${line}</p>`).join('');
+                    const transaction = db.transaction(['raidHistory'], 'readwrite');
+                    const store = transaction.objectStore('raidHistory');
+                    const request = store.put({ id: target, content: htmlContent });
+
+                    request.onsuccess = () => {
+                        if (target === 'nebelfee') {
+                            document.getElementById('nebelfee-content').innerHTML = htmlContent;
+                        } else if (target === 'schattenfee') {
+                            document.getElementById('schattenfee-content').innerHTML = htmlContent;
+                        }
+                        alert('編集内容が保存されました！');
+                    };
+
+                    request.onerror = () => {
+                        alert('保存に失敗しました。エラー: ' + request.error);
+                    };
+                } else {
+                    alert('編集対象を選択してください。');
+                }
+            };
+
+            window.hideTextArea = function() {
+                document.getElementById('edit-target').style.display = 'none';
+                document.getElementById('edit-content').style.display = 'none';
+                document.querySelector('#admin-panel button[onclick="saveEdit()"]').style.display = 'none';
+                document.querySelector('#admin-panel button[onclick="hideTextArea()"]').style.display = 'none';
+                document.getElementById('show-text-btn').style.display = 'block';
+            };
+
+            window.showTextArea = function() {
+                document.getElementById('edit-target').style.display = 'block';
+                document.getElementById('edit-content').style.display = 'block';
+                document.querySelector('#admin-panel button[onclick="saveEdit()"]').style.display = 'block';
+                document.querySelector('#admin-panel button[onclick="hideTextArea()"]').style.display = 'block';
+                document.getElementById('show-text-btn').style.display = 'none';
+            };
+
+            function toggleAdminMode(enable) {
+                isAdmin = enable;
+                localStorage.setItem("isAdmin", enable);
+                const adminElements = document.querySelectorAll(".admin-only");
+                adminElements.forEach(el => el.style.display = enable ? "block" : "none");
+                adminToggle.textContent = enable ? "管理者パネルを開く" : "管理者モード";
+                adminToggle.style.display = enable ? 'inline' : 'none';
+                if (!enable) {
+                    adminPanel.style.display = 'none';
+                    authPanel.style.display = 'none';
+                }
+            }
+
+            function toggleAdminPanel() {
+                if (!isAdmin) return;
+                const isPanelOpen = adminPanel.style.display === 'block';
+                adminPanel.style.display = isPanelOpen ? 'none' : 'block';
+                if (!isPanelOpen) {
+                    document.getElementById('edit-target').disabled = false;
+                    document.getElementById('edit-content').disabled = false;
+                    document.querySelector('#admin-panel button[onclick="saveEdit()"]').style.display = 'block';
+                    document.querySelector('#admin-panel button[onclick="hideTextArea()"]').style.display = 'block';
+                    document.getElementById('show-text-btn').style.display = 'none';
+                }
+            }
         });
     </script>
 </body>

@@ -1,3 +1,12 @@
+// グローバル変数
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+const spotsPerPage = 5;
+let currentPage = 1;
+let spotsData = JSON.parse(localStorage.getItem('spots')) || [];
+let nextId = spotsData.length > 0 ? Math.max(...spotsData.map(s => s.id)) + 1 : 1;
+let galleryData = JSON.parse(localStorage.getItem("galleryItems")) || [];
+let galleryNextId = galleryData.length > 0 ? Math.max(...galleryData.map(g => g.id)) + 1 : 1;
+
 // BGM関連
 function toggleBGM() {
     const bgm = document.getElementById("bgm");
@@ -86,11 +95,6 @@ function adjustElementsForMobile() {
 }
 
 // スポット管理
-const spotsPerPage = 5;
-let currentPage = 1;
-let spotsData = JSON.parse(localStorage.getItem('spots')) || [];
-let nextId = spotsData.length > 0 ? Math.max(...spotsData.map(s => s.id)) + 1 : 1;
-
 function compressImage(file, callback) {
     const img = new Image();
     const reader = new FileReader();
@@ -128,6 +132,7 @@ function compressImage(file, callback) {
 
 function renderSpots() {
     const spotList = document.getElementById('spot-list');
+    if (!spotList) return;
     spotList.innerHTML = '';
     if (spotsData.length === 0) {
         spotList.innerHTML = '<p>まだスポットがありません。管理者モードで追加してください。</p>';
@@ -166,11 +171,14 @@ function updateSpots() {
         spot.style.display = (page === currentPage) ? 'block' : 'none';
     });
 
-    document.getElementById('page-number').textContent = currentPage;
-    document.getElementById('prev-btn').disabled = currentPage === 1;
-    document.getElementById('next-btn').disabled = currentPage === totalPages;
-    document.getElementById('footer-prev').classList.toggle('disabled', currentPage === 1);
-    document.getElementById('footer-next').classList.toggle('disabled', currentPage === totalPages);
+    const pageNumber = document.getElementById('page-number');
+    if (pageNumber) {
+        pageNumber.textContent = currentPage;
+        document.getElementById('prev-btn').disabled = currentPage === 1;
+        document.getElementById('next-btn').disabled = currentPage === totalPages;
+        document.getElementById('footer-prev').classList.toggle('disabled', currentPage === 1);
+        document.getElementById('footer-next').classList.toggle('disabled', currentPage === totalPages);
+    }
 }
 
 window.changePage = function(delta) {
@@ -182,13 +190,20 @@ window.changePage = function(delta) {
 };
 
 window.closeAdminModal = function() {
-    document.getElementById('admin-modal').style.display = 'none';
-    document.getElementById('image-preview').style.display = 'none';
+    const modal = document.getElementById('admin-modal') || document.getElementById('admin-mode');
+    if (modal) {
+        modal.style.display = 'none';
+        const preview = document.getElementById('image-preview');
+        if (preview) preview.style.display = 'none';
+    }
 };
 
 window.closeEditModal = function() {
-    document.getElementById('edit-modal').style.display = 'none';
-    document.getElementById('edit-image-preview').style.display = 'none';
+    const modal = document.getElementById('edit-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('edit-image-preview').style.display = 'none';
+    }
 };
 
 window.addSpot = function(event) {
@@ -231,6 +246,7 @@ window.addSpot = function(event) {
 
 function updateAdminSpotList() {
     const adminList = document.getElementById('admin-spot-list');
+    if (!adminList) return;
     adminList.innerHTML = '';
     if (spotsData.length === 0) {
         adminList.innerHTML = '<p>まだスポットがありません。</p>';
@@ -348,52 +364,186 @@ window.importSpots = function(event) {
     reader.readAsText(file);
 };
 
+// ギャラリー管理
+function renderGallery() {
+    const gallery = document.getElementById('gallery');
+    const slideshow = document.getElementById('slideshow');
+    if (!gallery || !slideshow) return;
+
+    gallery.innerHTML = '';
+    slideshow.innerHTML = '';
+
+    galleryData.forEach(item => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item';
+        galleryItem.setAttribute('data-id', item.id);
+        galleryItem.innerHTML = `
+            <img src="${item.src}" alt="${item.caption}">
+            <p>${item.caption}</p>
+        `;
+        gallery.appendChild(galleryItem);
+
+        const slide = document.createElement('img');
+        slide.src = item.src;
+        slide.alt = item.caption;
+        slide.className = 'slide';
+        slide.setAttribute('data-id', item.id);
+        slideshow.appendChild(slide);
+    });
+
+    const slides = document.querySelectorAll('.slide');
+    if (slides.length > 0) {
+        slides[0].classList.add('active');
+        let slideIndex = 0;
+        setInterval(() => {
+            slides[slideIndex].classList.remove('active');
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active');
+        }, 5000);
+    }
+}
+
+window.addGalleryItem = function() {
+    const fileInput = document.getElementById('image-upload');
+    const captionInput = document.getElementById('caption-input');
+
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgSrc = e.target.result;
+            const caption = captionInput.value || "新しい冒険";
+            const id = galleryNextId++;
+
+            const newItem = { id, src: imgSrc, caption };
+            galleryData.push(newItem);
+            try {
+                localStorage.setItem('galleryItems', JSON.stringify(galleryData));
+                renderGallery();
+                fileInput.value = '';
+                captionInput.value = '';
+                document.getElementById('preview-image').style.display = 'none';
+            } catch (e) {
+                alert("ストレージ容量を超えました。");
+                galleryData.pop();
+            }
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else {
+        alert("画像を選択してください");
+    }
+};
+
+// 管理者モードの切り替え
+function toggleAdminMode(enable) {
+    const adminElements = document.querySelectorAll(".admin-only");
+    const exitBtn = document.getElementById("exit-admin");
+    adminElements.forEach(el => el.style.display = enable ? "block" : "none");
+    if (exitBtn) exitBtn.style.display = enable ? "inline-block" : "none";
+
+    if (document.getElementById('spot-list')) updateAdminSpotList();
+    if (document.getElementById('gallery')) renderGallery();
+}
+
 // イベントリスナー
 document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateTime, 5000);
     updateTime();
     adjustElementsForMobile();
 
-    const tracks = [
-        { src: "assets/Flow.mp3", name: "Flow" },
-        { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
-    ];
-    setupBGM(tracks);
+    const pageTracks = {
+        'index.html': [{ src: "assets/Flow.mp3", name: "Flow" }],
+        'profile-nebelfee.html': [
+            { src: "assets/忘却の此方.mp3", name: "忘却の此方" },
+            { src: "assets/Scream ～万魔殿パンデモニウム：煉獄編～.mp3", name: "慟哭" }
+        ],
+        'profile-schattenfee.html': [
+            { src: "assets/月下彼岸花 ～蛮神ツクヨミ討滅戦～.mp3", name: "月華彼岸花" },
+            { src: "assets/天つ風 ～白虎征魂戦～.mp3", name: "天つ風" }
+        ],
+        'story.html': [{ src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }],
+        'gallery.html': [
+            { src: "assets/White Stone Black ～万魔殿パンデモニウム：煉獄編～.mp3", name: "White Stone Black" },
+            { src: "assets/Flow.mp3", name: "Flow" }
+        ],
+        'raid.html': [{ src: "assets/Athena the Tireless One.mp3", name: "不屈のアテナ" }],
+        'gear.html': [{ src: "assets/Revolutions.mp3", name: "革命の唄" }],
+        'diary.html': [
+            { src: "assets/Flow.mp3", name: "Flow" },
+            { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
+        ],
+        'recruit.html': [{ src: "assets/Dawntrail.mp3", name: "DawnTrail" }],
+        'links.html': [{ src: "assets/二人の路.mp3", name: "二つの路" }],
+        'spots.html': [
+            { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
+            { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
+        ]
+    };
+
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    setupBGM(pageTracks[currentPage] || [{ src: "assets/Flow.mp3", name: "Flow" }]);
+
+    toggleAdminMode(isAdmin);
 
     let keyBuffer = '';
+    let adminTrigger = false;
     document.addEventListener('keydown', (e) => {
-        keyBuffer += e.key;
-        if (keyBuffer.toLowerCase().includes('admin')) {
-            document.getElementById('admin-modal').style.display = 'block';
-            updateAdminSpotList();
+        if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+            adminTrigger = true;
             keyBuffer = '';
+            setTimeout(() => adminTrigger = false, 5000); // 5秒以内にnebelfeeを入力
+        }
+        if (adminTrigger) {
+            keyBuffer += e.key.toLowerCase();
+            if (keyBuffer === 'nebelfee' && !isAdmin) {
+                isAdmin = true;
+                localStorage.setItem("isAdmin", "true");
+                toggleAdminMode(true);
+                adminTrigger = false;
+            }
         }
     });
 
-    document.getElementById('spot-image-file').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            compressImage(file, (compressedData) => {
-                document.getElementById('image-preview').src = compressedData;
-                document.getElementById('image-preview').style.display = 'block';
-            });
-        }
+    document.getElementById("exit-admin").addEventListener("click", () => {
+        isAdmin = false;
+        localStorage.setItem("isAdmin", "false");
+        toggleAdminMode(false);
     });
+
+    if (document.getElementById('spot-image-file')) {
+        document.getElementById('spot-image-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                compressImage(file, (compressedData) => {
+                    document.getElementById('image-preview').src = compressedData;
+                    document.getElementById('image-preview').style.display = 'block';
+                });
+            }
+        });
+    }
+
+    if (document.getElementById('image-upload')) {
+        document.getElementById('image-upload').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('preview-image').src = e.target.result;
+                    document.getElementById('preview-image').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 
     renderSpots();
+    renderGallery();
 
     document.querySelectorAll('.spot-image').forEach(image => {
         image.addEventListener('click', () => {
             image.classList.toggle('enlarged');
-            if (image.classList.contains('enlarged')) {
-                image.style.transform = 'scale(1.5)';
-                image.style.boxShadow = '0 0 20px rgba(52, 152, 219, 1)';
-                image.style.zIndex = '1000';
-            } else {
-                image.style.transform = 'scale(1.05)';
-                image.style.boxShadow = '0 0 15px rgba(52, 152, 219, 0.8)';
-                image.style.zIndex = 'auto';
-            }
+            image.style.transform = image.classList.contains('enlarged') ? 'scale(1.5)' : 'scale(1)';
+            image.style.boxShadow = image.classList.contains('enlarged') ? '0 0 20px rgba(52, 152, 219, 1)' : '0 0 15px rgba(52, 152, 219, 0.8)';
+            image.style.zIndex = image.classList.contains('enlarged') ? '1000' : 'auto';
         });
     });
 });
