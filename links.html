@@ -6,101 +6,45 @@
     <title>リンク集 - FF14 冒険者の記録</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* links.html用の追加CSS */
-        .links-section {
-            background-color: rgba(22, 33, 62, 0.9); /* ダークブルーで統一感 */
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        .links-section { background-color: rgba(22, 33, 62, 0.9); padding: 20px; margin: 20px auto; max-width: 800px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+        .links-card { background-color: rgba(255, 255, 255, 0.1); padding: 15px; margin: 15px 0; border-radius: 5px; border: 1px solid rgba(255, 111, 97, 0.3); text-align: left; }
+        .links-card h2 { color: #ff6f61; font-size: 24px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); margin-bottom: 10px; }
+        .links-card ul { list-style-type: none; padding-left: 0; color: #ffffff; font-size: 16px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); line-height: 1.6; }
+        .links-card ul li { position: relative; padding-left: 20px; margin: 8px 0; }
+        .social-links li:before { content: "🌟"; position: absolute; left: 0; color: #ff6f61; }
+        .external-links li:before { content: "🔗"; position: absolute; left: 0; color: #ff6f61; }
+        .links-card a { color: #ffd700; text-decoration: none; padding: 2px 6px; border-radius: 3px; transition: all 0.3s ease; }
+        .links-card a:hover { background-color: rgba(255, 111, 97, 0.2); color: white; }
+        .memo { color: #ccc; font-size: 14px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
+        .copyable { color: #ffd700; cursor: pointer; padding: 2px 6px; border-radius: 3px; transition: all 0.3s ease; }
+        .copyable:hover { background-color: rgba(255, 111, 97, 0.2); color: white; }
+        .track { color: #ffffff; font-weight: bold; }
+        body.bg-links::after { background: rgba(0, 0, 0, 0.5) !important; }
+        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 10px; background-color: rgba(0, 0, 0, 0.8); border-radius: 5px; color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
+        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
+        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+        nav li { margin: 0 15px; }
+        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
+        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
+        .content-wrapper { padding-top: 120px; }
+
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            nav { top: 60px; }
         }
 
-        .links-card {
-            background-color: rgba(255, 255, 255, 0.1); /* 薄い白で視認性アップ */
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            border: 1px solid rgba(255, 111, 97, 0.3); /* テーマカラーで枠 */
-            text-align: left;
-        }
-
-        .links-card h2 {
-            color: #ff6f61;
-            font-size: 24px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-            margin-bottom: 10px;
-        }
-
-        .links-card ul {
-            list-style-type: none;
-            padding-left: 0;
-            color: #ffffff;
-            font-size: 16px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            line-height: 1.6;
-        }
-
-        .links-card ul li {
-            position: relative;
-            padding-left: 20px;
-            margin: 8px 0;
-        }
-
-        .social-links li:before {
-            content: "🌟"; /* SNS用アイコン */
-            position: absolute;
-            left: 0;
-            color: #ff6f61;
-        }
-
-        .external-links li:before {
-            content: "🔗"; /* 外部リンク用アイコン */
-            position: absolute;
-            left: 0;
-            color: #ff6f61;
-        }
-
-        .links-card a {
-            color: #ffd700; /* ゴールドでリンクを目立たせる */
-            text-decoration: none;
-            padding: 2px 6px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .links-card a:hover {
-            background-color: rgba(255, 111, 97, 0.2);
-            color: white;
-        }
-
-        .memo {
-            color: #ccc; /* メモは薄いグレーで控えめに */
-            font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-        }
-
-        .copyable {
-            color: #ffd700;
-            cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .copyable:hover {
-            background-color: rgba(255, 111, 97, 0.2);
-            color: white;
-        }
-
-        .track {
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        /* linksページの背景オーバーレイ調整（必要に応じて） */
-        body.bg-links::after {
-            background: rgba(0, 0, 0, 0.5) !important;
+        @media (max-width: 767px) {
+            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
+            nav { display: none; top: 100px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav li { margin: 10px 0; }
+            nav a { font-size: 14px; padding: 10px; display: block; }
+            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
+            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
+            .music-player input[type="range"] { width: 80px; }
+            .music-player p { font-size: 12px; margin: 5px 0; }
         }
     </style>
 </head>
@@ -117,18 +61,21 @@
         <button class="nav-btn" onclick="nextTrack()">></button>
         <p>再生中: <span id="current-track"></span></p>
     </div>
+    <button class="hamburger">☰</button>
     <nav>
-        <a href="index.html">ホーム</a>
-        <a href="profile-nebelfee.html">Nebelfee</a>
-        <a href="profile-schattenfee.html">Schattenfee</a>
-        <a href="story.html">ストーリー</a>
-        <a href="gallery.html">ギャラリー</a>
-        <a href="raid.html">レイド</a>
-        <a href="gear.html">装備</a>
-        <a href="diary.html">プレイ日記</a>
-        <a href="recruit.html">仲間募集</a>
-        <a href="links.html">リンク集</a>
-        <a href="spots.html">スクショスポット</a>
+        <ul>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="profile-nebelfee.html">Nebelfee</a></li>
+            <li><a href="profile-schattenfee.html">Schattenfee</a></li>
+            <li><a href="story.html">ストーリー</a></li>
+            <li><a href="gallery.html">ギャラリー</a></li>
+            <li><a href="raid.html">レイド</a></li>
+            <li><a href="gear.html">装備</a></li>
+            <li><a href="diary.html">プレイ日記</a></li>
+            <li><a href="recruit.html">仲間募集</a></li>
+            <li><a href="links.html">リンク集</a></li>
+            <li><a href="spots.html">スクショスポット</a></li>
+        </ul>
     </nav>
     <div class="content-wrapper">
         <header class="links-header">
@@ -139,90 +86,33 @@
             <div class="links-card">
                 <h2>📱 私のSNS & 交流</h2>
                 <ul class="social-links">
-                    <li>
-                        <a href="https://twitter.com/Kou_Nebelfee_re" target="_blank">@Kou_Nebelfee</a> 
-                        <span class="memo"> - 姉の垢！SSや日常を呟いてるよ✨</span>
-                    </li>
-                    <li>
-                        <a href="https://twitter.com/Kou_Schattenfee" target="_blank">@Kou_Schattenfee</a> 
-                        <span class="memo"> - 弟の垢！旅の路をつぶやいていこっかな！</span>
-                    </li>
-                    <li>
-                        <a href="https://twitter.com/Kou_RP" target="_blank">@Kou_RP</a> 
-                        <span class="memo"> - RP垢🍾対話店の感想や宣伝などを行ってるよ～</span>
-                    </li>
-                    <li>
-                        <a href="https://twitter.com/KouNS_SS" target="_blank">@KouNS_SS</a> 
-                        <span class="memo"> - SS垢📷最近さぼり気味</span>
-                    </li>
-                    <li>
-                        <a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> 
-                        <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span>
-                    </li>
-                    <li>
-                        <a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> 
-                        <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span>
-                    </li>
-                    <li>
-                        <span class="copyable" onclick="copyToClipboard('kounebelfee_schattenfee')">Discord: kounebelfee_schattenfee</span> 
-                        <span class="memo"> - 一緒にチャットや冒険を楽しもう🎉（クリックでコピーしてフレンド申請してね！）</span>
-                    </li>
+                    <li><a href="https://twitter.com/Kou_Nebelfee_re" target="_blank">@Kou_Nebelfee</a> <span class="memo"> - 姉の垢！SSや日常を呟いてるよ✨</span></li>
+                    <li><a href="https://twitter.com/Kou_Schattenfee" target="_blank">@Kou_Schattenfee</a> <span class="memo"> - 弟の垢！旅の路をつぶやいていこっかな！</span></li>
+                    <li><a href="https://twitter.com/Kou_RP" target="_blank">@Kou_RP</a> <span class="memo"> - RP垢🍾対話店の感想や宣伝などを行ってるよ～</span></li>
+                    <li><a href="https://twitter.com/KouNS_SS" target="_blank">@KouNS_SS</a> <span class="memo"> - SS垢📷最近さぼり気味</span></li>
+                    <li><a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span></li>
+                    <li><a href="https://na.finalfantasyxiv.com/lodestone/character/example/" target="_blank">Lodestone</a> <span class="memo"> - キャラ情報とプレイ日記🌿見てね！</span></li>
+                    <li><span class="copyable" onclick="copyToClipboard('kounebelfee_schattenfee')">Discord: kounebelfee_schattenfee</span> <span class="memo"> - 一緒にチャットや冒険を楽しもう🎉（クリックでコピーしてフレンド申請してね！）</span></li>
                 </ul>
             </div>
             <div class="links-card">
                 <h2>🔗 おすすめサイト</h2>
                 <ul class="external-links">
                     <!-- 公式サイト -->
-                    <li>
-                        <a href="https://jp.finalfantasyxiv.com/" target="_blank">FFXIV公式サイト</a> 
-                        <span class="memo"> - 最新情報やパッチノートはここで！</span>
-                    </li>
-                    <li>
-                        <a href="https://jp.finalfantasyxiv.com/lodestone/" target="_blank">The Lodestone</a> 
-                        <span class="memo"> - 公式コミュニティ！キャラ情報やニュースが見れるよ🌟</span>
-                    </li>
-                    <li>
-                        <a href="https://forum.square-enix.com/ffxiv/" target="_blank">FFXIV公式フォーラム</a> 
-                        <span class="memo"> - 公式の話題や議論をチェック📝</span>
-                    </li>
+                    <li><a href="https://jp.finalfantasyxiv.com/" target="_blank">FFXIV公式サイト</a> <span class="memo"> - 最新情報やパッチノートはここで！</span></li>
+                    <li><a href="https://jp.finalfantasyxiv.com/lodestone/" target="_blank">The Lodestone</a> <span class="memo"> - 公式コミュニティ！キャラ情報やニュースが見れるよ🌟</span></li>
+                    <li><a href="https://forum.square-enix.com/ffxiv/" target="_blank">FFXIV公式フォーラム</a> <span class="memo"> - 公式の話題や議論をチェック📝</span></li>
                     <!-- ミラプリサイト -->
-                    <li>
-                        <a href="https://mirapri.com/" target="_blank">MIRAPRI SNAP</a> 
-                        <span class="memo"> - みんなのミラプリSSが見れる！おしゃれの参考に💃</span>
-                    </li>
-                    <li>
-                        <a href="https://www.ffxivcollection.com/" target="_blank">FFXIV Armoury Collection</a> 
-                        <span class="memo"> - 装備の見た目や入手方法をチェック👗</span>
-                    </li>
-                    <li>
-                        <a href="https://ffxiv.eorzeacollection.com/" target="_blank">Eorzea Collection</a> 
-                        <span class="memo"> - 海外のミラプリサイト！インスピレーションに✨</span>
-                    </li>
+                    <li><a href="https://mirapri.com/" target="_blank">MIRAPRI SNAP</a> <span class="memo"> - みんなのミラプリSSが見れる！おしゃれの参考に💃</span></li>
+                    <li><a href="https://www.ffxivcollection.com/" target="_blank">FFXIV Armoury Collection</a> <span class="memo"> - 装備の見た目や入手方法をチェック👗</span></li>
+                    <li><a href="https://ffxiv.eorzeacollection.com/" target="_blank">Eorzea Collection</a> <span class="memo"> - 海外のミラプリサイト！インスピレーションに✨</span></li>
                     <!-- 役に立つサイト -->
-                    <li>
-                        <a href="https://ffxiv.gamerescape.com/" target="_blank">FFXIV Wiki</a> 
-                        <span class="memo"> - 攻略情報が超豊富！困ったら覗いてみて</span>
-                    </li>
-                    <li>
-                        <a href="https://www.fflogs.com/" target="_blank">FFLogs</a> 
-                        <span class="memo"> - バトルログ解析！上達したい人におすすめ</span>
-                    </li>
-                    <li>
-                        <a href="https://ffxivteamcraft.com/" target="_blank">Teamcraft</a> 
-                        <span class="memo"> - クラフトやギャザリングの計画に便利✂️</span>
-                    </li>
-                    <li>
-                        <a href="https://xivapi.com/" target="_blank">XIVAPI</a> 
-                        <span class="memo"> - FF14のデータベース！マニアックな情報も</span>
-                    </li>
-                    <li>
-                        <a href="https://jp.ff14angler.com/" target="_blank">猫はお腹がすいた</a> 
-                        <span class="memo"> - 釣り情報が充実！釣り好きは必見🎣</span>
-                    </li>
-                    <li>
-                        <a href="http://ff14housing.com/" target="_blank">FF14ハウジング</a> 
-                        <span class="memo"> - ハウジング家具の実物が見れるよ🏡</span>
-                    </li>
+                    <li><a href="https://ffxiv.gamerescape.com/" target="_blank">FFXIV Wiki</a> <span class="memo"> - 攻略情報が超豊富！困ったら覗いてみて</span></li>
+                    <li><a href="https://www.fflogs.com/" target="_blank">FFLogs</a> <span class="memo"> - バトルログ解析！上達したい人におすすめ</span></li>
+                    <li><a href="https://ffxivteamcraft.com/" target="_blank">Teamcraft</a> <span class="memo"> - クラフトやギャザリングの計画に便利✂️</span></li>
+                    <li><a href="https://xivapi.com/" target="_blank">XIVAPI</a> <span class="memo"> - FF14のデータベース！マニアックな情報も</span></li>
+                    <li><a href="https://jp.ff14angler.com/" target="_blank">猫はお腹がすいた</a> <span class="memo"> - 釣り情報が充実！釣り好きは必見🎣</span></li>
+                    <li><a href="http://ff14housing.com/" target="_blank">FF14ハウジング</a> <span class="memo"> - ハウジング家具の実物が見れるよ🏡</span></li>
                 </ul>
             </div>
             <div class="links-card">
@@ -301,9 +191,7 @@
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-    <script src="script.js"></script>
     <script>
-        // クリップボードにコピーする関数
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('「' + text + '」をクリップボードにコピーしました！');
@@ -317,7 +205,55 @@
                 { src: "assets/目覚めの御使い ～ティターニア討滅戦～.mp3", name: "目覚めの御使い" },
                 { src: "assets/忘却の彼方 ～蛮神シヴァ討滅戦～.mp3", name: "忘却の彼方" }
             ];
-            setupBGM(tracks);
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
+            };
+
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('open');
+            });
         });
     </script>
 </body>

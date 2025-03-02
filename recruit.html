@@ -4,108 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>仲間募集 - FF14 冒険者の記録</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 既存のstyles.cssを読み込み -->
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* 提案した代替案CSSをここに追加 */
-        .recruit-section {
-            background-color: rgba(22, 33, 62, 0.9);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        .recruit-section { background-color: rgba(22, 33, 62, 0.9); padding: 20px; margin: 20px auto; max-width: 800px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+        .recruit-card { background-color: rgba(255, 255, 255, 0.1); padding: 15px; margin: 15px 0; border-radius: 5px; border: 1px solid rgba(255, 111, 97, 0.3); text-align: left; }
+        .recruit-card h2 { color: #ff6f61; font-size: 24px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); margin-bottom: 10px; }
+        .recruit-card p, .recruit-card ul { color: #ffffff; font-size: 16px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); line-height: 1.6; }
+        .recruit-card ul { list-style-type: none; padding-left: 0; }
+        .recruit-card ul li { position: relative; padding-left: 20px; margin: 5px 0; }
+        .recruit-card ul li:before { content: "✨"; position: absolute; left: 0; color: #ff6f61; }
+        .social-links a { color: #ffd700; text-decoration: none; padding: 3px 8px; border-radius: 3px; transition: all 0.3s ease; }
+        .social-links a:hover { background-color: rgba(255, 111, 97, 0.2); color: white; }
+        .recruit-images { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; }
+        .image-box { text-align: center; }
+        .recruit-image { max-width: 100%; height: auto; max-height: 200px; border: 2px solid #ffd700; border-radius: 5px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .recruit-image:hover { transform: scale(1.05); box-shadow: 0 0 10px rgba(255, 111, 97, 0.8); }
+        .image-box p { color: #ffffff; font-size: 14px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); margin: 5px 0 0; }
+        body.bg-recruit::after { background: rgba(0, 0, 0, 0.5) !important; }
+        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 10px; background-color: rgba(0, 0, 0, 0.8); border-radius: 5px; color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
+        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
+        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+        nav li { margin: 0 15px; }
+        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
+        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
+        .content-wrapper { padding-top: 120px; }
+
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            nav { top: 60px; }
         }
 
-        .recruit-card {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            border: 1px solid rgba(255, 111, 97, 0.3);
-            text-align: left;
-        }
-
-        .recruit-card h2 {
-            color: #ff6f61;
-            font-size: 24px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-            margin-bottom: 10px;
-        }
-
-        .recruit-card p, .recruit-card ul {
-            color: #ffffff;
-            font-size: 16px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            line-height: 1.6;
-        }
-
-        .recruit-card ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .recruit-card ul li {
-            position: relative;
-            padding-left: 20px;
-            margin: 5px 0;
-        }
-
-        .recruit-card ul li:before {
-            content: "✨";
-            position: absolute;
-            left: 0;
-            color: #ff6f61;
-        }
-
-        .social-links a {
-            color: #ffd700;
-            text-decoration: none;
-            padding: 3px 8px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: rgba(255, 111, 97, 0.2);
-            color: white;
-        }
-
-        .recruit-images {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .image-box {
-            text-align: center;
-        }
-
-        .recruit-image {
-            max-width: 100%;
-            height: auto;
-            max-height: 200px;
-            border: 2px solid #ffd700;
-            border-radius: 5px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .recruit-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(255, 111, 97, 0.8);
-        }
-
-        .image-box p {
-            color: #ffffff;
-            font-size: 14px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            margin: 5px 0 0;
-        }
-
-        /* recruitページの背景オーバーレイ調整（必要に応じて） */
-        body.bg-recruit::after {
-            background: rgba(0, 0, 0, 0.5) !important;
+        @media (max-width: 767px) {
+            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
+            nav { display: none; top: 100px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav li { margin: 10px 0; }
+            nav a { font-size: 14px; padding: 10px; display: block; }
+            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
+            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
+            .music-player input[type="range"] { width: 80px; }
+            .music-player p { font-size: 12px; margin: 5px 0; }
         }
     </style>
 </head>
@@ -122,18 +62,21 @@
         <button class="nav-btn" onclick="nextTrack()">></button>
         <p>再生中: <span id="current-track"></span></p>
     </div>
+    <button class="hamburger">☰</button>
     <nav>
-        <a href="index.html">ホーム</a>
-        <a href="profile-nebelfee.html">Nebelfee</a>
-        <a href="profile-schattenfee.html">Schattenfee</a>
-        <a href="story.html">ストーリー</a>
-        <a href="gallery.html">ギャラリー</a>
-        <a href="raid.html">レイド</a>
-        <a href="gear.html">装備</a>
-        <a href="diary.html">プレイ日記</a>
-        <a href="recruit.html">仲間募集</a>
-        <a href="links.html">リンク集</a>
-        <a href="spots.html">スクショスポット</a>
+        <ul>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="profile-nebelfee.html">Nebelfee</a></li>
+            <li><a href="profile-schattenfee.html">Schattenfee</a></li>
+            <li><a href="story.html">ストーリー</a></li>
+            <li><a href="gallery.html">ギャラリー</a></li>
+            <li><a href="raid.html">レイド</a></li>
+            <li><a href="gear.html">装備</a></li>
+            <li><a href="diary.html">プレイ日記</a></li>
+            <li><a href="recruit.html">仲間募集</a></li>
+            <li><a href="links.html">リンク集</a></li>
+            <li><a href="spots.html">スクショスポット</a></li>
+        </ul>
     </nav>
     <div class="content-wrapper">
         <header class="recruit-header">
@@ -148,7 +91,6 @@
                 <p><span class="icon">💖</span> <strong>好きなこと</strong>: のんびりSS撮影、ミラプリ、まったり雑談、対話店巡り、高難易度バトル</p>
                 <p><span class="icon">⚔️</span> <strong>マイブーム</strong>: 対話店巡ったり 高難易度で戦ったり！</p>
             </div>
-
             <div class="recruit-card">
                 <h2>🌙 こんな仲間と遊びたいな</h2>
                 <ul>
@@ -157,7 +99,6 @@
                     <li>まったり派だけど、時々冒険も楽しみたい人</li>
                 </ul>
             </div>
-
             <div class="recruit-card">
                 <h2>🍀 気軽に声かけてね♪</h2>
                 <p><span class="icon">📌</span> 気になったら、気軽に話しかけてね！</p>
@@ -170,7 +111,6 @@
                     <li><a href="https://twitter.com/KouNS_SS" target="_blank">@KouNS_SS</a> - SSアカウント</li>
                 </ul>
             </div>
-
             <div class="recruit-card">
                 <h2>🌸 私の雰囲気を見てみて</h2>
                 <div class="recruit-images">
@@ -189,14 +129,61 @@
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-    <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
                 { src: "assets/Heavensward.mp3", name: "Heavensward" },
                 { src: "assets/紅の夜明け ～クガネ昼～.mp3", name: "紅の夜明け" }
             ];
-            setupBGM(tracks);
+            const bgm = document.getElementById("bgm");
+            const currentTrack = document.getElementById("current-track");
+            let currentIndex = Math.floor(Math.random() * tracks.length);
+
+            function updateTrack() {
+                bgm.src = tracks[currentIndex].src;
+                currentTrack.textContent = tracks[currentIndex].name;
+                bgm.load();
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            }
+
+            updateTrack();
+
+            bgm.addEventListener('ended', () => {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            });
+
+            window.prevTrack = function() {
+                currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+                updateTrack();
+            };
+
+            window.nextTrack = function() {
+                currentIndex = (currentIndex + 1) % tracks.length;
+                updateTrack();
+            };
+
+            window.startBGM = function() {
+                bgm.play().catch(error => console.log("再生エラー:", error));
+            };
+
+            window.toggleBGM = function() {
+                if (bgm.paused) {
+                    bgm.play().catch(error => console.log("再生エラー:", error));
+                } else {
+                    bgm.pause();
+                }
+            };
+
+            window.adjustVolume = function() {
+                bgm.volume = document.getElementById("volume").value;
+            };
+
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('open');
+            });
         });
     </script>
 </body>

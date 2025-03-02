@@ -6,54 +6,37 @@
     <title>プレイ日記 - FF14 冒険者の記録</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* 新しい日記を作成ボタンのデザイン */
-        #admin-controls {
-            margin-bottom: 20px;
+        #admin-controls { margin-bottom: 20px; }
+        .create-btn { display: inline-block; padding: 12px 24px; font-size: 18px; font-weight: bold; color: #ffffff; background-color: #ff6f61; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; }
+        .create-btn:hover { background-color: #ff8a75; transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); }
+        .create-btn:active { transform: translateY(0); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); }
+        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 10px; background-color: rgba(0, 0, 0, 0.8); border-radius: 5px; color: white; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); }
+        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
+        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
+        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+        nav li { margin: 0 15px; }
+        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
+        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
+        .content-wrapper { padding-top: 120px; }
+        #admin-command { width: 80px; font-size: 10px; opacity: 0.3; border: none; background: transparent; color: inherit; vertical-align: middle; }
+
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            nav { top: 60px; }
         }
-        .create-btn {
-            display: inline-block;
-            padding: 12px 24px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
-            background-color: #ff6f61;
-            text-decoration: none;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-        .create-btn:hover {
-            background-color: #ff8a75;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
-        }
-        .create-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        /* 音楽プレイヤーのスタイル */
-        .music-player {
-            margin: 20px auto;
-            text-align: center;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
-            max-width: 600px;
-        }
-        .music-player button {
-            padding: 5px 10px;
-            margin: 0 5px;
-            background-color: #ff6f61;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .music-player button:hover {
-            background-color: #ff8a75;
-        }
-        .music-player input[type="range"] {
-            vertical-align: middle;
+
+        @media (max-width: 767px) {
+            .create-btn { padding: 8px 16px; font-size: 16px; }
+            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
+            nav { display: none; top: 100px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav li { margin: 10px 0; }
+            nav a { font-size: 14px; padding: 10px; display: block; }
+            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
+            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
+            .music-player input[type="range"] { width: 80px; }
+            .music-player p { font-size: 12px; margin: 5px 0; }
         }
     </style>
 </head>
@@ -70,18 +53,21 @@
         <button class="nav-btn" onclick="nextTrack()">></button>
         <p>再生中: <span id="current-track">未選択</span></p>
     </div>
+    <button class="hamburger">☰</button>
     <nav>
-        <a href="index.html">ホーム</a>
-        <a href="profile-nebelfee.html">Nebelfee</a>
-        <a href="profile-schattenfee.html">Schattenfee</a>
-        <a href="story.html">ストーリー</a>
-        <a href="gallery.html">ギャラリー</a>
-        <a href="raid.html">レイド</a>
-        <a href="gear.html">装備</a>
-        <a href="diary.html">プレイ日記</a>
-        <a href="recruit.html">仲間募集</a>
-        <a href="links.html">リンク集</a>
-        <a href="spots.html">スクショスポット</a>
+        <ul>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="profile-nebelfee.html">Nebelfee</a></li>
+            <li><a href="profile-schattenfee.html">Schattenfee</a></li>
+            <li><a href="story.html">ストーリー</a></li>
+            <li><a href="gallery.html">ギャラリー</a></li>
+            <li><a href="raid.html">レイド</a></li>
+            <li><a href="gear.html">装備</a></li>
+            <li><a href="diary.html">プレイ日記</a></li>
+            <li><a href="recruit.html">仲間募集</a></li>
+            <li><a href="links.html">リンク集</a></li>
+            <li><a href="spots.html">スクショスポット</a></li>
+        </ul>
     </nav>
     <div class="content-wrapper">
         <h1 id="diary-title" style="cursor: pointer;">プレイ日記</h1>
@@ -99,7 +85,7 @@
     </div>
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved. 
-            <input type="text" id="admin-command" style="width: 80px; font-size: 10px; opacity: 0.3; border: none; background: transparent; color: inherit; vertical-align: middle;" placeholder="...">
+            <input type="text" id="admin-command" placeholder="...">
         </p>
     </footer>
     <script>
@@ -108,87 +94,63 @@
         let currentPage = 1;
         const ITEMS_PER_PAGE = 10;
 
-        // 音楽プレイヤーの設定
-        const tracks = [
-            { src: "assets/Flow.mp3", name: "Flow" },
-            { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
-        ];
-        let currentTrackIndex = 0;
-        const audio = document.getElementById("bgm");
-        const currentTrackDisplay = document.getElementById("current-track");
-
-        function setupBGM() {
-            const source = document.getElementById("bgm-source");
-            source.src = tracks[currentTrackIndex].src;
-            audio.load();
-            currentTrackDisplay.textContent = tracks[currentTrackIndex].name;
-            console.log("BGM設定:", tracks[currentTrackIndex].name);
-        }
-
-        function startBGM() {
-            audio.play().catch(err => console.error("再生エラー:", err));
-            console.log("BGM開始:", tracks[currentTrackIndex].name);
-        }
-
-        function toggleBGM() {
-            if (audio.paused) {
-                audio.play().catch(err => console.error("再生エラー:", err));
-            } else {
-                audio.pause();
-            }
-            console.log("BGM切り替え:", audio.paused ? "停止" : "再生");
-        }
-
-        function adjustVolume() {
-            audio.volume = document.getElementById("volume").value;
-            console.log("音量調整:", audio.volume);
-        }
-
-        function prevTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-            setupBGM();
-            startBGM();
-        }
-
-        function nextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-            setupBGM();
-            startBGM();
-        }
-
-        // 管理者モード起動関数
-        function activateAdminMode() {
-            isAdmin = true;
-            document.getElementById("admin-controls").style.display = "block";
-            localStorage.setItem("isAdmin", "true");
-            loadDiaries();
-            console.log("管理者モード: ON");
-        }
-
-        // 全ての初期化を1つのDOMContentLoadedに統合
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("ページ読み込み開始");
+            const tracks = [
+                { src: "assets/Flow.mp3", name: "Flow" },
+                { src: "assets/Close in the Distance.mp3", name: "Close in the Distance" }
+            ];
+            const audio = document.getElementById("bgm");
+            const currentTrackDisplay = document.getElementById("current-track");
+            let currentTrackIndex = 0;
 
-            // 音楽プレイヤーの初期化
-            setupBGM();
-
-            // 管理者コマンド入力の監視
-            const adminInput = document.getElementById("admin-command");
-            if (adminInput) {
-                console.log("管理者コマンド入力欄が検出されました");
-                adminInput.addEventListener("input", (e) => {
-                    const command = e.target.value.trim().toLowerCase();
-                    console.log("入力された値:", command);
-                    if (command === "admin") {
-                        activateAdminMode();
-                        e.target.value = "";
-                    }
-                });
-            } else {
-                console.error("管理者コマンド入力欄が見つかりません");
+            function setupBGM() {
+                audio.src = tracks[currentTrackIndex].src;
+                currentTrackDisplay.textContent = tracks[currentTrackIndex].name;
+                audio.load();
             }
 
-            // IndexedDB初期化
+            function startBGM() {
+                audio.play().catch(err => console.error("再生エラー:", err));
+            }
+
+            function toggleBGM() {
+                if (audio.paused) {
+                    audio.play().catch(err => console.error("再生エラー:", err));
+                } else {
+                    audio.pause();
+                }
+            }
+
+            function adjustVolume() {
+                audio.volume = document.getElementById("volume").value;
+            }
+
+            function prevTrack() {
+                currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+                setupBGM();
+                startBGM();
+            }
+
+            function nextTrack() {
+                currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                setupBGM();
+                startBGM();
+            }
+
+            setupBGM();
+
+            const adminInput = document.getElementById("admin-command");
+            adminInput.addEventListener("input", (e) => {
+                const command = e.target.value.trim().toLowerCase();
+                if (command === "admin") {
+                    isAdmin = true;
+                    document.getElementById("admin-controls").style.display = "block";
+                    localStorage.setItem("isAdmin", "true");
+                    loadDiaries();
+                    e.target.value = "";
+                }
+            });
+
             const dbName = "FF14DiaryDB";
             const request = indexedDB.open(dbName, 1);
 
@@ -200,12 +162,17 @@
             request.onsuccess = (event) => {
                 db = event.target.result;
                 loadDiaries();
-                console.log("IndexedDB 接続成功");
             };
 
             request.onerror = (event) => {
                 console.error("IndexedDBエラー:", event.target.error);
             };
+
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('open');
+            });
         });
 
         function loadDiaries() {
@@ -231,7 +198,6 @@
             const paginatedDiaries = diaries.slice(startIndex, endIndex);
 
             paginatedDiaries.forEach(diary => {
-                console.log("日記データ:", diary);
                 const entry = document.createElement("article");
                 entry.className = "diary-entry";
                 if (!diary.token) {
@@ -292,7 +258,6 @@
                 store.delete(Number(id));
                 transaction.oncomplete = () => {
                     loadDiaries();
-                    console.log(`日記 ID: ${id} を削除しました`);
                 };
             }
         }

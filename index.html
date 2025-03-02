@@ -7,49 +7,46 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         /* index.html用の追加CSS */
-        h1 {
-            color: #ff6f61;
-            font-size: 36px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* 視認性強化 */
+        h1 { color: #ff6f61; font-size: 36px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); }
+        p { color: #ffffff; font-size: 16px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
+        .characters { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin: 20px 0; gap: 15px; }
+        .circle-img { width: 100%; max-width: 350px; height: auto; border-radius: 50%; margin: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .circle-img:hover { transform: scale(1.2) rotate(5deg); box-shadow: 0 0 15px rgba(255, 111, 97, 0.8); }
+        .time p { margin: 10px 0; font-size: 18px; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); }
+        body.bg-index::after { background: rgba(0, 0, 0, 0.3) !important; }
+        .content-wrapper { padding-top: 120px; padding-bottom: 80px; }
+
+        /* レイアウト調整 */
+        .music-player { position: fixed; top: 0; left: 0; right: 0; z-index: 1200; }
+        .hamburger { font-size: 24px; background: none; border: none; color: #ffd700; cursor: pointer; padding: 10px; }
+        nav { position: fixed; left: 0; width: 100%; background-color: #333; z-index: 1000; }
+        nav ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; }
+        nav li { margin: 0 15px; }
+        nav a { color: #ffd700; text-decoration: none; transition: all 0.3s ease; }
+        nav a:hover { color: #ff6f61; background-color: rgba(255, 255, 255, 0.2); padding: 5px 10px; border-radius: 5px; }
+
+        @media (min-width: 768px) {
+            .hamburger { display: none; }
+            nav { top: 60px; }
         }
 
-        p {
-            color: #ffffff;
-            font-size: 16px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* 視認性強化 */
-        }
-
-        .characters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .circle-img {
-            width: 100%;
-            max-width: 350px;
-            height: auto;
-            border-radius: 50%;
-            margin: 15px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .circle-img:hover {
-            transform: scale(1.2) rotate(5deg);
-            box-shadow: 0 0 15px rgba(255, 111, 97, 0.8);
-        }
-
-        .time p {
-            margin: 10px 0;
-            font-size: 18px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* 時間表示の視認性向上 */
-        }
-
-        /* 背景オーバーレイ調整 - 黒い幕を軽減 */
-        body.bg-index::after {
-            background: rgba(0, 0, 0, 0.3) !important; /* 透明度を0.5から0.3に下げて軽減 */
+        @media (max-width: 767px) {
+            h1 { font-size: 24px; }
+            p { font-size: 14px; }
+            .characters { gap: 10px; }
+            .circle-img { max-width: 150px; margin: 10px; }
+            .time p { font-size: 14px; }
+            .music-player { flex-wrap: wrap; gap: 5px; padding: 5px; }
+            .music-player button, .nav-btn { padding: 3px 8px; font-size: 12px; }
+            .music-player input[type="range"] { width: 80px; }
+            .music-player p { font-size: 12px; margin: 5px 0; }
+            .content-wrapper { padding-top: 120px; }
+            .hamburger { display: block; position: fixed; top: 60px; left: 10px; z-index: 1100; }
+            nav { display: none; top: 100px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; align-items: center; }
+            nav li { margin: 10px 0; }
+            nav a { font-size: 14px; padding: 10px; display: block; }
         }
     </style>
 </head>
@@ -64,44 +61,44 @@
         <input type="range" id="volume" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()">
         <button class="nav-btn" onclick="prevTrack()"><</button>
         <button class="nav-btn" onclick="nextTrack()">></button>
-        <p>再生中: <span id="current-track"></span></p>
+        <p>再生中: <span id="current-track">未選択</span></p>
     </div>
+    <button class="hamburger">☰</button>
     <nav>
-        <a href="index.html">ホーム</a>
-        <a href="profile-nebelfee.html">Nebelfee</a>
-        <a href="profile-schattenfee.html">Schattenfee</a>
-        <a href="story.html">ストーリー</a>
-        <a href="gallery.html">ギャラリー</a>
-        <a href="raid.html">レイド</a>
-        <a href="gear.html">装備</a>
-        <a href="diary.html">プレイ日記</a>
-        <a href="recruit.html">仲間募集</a>
-        <a href="links.html">リンク集</a>
-        <a href="spots.html">スクショスポット</a>
+        <ul>
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="profile-nebelfee.html">Nebelfee</a></li>
+            <li><a href="profile-schattenfee.html">Schattenfee</a></li>
+            <li><a href="story.html">ストーリー</a></li>
+            <li><a href="gallery.html">ギャラリー</a></li>
+            <li><a href="raid.html">レイド</a></li>
+            <li><a href="gear.html">装備</a></li>
+            <li><a href="diary.html">プレイ日記</a></li>
+            <li><a href="recruit.html">仲間募集</a></li>
+            <li><a href="links.html">リンク集</a></li>
+            <li><a href="spots.html">スクショスポット</a></li>
+        </ul>
     </nav>
-    <h1>霧と影は交わるべからず</h1>
-    <p>交われば、世界の均衡が崩れる</p>
-    <div class="characters">
-        <a href="profile-nebelfee.html"><img src="assets/nebelfee.jpg" alt="Nebelfee" class="circle-img"></a>
-        <a href="profile-schattenfee.html"><img src="assets/schattenfee.jpg" alt="Schattenfee" class="circle-img"></a>
-    </div>
-    <div class="time">
-        <p>リアルタイム: <span id="real-time"></span></p>
-        <p>エオルゼアタイム: <span id="eorzea-time"></span></p>
+    <div class="content-wrapper">
+        <h1>霧と影は交わるべからず</h1>
+        <p>交われば、世界の均衡が崩れる</p>
+        <div class="characters">
+            <a href="profile-nebelfee.html"><img src="assets/nebelfee.jpg" alt="Nebelfee" class="circle-img"></a>
+            <a href="profile-schattenfee.html"><img src="assets/schattenfee.jpg" alt="Schattenfee" class="circle-img"></a>
+        </div>
+        <div class="time">
+            <p>リアルタイム: <span id="real-time"></span></p>
+            <p>エオルゼアタイム: <span id="eorzea-time"></span></p>
+        </div>
     </div>
     <footer>
         <p>© SQUARE ENIX CO., LTD. All Rights Reserved.</p>
     </footer>
-    <script src="script.js"></script>
     <script>
-        // BGM関連関数
         function toggleBGM() {
             const bgm = document.getElementById("bgm");
             if (bgm && bgm.paused) {
-                bgm.play().catch(error => {
-                    console.log("再生エラー:", error);
-                    alert("BGMの再生にはタップが必要です。ボタンを再度押してください。");
-                });
+                bgm.play().catch(error => { console.log("再生エラー:", error); alert("BGMの再生にはタップが必要です。"); });
             } else if (bgm) {
                 bgm.pause();
             }
@@ -110,10 +107,7 @@
         function startBGM() {
             const bgm = document.getElementById("bgm");
             if (bgm) {
-                bgm.play().catch(error => {
-                    console.log("再生エラー:", error);
-                    alert("BGMの再生にはタップが必要です。");
-                });
+                bgm.play().catch(error => { console.log("再生エラー:", error); alert("BGMの再生にはタップが必要です。"); });
             }
         }
 
@@ -157,7 +151,6 @@
             };
         }
 
-        // 時間表示関数
         function updateTime() {
             const now = new Date();
             const realTime = now.toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
@@ -170,7 +163,6 @@
             document.querySelectorAll("#eorzea-time").forEach(el => el.textContent = eorzeaTime);
         }
 
-        // 初期化とイベントリスナー
         document.addEventListener("DOMContentLoaded", () => {
             const tracks = [
                 { src: "assets/Dawntrail.mp3", name: "DawnTrail" },
@@ -178,10 +170,15 @@
                 { src: "assets/Endwalker - Footfalls.mp3", name: "Endwalker" }
             ];
             setupBGM(tracks);
+            updateTime();
+            setInterval(updateTime, 500);
 
-            // 時間更新を初期化
-            updateTime(); // 初回即時実行
-            setInterval(updateTime, 500); // 500ms間隔で更新
+            // ハンバーガーメニューの制御
+            const hamburger = document.querySelector('.hamburger');
+            const nav = document.querySelector('nav');
+            hamburger.addEventListener('click', () => {
+                nav.classList.toggle('open');
+            });
         });
     </script>
 </body>
